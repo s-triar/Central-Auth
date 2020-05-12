@@ -1,0 +1,33 @@
+<mat-card class="dashboard-card">
+  <mat-card-header>
+    <mat-card-title>
+      Daftar Project
+      <button
+        mat-icon-button
+        class="more-button"
+        [matMenuTriggerFor]="menu"
+        aria-label="Toggle menu"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu" xPosition="before">
+        <mat-list style="overflow-y: auto; max-height: 200px;">
+          <mat-list-item> Pepper </mat-list-item>
+          <mat-list-item> Salt </mat-list-item>
+          <mat-list-item> Paprika </mat-list-item>
+          <mat-list-item>
+            <button mat-menu-item>Expand</button>
+          </mat-list-item>
+          <mat-list-item>
+            <button mat-menu-item>Remove</button>
+          </mat-list-item>
+        </mat-list>
+      </mat-menu>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="dashboard-card-content">
+    <mat-list>
+      <app-card-project-item *ngFor="let item of items"></app-card-project-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

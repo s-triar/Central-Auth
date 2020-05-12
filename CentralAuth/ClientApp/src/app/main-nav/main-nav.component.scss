@@ -1,0 +1,36 @@
+@import "theme";
+
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.child,
+.hr-child {
+  display: none;
+}
+.child a span {
+  padding-left: 16px;
+}
+.router-link-active {
+  $primary: map-get($light-theme, primary);
+  background-color: mat-color($primary, lighter);
+}
+
+.show {
+  $primary: map-get($light-theme, primary);
+  background-color: mat-color($primary, lighter);
+  display: block;
+}

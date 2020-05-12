@@ -1,0 +1,77 @@
+<div
+  fxLayout="column"
+  fxLayoutAlign="center center"
+  fxLayoutGap="0px"
+  style="
+    height: calc(100% - 64px) !important;
+    min-height: calc(100% - 64px) !important;
+  "
+>
+  <mat-card>
+    <mat-card-title
+      ><h1>Register <b>Developer</b></h1></mat-card-title
+    >
+    <mat-card-content
+      fxLayout="row"
+      fxLayoutAlign="space-around start"
+      fxLayoutGap="10px"
+      fxLayout.lt-md="column"
+    >
+      <form [formGroup]="loginForm" fxLayoutGap="10px">
+        <mat-form-field appearance="fill">
+          <mat-label>NIK</mat-label>
+          <mat-icon matPrefix>perm_identity</mat-icon>
+          <input matInput formControlName="nik" />
+          <mat-error
+            *ngIf="
+              nik.invalid && (nik.dirty || nik.touched) && nik.errors.required
+            "
+            >NIK belum terisi.</mat-error
+          >
+          <mat-error
+            *ngIf="
+              nik.invalid && (nik.dirty || nik.touched) && nik.errors.pattern
+            "
+            >NIK hanya bisa menerima masukan angka.</mat-error
+          >
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Password</mat-label>
+          <mat-icon matPrefix>vpn_key</mat-icon>
+          <input
+            matInput
+            formControlName="password"
+            [type]="hide ? 'password' : 'text'"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="hide = !hide"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide"
+          >
+            <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+          </button>
+          <mat-error
+            *ngIf="
+              password.invalid &&
+              (password.dirty || password.touched) &&
+              password.errors.required
+            "
+            >Password belum terisi.</mat-error
+          >
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+    <mat-card-actions
+      fxLayout="row"
+      fxLayoutAlign="space-between start"
+      fxLayoutGap="gappx"
+    >
+      <button mat-button color="accent" [routerLink]="['/forget-password']">
+        Forget
+      </button>
+      <button mat-raised-button color="primary">Login</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

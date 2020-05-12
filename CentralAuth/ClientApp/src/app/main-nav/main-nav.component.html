@@ -1,0 +1,89 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="isHandset$ | async"
+  >
+    <app-user-side-nav
+      [Url]="user.PhotoUrl"
+      [Nik]="user.Nik"
+      [Name]="user.Name"
+    ></app-user-side-nav>
+    <mat-nav-list>
+      <a
+        mat-list-item
+        [routerLink]="['/dashboard']"
+        routerLinkActive="router-link-active"
+      >
+        <mat-icon>dashboard</mat-icon>
+        Dashboard
+      </a>
+
+      <a
+        mat-list-item
+        [routerLink]="['/pengguna']"
+        routerLinkActive="router-link-active"
+      >
+        <mat-icon>people</mat-icon>
+        Pengguna
+      </a>
+
+      <a
+        mat-list-item
+        [routerLink]="['/project']"
+        routerLinkActive="router-link-active"
+      >
+        <mat-icon>vertical_split</mat-icon>
+        Project
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar
+      color="primary"
+      fxLayout="row"
+      fxLayoutAlign="start center"
+      fxLayoutGap="5px"
+    >
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="!(isHandset$ | async)"
+        fxFlex="none"
+      >
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span fxFlex="none"
+        ><img
+          src="assets/defaults/logo_white_large.png"
+          alt="Central Auth"
+          width="175px"
+      /></span>
+      <div fxFlex="grow"></div>
+      <button
+        color="accent"
+        type="button"
+        mat-icon-button
+        (click)="ToggleTheme()"
+      >
+        <mat-icon>{{
+          (theme$ | async).IsDefault ? "wb_sunny" : "brightness_2"
+        }}</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        type="button"
+        matTooltip="Logout"
+        matTooltipPosition="below"
+      >
+        <mat-icon>meeting_room</mat-icon>
+      </button>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
