@@ -8,7 +8,6 @@ namespace CentralAuth.Commons.Models.Authentication
 {
     public class UserAuth
     {
-        public int Id { get; set; }
         public string Nik { get; set; }
         public string Name { get; set; }
 
