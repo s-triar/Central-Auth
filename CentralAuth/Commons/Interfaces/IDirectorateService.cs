@@ -10,7 +10,7 @@ namespace CentralAuth.Commons.Interfaces
     {
         IEnumerable<Directorate> GetAll();
         IEnumerable<Directorate> GetAllByFilter(Object entity);
-        IEnumerable<object> GetAllByFilterGrid(Object entity);
+        GridResponse<Directorate> GetAllByFilterGrid(Object entity);
         Directorate GetByDepartemen(string Kode);
         Directorate GetByUser(string Nik);
         Directorate GetByID(string Kode);

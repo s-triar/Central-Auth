@@ -34,6 +34,8 @@ import { DialogLoadingComponent } from './components/dialog-loading/dialog-loadi
 import { SnackbarNotifComponent } from './components/snackbar-notif/snackbar-notif.component';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatPaginationCustomProvider } from './providers/mat-pagination-custom-provider';
+import { UpdateDirectorateComponent } from './pages/master-directorate/dialogs/update-directorate/update-directorate.component';
+import { DeleteDirectorateComponent } from './pages/master-directorate/dialogs/delete-directorate/delete-directorate.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +60,8 @@ import { MatPaginationCustomProvider } from './providers/mat-pagination-custom-p
     ChangeIconOnHoverDirective,
     DialogLoadingComponent,
     SnackbarNotifComponent,
+    UpdateDirectorateComponent,
+    DeleteDirectorateComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

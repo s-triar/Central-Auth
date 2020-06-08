@@ -13,8 +13,16 @@ import { Sort } from 'src/app/models/commons/sort';
 import { Pagination } from 'src/app/models/commons/pagination';
 import { DirectorateService } from 'src/app/services/directorate.service';
 import { Observable, Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, debounceTime } from 'rxjs/operators';
 import { GridFilterType } from 'src/app/models/enums/gridfiltertype';
+import { UpdateDirectorateComponent } from './dialogs/update-directorate/update-directorate.component';
+import { DeleteDirectorateComponent } from './dialogs/delete-directorate/delete-directorate.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { GridResponse } from 'src/app/models/grid-response';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarNotifConfig } from 'src/app/models/enums/snackbar-config';
+import { ResponseContextGetter } from 'src/app/utils/response-context-getter';
+import { SnackbarNotifComponent } from 'src/app/components/snackbar-notif/snackbar-notif.component';
 
 @Component({
   selector: 'app-master-directorate',
@@ -22,20 +30,12 @@ import { GridFilterType } from 'src/app/models/enums/gridfiltertype';
   styleUrls: ['./master-directorate.component.scss']
 })
 export class MasterDirectorateComponent implements OnInit, OnDestroy {
-
-  search: Grid;
-  filter: Filter = {
-    columnName: 'kode',
-    filterType: GridFilterType.CONTAIN,
-    filterValue: '0'
+  isLoadingResults = false;
+  state: Directorate = {
+    kode : '',
+    namaDirektorat: ''
   };
-  sort: Sort = {
-    columnName: 'namaDirektorat',
-    sortType: 'ASC'
-  };
-  Page: Pagination;
-
-  lengthData = 200;
+  lengthData = 0;
   pageSize = 10;
   pageSizeOptions = [5, 10, 25, 50, 100];
   columnsConfig: any[] = [
@@ -49,99 +49,36 @@ export class MasterDirectorateComponent implements OnInit, OnDestroy {
     }
   ];
   columnsKey: string[] = this.columnsConfig.map(col => col.key);
-
-
+  columnsFilter: string [] = ['search-kode', 'search-namaDirektorat', 'action-edit', 'action-delete'];
   dataSource: MatTableDataSource<Directorate>;
+  search: Grid = {
+    filter: [],
+    sort: [],
+    pagination: {
+      numberDisplay: this.pageSize,
+      pageNumber: 1
+    }
+  };
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) matsort: MatSort;
 
-  DATAS: Directorate[] = [
-    {
-      kode: '01',
-      namaDirektorat: 'Directorate 1'
-    },
-    {
-      kode: '02',
-      namaDirektorat: 'Directorate 2'
-    },
-    {
-      kode: '03',
-      namaDirektorat: 'Directorate 3'
-    },
-    {
-      kode: '04',
-      namaDirektorat: 'Directorate 4'
-    },
-    {
-      kode: '05',
-      namaDirektorat: 'Directorate 5'
-    },
-    {
-      kode: '06',
-      namaDirektorat: 'Directorate 6'
-    },
-    {
-      kode: '07',
-      namaDirektorat: 'Directorate 7'
-    },
-    {
-      kode: '07',
-      namaDirektorat: 'Directorate 7'
-    },
-    {
-      kode: '07',
-      namaDirektorat: 'Directorate 7'
-    },
-    {
-      kode: '07',
-      namaDirektorat: 'Directorate 7'
-    },
-    {
-      kode: '07',
-      namaDirektorat: 'Directorate 7'
-    },
-    {
-      kode: '07',
-      namaDirektorat: 'Directorate 7'
-    },
-    {
-      kode: '07',
-      namaDirektorat: 'Directorate 7'
-    },
-    {
-      kode: '07',
-      namaDirektorat: 'Directorate 7'
-    },
-    {
-      kode: '07',
-      namaDirektorat: 'Directorate 7'
-    },
-    {
-      kode: '07',
-      namaDirektorat: 'Directorate 7'
-    }
-  ];
-
-  data$: any;
+  // DATAS: Directorate[] = [];
   dataSubscription: Subscription;
-  constructor(private _dialog: MatDialog, private _directorateService: DirectorateService) {
-    this.columnsKey.push('edit');
-    this.columnsKey.push('delete');
-    this.dataSource = new MatTableDataSource(this.DATAS);
-    this.search = new Grid();
-    this.search.filter = [this.filter];
-    this.search.sort = [this.sort];
-    this.search.pagination = {
-      numberDisplay: this.pageSize,
-      pageNumber: 1
-    };
-
+  dialogSubscription: Subscription;
+  constructor(
+    private _dialog: MatDialog,
+    private _directorateService: DirectorateService,
+    private _snackbar: MatSnackBar
+    ) {
+    this.columnsKey = [...this.columnsKey, ...['edit', 'delete']];
+    this.dataSource = new MatTableDataSource([]);
    }
 
   ngOnInit() {
     // this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.matsort;
+    this.FetchData();
   }
   ngOnDestroy(): void {
     // Called once, before the instance is destroyed.
@@ -150,60 +87,125 @@ export class MasterDirectorateComponent implements OnInit, OnDestroy {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+    const value = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    for (const key in this.state) {
+      if (this.state.hasOwnProperty(key)) {
+        this.constructFilterData(value, key);
+      }
+    }
+    this.FetchData();
+  }
+
+
+  filterColumn(event: Event, namaColumn: string) {
+    const value = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    const key = this.cleanColumnFilterKey(namaColumn);
+    this.constructFilterData(value, key);
+    this.FetchData();
+  }
+  sortColumn(event) {
+   const sort: Sort = {
+      columnName: this.matsort.active,
+      sortType: this.matsort.direction.toUpperCase()
+   };
+   this.search.sort = [sort];
+   this.FetchData();
+  }
+  constructFilterData(value, key) {
+    const index = this.search.filter.findIndex(x => x.columnName === key);
+    if (value === '' || value === null) {
+      if (index !== -1) {
+        this.search.filter = this.search.filter.filter(x => x.columnName !== key);
+      }
+    } else {
+      if (index === -1) {
+        const filter: Filter = {
+          columnName: key,
+          filterType: GridFilterType.CONTAIN,
+          filterValue: value
+        };
+        this.search.filter.push(filter);
+      } else {
+        this.search.filter[index].filterValue = value;
+      }
     }
   }
 
-  fetchData() {
-    this.dataSubscription = this._directorateService.getByFilterGrid(this.search)
-    // this.dataSubscription = this._directorateService.getAll()
-    .pipe(
-      map(d => {
-        const res: Directorate[] = [];
-        d.forEach(element => {
-          console.log(element);
-          console.log(new Directorate(element));
-          res.push(new Directorate(element));
-        });
-        return res;
-      })
-    )
-    .subscribe(data => {
-      console.log(data);
-      this.data$ = data;
-    });
+  cleanColumnFilterKey(key: string) {
+    key = key.split('-')[1];
+    return key;
   }
 
   onPageEvent(event: PageEvent) {
-    console.log(event);
+    this.pageSize = event.pageSize;
+    this.search.pagination.pageNumber = event.pageIndex + 1;
+    this.search.pagination.numberDisplay = event.pageSize;
+    this.FetchData();
   }
 
+  FetchData() {
+    console.log(this.search);
+    this.isLoadingResults = true;
+    this.dataSubscription = this._directorateService.getByFilterGrid(this.search)
+                                .subscribe(
+                                  (data: GridResponse<Directorate>) => {
+                                    this.lengthData = data.numberData;
+                                    this.dataSource = new MatTableDataSource(data.data);
+                                    this.isLoadingResults = false;
+                                  },
+                                  (err: HttpErrorResponse) => {
+                                    const context = ResponseContextGetter.GetErrorContext<any>(err);
+                                    this._snackbar.openFromComponent(SnackbarNotifComponent, {
+                                      duration: SnackbarNotifConfig.DURATION,
+                                      data: context,
+                                      horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
+                                      verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
+                                    });
+                                    this.isLoadingResults = false;
+                                  }
+                                );
+  }
   Add(): void {
     const dialogRef = this._dialog.open(CreateDirectorateComponent, {
       minWidth: DialogPopUpConfig.MIN_WIDTH,
       data: new Directorate(),
       role: <any>DialogPopUpConfig.ROLE,
-      ariaLabelledBy: 'create-directorate',
-      ariaLabel: 'Create or Update Directorate Data',
-      ariaDescribedBy: 'Dialog which has form to input data of directorate',
-      id: 'create-directorate'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    this.dialogSubscription = dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
-
+        this.FetchData();
       }
     });
   }
 
-  Edit(data: any) {
+  Edit(data: Directorate) {
+    const dialogRef = this._dialog.open(UpdateDirectorateComponent, {
+      minWidth: DialogPopUpConfig.MIN_WIDTH,
+      data: data,
+      role: <any>DialogPopUpConfig.ROLE,
+    });
 
+    this.dialogSubscription = dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.FetchData();
+      }
+    });
   }
 
-  Delete(data: any) {
+  Delete(data: Directorate) {
+    const dialogRef = this._dialog.open(DeleteDirectorateComponent, {
+      minWidth: DialogPopUpConfig.MIN_WIDTH,
+      data: data,
+      role: <any>DialogPopUpConfig.ROLE,
+    });
+
+    this.dialogSubscription = dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.FetchData();
+        this.dialogSubscription.unsubscribe();
+      }
+    });
 
   }
 

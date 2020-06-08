@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Directorate } from '../models/directorate';
 import { Grid } from '../models/grid';
 import { QueryStringBuilder } from '../utils/query-string-builder';
+import { GridResponse } from '../models/grid-response';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +17,8 @@ export class DirectorateService {
   update(payload: Directorate): Observable<any> {
     return this._http.post(`api/Directorate/Update`, payload);
   }
-  delete(payload: any): Observable<any> {
-    return this._http.post(`api/Directorate/Delete`, payload);
+  delete(payload: string): Observable<any> {
+    return this._http.post(`api/Directorate/Delete`, {Kode: payload});
   }
   getAll(): Observable<any> {
     console.log('api/Directorate/GetAll');
@@ -36,10 +37,8 @@ export class DirectorateService {
     const params = QueryStringBuilder.BuildParametersFromSearch<Directorate>(payload);
     return this._http.get(`api/Directorate/GetByFilter?${params}`);
   }
-  getByFilterGrid(payload: Grid): Observable<any> {
+  getByFilterGrid(payload: Grid): Observable<GridResponse<Directorate>> {
     const params = QueryStringBuilder.BuildParametersFromSearch<Grid>(payload);
-    console.log(params);
-    console.log(`api/Directorate/GetByFilterGrid?${params}`);
-    return this._http.get(`api/Directorate/GetByFilterGrid?${params}`);
+    return this._http.get<GridResponse<Directorate>>(`api/Directorate/GetByFilterGrid?${params}`);
   }
 }

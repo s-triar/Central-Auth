@@ -4,4 +4,23 @@
     font-family: "Open Sans", sans-serif
 }
   
-  
+.mat-container {
+    height: 592px;
+    overflow: auto;
+}
+.form-column-filter{
+    margin-top: 5px;
+}
+
+.example-loading-shade {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

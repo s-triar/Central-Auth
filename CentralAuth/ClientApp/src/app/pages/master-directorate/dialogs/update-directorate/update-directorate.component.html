@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="0px">
-    <h1  mat-dialog-title>Tambah Direktorat</h1>
+    <h1  mat-dialog-title>Update Direktorat</h1>
     <button 
         (click)="onNoClick()"
         matTooltip="Tutup Dialog"
@@ -17,7 +17,7 @@
     <form [formGroup]="form" fxLayout="column" fxLayoutGap="10px" style="margin: 10px;">
         <mat-form-field appearance="fill">
             <mat-label>Kode</mat-label>
-            <input matInput formControlName="Kode" cdkFocusInitial placeholder="Contoh: 02"/>
+            <input matInput formControlName="Kode"  placeholder="Contoh: 02" readonly/>
             <mat-icon matSuffix>done</mat-icon>
             <mat-error
             *ngIf="Kode.invalid && (Kode.dirty || Kode.touched) && Kode.errors.required"
@@ -29,6 +29,7 @@
             <input
             matInput
             formControlName="NamaDirektorat"
+            cdkFocusInitial
             />
             <mat-error
             *ngIf="
@@ -45,10 +46,3 @@
 <mat-dialog-actions fxLayout="row-reverse" fxLayoutAlign="space-between center" fxLayoutGap="0px">
     <button color="primary" mat-raised-button type="button" (click)="onSubmitClick()" [disabled]="!form.valid && !process">Submit</button>
 </mat-dialog-actions>
-
-
-
-<!-- <p>create-directorate works!</p>
-<button mat-button (click)="onNoClick()">No Thanks</button>
-<button mat-button [mat-dialog-close]="'Ok from dialog'" cdkFocusInitial>Ok</button>
-<button mat-button [mat-dialog-close]="'Ok from dialog'" cdkFocusInitial>Ok</button> -->

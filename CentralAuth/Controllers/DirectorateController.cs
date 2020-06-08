@@ -56,17 +56,15 @@ namespace CentralAuth.Controllers
                     title = "Success",
                     ok = true
                 };
-                if (t == 0)
+                if (t == 1) { return Ok(res); }
+                res = new CustomResponse()
                 {
-                    res = new CustomResponse()
-                    {
-                        errors = null,
-                        message = "Tambah Direktorat Gagal",
-                        title = "Warning",
-                        ok = false
-                    };
-                }
-                return Ok(res);
+                    errors = null,
+                    message = "Tambah Direktorat Gagal",
+                    title = "Warning",
+                    ok = false
+                };
+                return BadRequest(res);
             }
             catch (Exception ex)
             {
@@ -83,9 +81,37 @@ namespace CentralAuth.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Update([FromBody]Directorate entity)
         {
-            var t = await this._directorateService.Update(entity);
-            if (t == 0) return BadRequest();
-            return Ok();
+            try
+            {
+                var t = await this._directorateService.Update(entity);
+                var res = new CustomResponse()
+                {
+                    errors = null,
+                    message = "Update Direktorat Berhasil",
+                    title = "Success",
+                    ok = true
+                };
+                if (t == 1) { return Ok(res); }
+                res = new CustomResponse()
+                {
+                    errors = null,
+                    message = "Update Direktorat Gagal",
+                    title = "Warning",
+                    ok = false
+                };
+                return BadRequest(res);
+            }
+            catch (Exception ex)
+            {
+                var res = new CustomResponse()
+                {
+                    errors = new List<string>() { ex.InnerException.Message },
+                    message = ex.Message,
+                    title = "Error",
+                    ok = false
+                };
+                return BadRequest(res);
+            }
         }
 
         [HttpGet("[action]")]
@@ -94,16 +120,45 @@ namespace CentralAuth.Controllers
             return this._directorateService.GetAllByFilter(entity);
         }
         [HttpGet("[action]")]
-        public IEnumerable<object> GetByFilterGrid([FromQuery]Grid entity)
+        public GridResponse<Directorate> GetByFilterGrid([FromQuery]Grid entity)
         {
             return this._directorateService.GetAllByFilterGrid(entity);
         }
         [HttpPost("[action]")]
-        public async Task<IActionResult> Delete([FromBody]string Kode)
+        public async Task<IActionResult> Delete([FromBody]Directorate entity)
         {
-            var t = await this._directorateService.Delete(Kode);
-            if (t == 0) return BadRequest();
-            return Ok();
+
+            try
+            {
+                var t = await this._directorateService.Delete(entity.Kode);
+                var res = new CustomResponse()
+                {
+                    errors = null,
+                    message = "Delete Direktorat Berhasil",
+                    title = "Success",
+                    ok = true
+                };
+                if (t == 1) { return Ok(res); }
+                res = new CustomResponse()
+                {
+                    errors = null,
+                    message = "Delete Direktorat Gagal",
+                    title = "Warning",
+                    ok = false
+                };
+                return BadRequest(res);
+            }
+            catch (Exception ex)
+            {
+                var res = new CustomResponse()
+                {
+                    errors = new List<string>() { ex.InnerException.Message },
+                    message = ex.Message,
+                    title = "Error",
+                    ok = false
+                };
+                return BadRequest(res);
+            }
         }
     }
 }

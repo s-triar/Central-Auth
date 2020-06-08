@@ -1,24 +1,24 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
-import { FormBuilder, Validators } from '@angular/forms';
-import { Directorate } from 'src/app/models/directorate';
-import { DialogLoadingComponent } from 'src/app/components/dialog-loading/dialog-loading.component';
-import { DirectorateService } from 'src/app/services/directorate.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { ResponseContextGetter } from 'src/app/utils/response-context-getter';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { SnackbarNotifComponent } from 'src/app/components/snackbar-notif/snackbar-notif.component';
-import { CustomResponse } from 'src/app/models/custom-response';
-import { SnackbarNotifConfig } from 'src/app/models/enums/snackbar-config';
-import { DialogLoadingConfig } from 'src/app/models/enums/dialog-loading-config';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { takeLast, takeUntil } from 'rxjs/operators';
+import { Validators, FormBuilder } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Directorate } from 'src/app/models/directorate';
+import { DirectorateService } from 'src/app/services/directorate.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DialogLoadingComponent } from 'src/app/components/dialog-loading/dialog-loading.component';
+import { DialogLoadingConfig } from 'src/app/models/enums/dialog-loading-config';
+import { CustomResponse } from 'src/app/models/custom-response';
+import { ResponseContextGetter } from 'src/app/utils/response-context-getter';
+import { SnackbarNotifComponent } from 'src/app/components/snackbar-notif/snackbar-notif.component';
+import { SnackbarNotifConfig } from 'src/app/models/enums/snackbar-config';
+import { HttpErrorResponse } from '@angular/common/http';
+
 @Component({
-  selector: 'app-create-directorate',
-  templateUrl: './create-directorate.component.html',
-  styleUrls: ['./create-directorate.component.scss']
+  selector: 'app-update-directorate',
+  templateUrl: './update-directorate.component.html',
+  styleUrls: ['./update-directorate.component.scss']
 })
-export class CreateDirectorateComponent implements OnInit, OnDestroy {
+export class UpdateDirectorateComponent implements OnInit, OnDestroy {
 
   process = false;
   formSubscription: Subscription;
@@ -29,7 +29,7 @@ export class CreateDirectorateComponent implements OnInit, OnDestroy {
 
   constructor(
     private _dialog: MatDialog,
-    private _dialogRef: MatDialogRef<CreateDirectorateComponent>,
+    private _dialogRef: MatDialogRef<UpdateDirectorateComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Directorate,
     private _fb: FormBuilder,
     private _directorateService: DirectorateService,
@@ -62,7 +62,7 @@ export class CreateDirectorateComponent implements OnInit, OnDestroy {
         disableClose: DialogLoadingConfig.DISABLED_CLOSE
       });
       this.formSubscription = this._directorateService
-          .create(new Directorate(this.form.value))
+          .update(new Directorate(this.form.value))
           .subscribe(
             (x: CustomResponse<any>) => {
               const context = ResponseContextGetter.GetCustomResponseContext<any>(x);
@@ -93,7 +93,5 @@ export class CreateDirectorateComponent implements OnInit, OnDestroy {
           );
     }
   }
-
-
 
 }

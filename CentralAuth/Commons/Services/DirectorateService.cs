@@ -50,7 +50,7 @@ namespace CentralAuth.Commons.Services
             return this._context.Directorates.Where(CustomFilter<Directorate>.ContainFilter(entity)).AsEnumerable();
         }
 
-        public IEnumerable<object> GetAllByFilterGrid(object entity)
+        public GridResponse<Directorate> GetAllByFilterGrid(object entity)
         {
             Grid search = entity as Grid;
             var q = this._context.Directorates.Where(CustomFilter<Directorate>.FilterGrid(entity));
@@ -68,8 +68,14 @@ namespace CentralAuth.Commons.Services
                     }
                 }
             }
+            var n = q.Count();
             q = q.Skip(search.Pagination.NumberDisplay*(search.Pagination.PageNumber-1)).Take(search.Pagination.NumberDisplay);
-            return q.AsEnumerable();
+            var q_enum = q.AsEnumerable();
+            return new GridResponse<Directorate>
+            {
+                Data = q_enum,
+                NumberData = n
+            };
         }
 
         public Directorate GetByDepartemen(string Kode)

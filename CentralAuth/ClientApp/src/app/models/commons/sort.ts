@@ -1,4 +1,4 @@
 export interface Sort {
     columnName: string;
-    sortType: 'ASC'|'DESC';
+    sortType: string;
 }
