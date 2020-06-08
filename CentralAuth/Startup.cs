@@ -13,6 +13,17 @@ using CentralAuth.Commons.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography.X509Certificates;
 using System.IO;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using CentralAuth.Commons.Constants;
+using CentralAuth.Commons.IdentityServerModels;
+using CentralAuth.Commons.Services;
+using CentralAuth.Commons.Interfaces;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace CentralAuth
 {
@@ -35,7 +46,7 @@ namespace CentralAuth
                 config.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddIdentity<User, IdentityRole>(options =>
+            services.AddIdentity<AppUser, AppRole>(options =>
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 3;
@@ -47,23 +58,48 @@ namespace CentralAuth
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
+
+            JwtConfig jwtConfig = Configuration.GetSection("Jwt").Get<JwtConfig>();
+            services.AddAuthentication(config =>
+                    {
+                        config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                        config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    })
+                    .AddJwtBearer(options =>
+                    {
+                        options.RequireHttpsMetadata = false;
+                        options.SaveToken = true;
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            ValidIssuer = jwtConfig.Issuer,
+                            ValidAudience = jwtConfig.Audience,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.SecretKey)),
+                            ClockSkew = TimeSpan.Zero
+                        };
+                    });
+
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            X509Certificate2 cert = null;
-            using (X509Store certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser)) // grab certificate to generate token from azure if deploy into azure
-            {
-                certStore.Open(OpenFlags.ReadOnly);
-                X509Certificate2Collection certCollection = certStore.Certificates.Find(
-                    X509FindType.FindByThumbprint,
-                    "RWQYT8W9TGWG0QG0P", // replace with our own certificate thumbprint
-                    false
-                );
-                if(certCollection.Count > 0)
-                {
-                    cert = certCollection[0];
+            //X509Certificate2 cert = null;
+            //using (X509Store certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser)) // grab certificate to generate token from azure if deploy into azure
+            //{
+            //    certStore.Open(OpenFlags.ReadOnly);
+            //    X509Certificate2Collection certCollection = certStore.Certificates.Find(
+            //        X509FindType.FindByThumbprint,
+            //        "RWQYT8W9TGWG0QG0P", // replace with our own certificate thumbprint
+            //        false
+            //    );
+            //    if(certCollection.Count > 0)
+            //    {
+            //        cert = certCollection[0];
 
-                }
-            }
+            //    }
+            //}
 
             //Fallback to local file or development
             //if(cert == null)
@@ -73,19 +109,36 @@ namespace CentralAuth
 
 
             services.AddIdentityServer(options =>
-            {
-                options.UserInteraction.LoginUrl = "/login";
-                options.UserInteraction.LogoutUrl = "/logout";
-            })
-            .AddConfigurationStore()
-            .AddOperationalStore()
-            .AddAspNetIdentity<User>();
+                    {
+                        options.UserInteraction.LoginUrl = "/login";
+                        options.UserInteraction.LogoutUrl = "/logout";
+                    })
+                    .AddClientStore<AppClient>()
+                    .AddClientStoreCache<AppClient>()
+                    .AddResourceStore<AppApiResource>()
+                    .AddResourceStoreCache<AppApiResource>()
+                    //.AddConfigurationStore()
+                    //.AddOperationalStore()
+                    .AddAspNetIdentity<AppUser>()
+                    .AddDeveloperSigningCredential();// jika nggak maka pake sertifikat;
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+            services.AddScoped<IDepartmentService, DepartmentService>();
+            services.AddScoped<IDirectorateService, DirectorateService>();
+
+        }
+
+        private void ConfigureSqlServerDatabaseOptions(MySqlDbContextOptionsBuilder obj)
+        {
+            throw new NotImplementedException();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,10 +158,9 @@ namespace CentralAuth
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
             app.UseAuthentication();
-            app.UseIdentityServer();
-
+            //app.UseIdentityServer();
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

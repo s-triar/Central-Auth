@@ -39,6 +39,46 @@
         <mat-icon>vertical_split</mat-icon>
         Project
       </a>
+      <a
+        mat-list-item
+        [routerLink]="['/direktorat']"
+        routerLinkActive="router-link-active"
+      >
+        <mat-icon>domain</mat-icon>
+        Direktorat
+      </a>
+      <a
+        mat-list-item
+        [routerLink]="['/departemen']"
+        routerLinkActive="router-link-active"
+      >
+        <mat-icon>domain</mat-icon>
+        Departemen
+      </a>
+      <a
+        mat-list-item
+        [routerLink]="['/departemen']"
+        routerLinkActive="router-link-active"
+      >
+        <mat-icon>domain</mat-icon>
+        SubDepartemen
+      </a>
+      <a
+        mat-list-item
+        [routerLink]="['/departemen']"
+        routerLinkActive="router-link-active"
+      >
+        <mat-icon>domain</mat-icon>
+        Cabang
+      </a>
+      <a
+        mat-list-item
+        [routerLink]="['/departemen']"
+        routerLinkActive="router-link-active"
+      >
+        <mat-icon>domain</mat-icon>
+        Unit
+      </a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -66,7 +106,9 @@
       /></span>
       <div fxFlex="grow"></div>
       <button
-        color="accent"
+        [matTooltip]="(theme$ | async).IsDefault ? 'Tema Terang':'Tema Gelap'"
+        matTooltipPosition="above"
+        [class]="(theme$ | async).IsDefault ? 'light-lighter-color':'dark-lighter-color'"
         type="button"
         mat-icon-button
         (click)="ToggleTheme()"

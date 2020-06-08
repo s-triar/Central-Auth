@@ -28,9 +28,18 @@
   $primary: map-get($light-theme, primary);
   background-color: mat-color($primary, lighter);
 }
-
 .show {
   $primary: map-get($light-theme, primary);
   background-color: mat-color($primary, lighter);
   display: block;
+}
+
+.light-lighter-color{
+  $primary: map-get($light-theme, accent);
+  color: mat-color($primary, lighter);
+}
+
+.dark-lighter-color{
+  $accent: map-get($dark-theme, accent);
+  color: mat-color($accent, lighter);
 }

@@ -9,8 +9,16 @@ using System.Threading.Tasks;
 
 namespace CentralAuth.Datas
 {
-    public class AppDbContext : IdentityDbContext<User, IdentityRole, string>
+    public class AppDbContext : IdentityDbContext<AppUser, AppRole, string>
     {
+        public DbSet<User> Users { get; set; }
+        public DbSet<Directorate> Directorates { get; set; }
+        public DbSet<Department> Departemens { get; set; }
+        public DbSet<SubDepartment> SubDepartemens { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Unit> Units { get; set; }
+        public DbSet<Branch> Cabangs { get; set; }
+
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {

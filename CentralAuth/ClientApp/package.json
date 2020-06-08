@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
     "build:ssr": "ng run centralauth:server:dev",
     "test": "ng test",
@@ -26,11 +26,6 @@
     "@angular/router": "~9.1.4",
     "@nguniversal/aspnetcore-engine": "^9.1.0",
     "@nguniversal/module-map-ngfactory-loader": "^8.2.6",
-    "@ngxs/cli": "^2.0.0",
-    "@ngxs/devtools-plugin": "^3.6.2",
-    "@ngxs/logger-plugin": "^3.6.2",
-    "@ngxs/storage-plugin": "^3.6.2",
-    "@ngxs/store": "^3.6.2",
     "angular-google-charts": "^1.1.4",
     "aspnet-prerendering": "^3.0.1",
     "core-js": "^3.6.5",
@@ -39,7 +34,7 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.901.4",
+    "@angular-devkit/build-angular": "^0.901.7",
     "@angular/cli": "~9.1.4",
     "@angular/compiler-cli": "^9.1.4",
     "@angular/language-service": "~9.1.4",

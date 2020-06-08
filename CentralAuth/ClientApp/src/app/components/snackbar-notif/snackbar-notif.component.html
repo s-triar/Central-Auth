@@ -1,0 +1,12 @@
+<div fxLayout="row" fxLayoutAlign="start space-between" fxLayoutGap="5px" style="padding: 7px;" >
+    <div fxLayout="column" fxLayoutAlign="start start" fxFlex="70" fxLayoutGap="10px">
+        <div fxFlex><h4>{{data.title}}</h4></div>
+        <div fxFlex="grow"><p>{{data.message}}</p></div>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="center center" fxFlex="29" fxLayoutGap="10px">
+        <div fxFlex><p><mat-icon style="font-size: 40px; font-weight: 800;" [color]="data.title === 'Success' ? 'primary': data.title ==='Error' ? 'warn': 'accent'">{{data.title === 'Success' ? 'check_circle': data.title ==='Error' ? 'error': 'warning'}}</mat-icon></p></div>
+        <div fxFlex><p style="text-align: center;">Status Code: {{data.statusCode}}</p></div>
+    </div>
+</div>
+
+

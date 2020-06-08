@@ -1,0 +1,54 @@
+<div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="0px">
+    <h1  mat-dialog-title>Tambah Direktorat</h1>
+    <button 
+        (click)="onNoClick()"
+        matTooltip="Tutup Dialog"
+        matTooltipPosition="above"
+        appChangeIconOnHover 
+        IconNameEnter="remove_circle" 
+        IconNameLeave="remove_circle_outline" 
+        mat-icon-button color="warn" 
+        aria-label="Close button for disposing dialog">
+        <mat-icon >remove_circle_outline</mat-icon>
+    </button>  
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+    <form [formGroup]="CreateForm" fxLayout="column" fxLayoutGap="10px" style="margin: 10px;">
+        <mat-form-field appearance="fill">
+            <mat-label>Kode</mat-label>
+            <input matInput formControlName="Kode" cdkFocusInitial placeholder="Contoh: 02"/>
+            <mat-icon matSuffix>done</mat-icon>
+            <mat-error
+            *ngIf="Kode.invalid && (Kode.dirty || Kode.touched) && Kode.errors.required"
+            >Kode belum terisi.</mat-error
+            >
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Nama Direktorat</mat-label>
+            <input
+            matInput
+            formControlName="NamaDirektorat"
+            />
+            <mat-error
+            *ngIf="
+                NamaDirektorat.invalid &&
+                (NamaDirektorat.dirty || NamaDirektorat.touched) &&
+                NamaDirektorat.errors.required
+            "
+            >Nama Direktorat belum terisi.</mat-error
+            >
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions fxLayout="row-reverse" fxLayoutAlign="space-between center" fxLayoutGap="0px">
+    <button color="primary" mat-raised-button type="button" (click)="onSubmitClick()" [disabled]="!CreateForm.valid && !process">Submit</button>
+</mat-dialog-actions>
+
+
+
+<!-- <p>create-directorate works!</p>
+<button mat-button (click)="onNoClick()">No Thanks</button>
+<button mat-button [mat-dialog-close]="'Ok from dialog'" cdkFocusInitial>Ok</button>
+<button mat-button [mat-dialog-close]="'Ok from dialog'" cdkFocusInitial>Ok</button> -->
