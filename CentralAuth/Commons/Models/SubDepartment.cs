@@ -20,6 +20,7 @@ namespace CentralAuth.Commons.Models
         public string CreatedBy { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
         public string UpdatedBy { get; set; }
+        public string DepartemenKode { get; set; }
         public virtual Department Departemen { get; set; }
         public virtual ICollection<User> Users { get;  }
     }

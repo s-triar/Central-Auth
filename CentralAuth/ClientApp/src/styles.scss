@@ -54,3 +54,42 @@ body {
 .dialog-header-title{
   font-size: 25px;font-weight:400;
 }
+
+.mat-table {
+  width: 100%;
+  overflow: auto;
+  font-family: "Open Sans", sans-serif
+}
+
+.mat-container {
+  height: 592px;
+  overflow: auto;
+}
+.form-column-filter{
+  margin-top: 5px;
+}
+
+.example-loading-shade {
+  position: absolute;
+  top: 64px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mat-header-cell, .mat-cell{
+  margin-left: 5px;
+  margin-right: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.mat-sort-header-container, .mat-header-cell > mat-form-field{
+  padding-left: 5px;
+  padding-right: 5px;
+}

@@ -18,6 +18,7 @@ namespace CentralAuth.Commons.Models
         }
         [Key]
         public string Kode { get; set; }
+        public string Singkatan { get; set; }
         public string NamaCabang { get; set; }
         public string Keterangan { get; set; }
         public string Alamat { get; set; }

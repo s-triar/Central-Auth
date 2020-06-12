@@ -31,7 +31,7 @@ namespace CentralAuth.Controllers
         [HttpGet("[action]/{id}")]
         public Directorate GetById(string Kode)
         {
-            return this._directorateService.GetByID(Kode);
+            return this._directorateService.FindByKey(Kode);
         }
         [HttpGet("[action]/{id}")]
         public Directorate GetByIdDepartemen(string Kode)
@@ -48,7 +48,8 @@ namespace CentralAuth.Controllers
         {
             try
             {
-                var t = await this._directorateService.Create(entity);
+                this._directorateService.Add(entity);
+                var t = await this._directorateService.SaveAsync();
                 var res = new CustomResponse()
                 {
                     errors = null,
@@ -83,7 +84,8 @@ namespace CentralAuth.Controllers
         {
             try
             {
-                var t = await this._directorateService.Update(entity);
+                this._directorateService.Update(entity);
+                var t = await this._directorateService.SaveAsync();
                 var res = new CustomResponse()
                 {
                     errors = null,
@@ -130,7 +132,8 @@ namespace CentralAuth.Controllers
 
             try
             {
-                var t = await this._directorateService.Delete(entity.Kode);
+                this._directorateService.DeleteByKey(entity.Kode);
+                var t = await this._directorateService.SaveAsync();
                 var res = new CustomResponse()
                 {
                     errors = null,

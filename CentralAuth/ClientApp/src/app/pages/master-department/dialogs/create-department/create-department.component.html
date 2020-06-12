@@ -1,0 +1,86 @@
+<div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="0px">
+    <h1  mat-dialog-title>Tambah Departemen</h1>
+    <button 
+        (click)="onNoClick()"
+        matTooltip="Tutup Dialog"
+        matTooltipPosition="above"
+        appChangeIconOnHover 
+        IconNameEnter="remove_circle" 
+        IconNameLeave="remove_circle_outline" 
+        mat-icon-button color="warn" 
+        aria-label="Close button for disposing dialog">
+        <mat-icon >remove_circle_outline</mat-icon>
+    </button>  
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+    <form [formGroup]="form" fxLayout="column" fxLayoutGap="10px" style="margin: 10px;">
+        <mat-form-field appearance="fill">
+            <mat-label>Kode</mat-label>
+            <input matInput formControlName="kode" cdkFocusInitial placeholder="Contoh: 02"/>
+            <mat-icon matSuffix>done</mat-icon>
+            <mat-error
+            *ngIf="kode.invalid && (kode.dirty || kode.touched) && kode.errors.required"
+            >Kode belum terisi.</mat-error
+            >
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Nama Departemen</mat-label>
+            <input
+            matInput
+            formControlName="namaDepartemen"
+            />
+            <mat-error
+            *ngIf="
+                namaDepartemen.invalid &&
+                (namaDepartemen.dirty || namaDepartemen.touched) &&
+                namaDepartemen.errors.required
+            "
+            >Nama Departemen belum terisi.</mat-error
+            >
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Direktorat</mat-label>
+            <input
+            [matAutocomplete]="auto"
+            matInput
+            formControlName="direktorat"
+            (keyup)="onSearch($event)"
+            (focus)="onSearch($event)"
+            />
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn(option)" (optionSelected)="onOptionSelected($event)">
+                <mat-option *ngFor="let option of filteredOptions" [value]="option">
+                    {{option.namaDirektorat}}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-error
+            *ngIf="
+                direktorat.invalid &&
+                (direktorat.dirty || direktorat.touched) &&
+                direktorat.errors.required
+            "
+            >Direktorat belum terisi.</mat-error
+            >
+        </mat-form-field>
+        <mat-form-field appearance="fill" *ngIf="false">
+            <mat-label>Kode Direktorat</mat-label>
+            <input
+            matInput
+            formControlName="direktoratKode"
+            readonly
+            />
+            <mat-error
+            *ngIf="
+            direktoratKode.invalid &&
+                (direktoratKode.dirty || direktoratKode.touched) &&
+                direktoratKode.errors.required
+            "
+            >Kode Direktorat belum terisi.</mat-error
+            >
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions fxLayout="row-reverse" fxLayoutAlign="space-between center" fxLayoutGap="0px">
+    <button color="primary" mat-raised-button type="button" (click)="onSubmitClick()" [disabled]="!form.valid && !process">Submit</button>
+</mat-dialog-actions>

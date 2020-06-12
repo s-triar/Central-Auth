@@ -49,7 +49,7 @@ export class MasterDirectorateComponent implements OnInit, OnDestroy {
     }
   ];
   columnsKey: string[] = this.columnsConfig.map(col => col.key);
-  columnsFilter: string [] = ['search-kode', 'search-namaDirektorat', 'action-edit', 'action-delete'];
+  columnsFilter: string [] = this.columnsConfig.map(col => `search-${col.key}`);
   dataSource: MatTableDataSource<Directorate>;
   search: Grid = {
     filter: [],
@@ -72,6 +72,7 @@ export class MasterDirectorateComponent implements OnInit, OnDestroy {
     private _snackbar: MatSnackBar
     ) {
     this.columnsKey = [...this.columnsKey, ...['edit', 'delete']];
+    this.columnsFilter = [...this.columnsFilter, ...['action-edit', 'action-delete']];
     this.dataSource = new MatTableDataSource([]);
    }
 

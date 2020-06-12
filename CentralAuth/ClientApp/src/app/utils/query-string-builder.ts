@@ -45,7 +45,7 @@ export class QueryStringBuilder {
         } else if (value instanceof Object) {
             QueryStringBuilder.PopulateObject(params, key, value);
         } else {
-            if (value !== undefined) {
+            if (value !== undefined && value !== null) {
                 params.set(key, value.toString());
             }
         }

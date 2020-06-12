@@ -11,6 +11,9 @@ import { MasterUserComponent } from './pages/master-user/master-user.component';
 import { MasterProjectComponent } from './pages/master-project/master-project.component';
 import { MasterDirectorateComponent } from './pages/master-directorate/master-directorate.component';
 import { MasterDepartmentComponent } from './pages/master-department/master-department.component';
+import { MasterSubDepartmentComponent } from './pages/master-sub-department/master-sub-department.component';
+import { MasterBranchComponent } from './pages/master-branch/master-branch.component';
+import { MasterUnitComponent } from './pages/master-unit/master-unit.component';
 
 const routes: Routes = [
   {
@@ -22,7 +25,10 @@ const routes: Routes = [
       { path: 'pengguna', component: MasterUserComponent },
       { path: 'project', component: MasterProjectComponent },
       { path: 'departemen', component: MasterDepartmentComponent },
+      { path: 'sub-departemen', component: MasterSubDepartmentComponent },
       { path: 'direktorat', component: MasterDirectorateComponent },
+      { path: 'cabang', component: MasterBranchComponent },
+      { path: 'unit', component: MasterUnitComponent },
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'forget-password', component: ForgetPasswordComponent },

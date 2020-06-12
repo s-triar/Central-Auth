@@ -57,8 +57,6 @@ export class DeleteDirectorateComponent implements OnInit, OnDestroy {
         minWidth: DialogLoadingConfig.MIN_WIDTH,
         disableClose: DialogLoadingConfig.DISABLED_CLOSE
       });
-      console.log(this.form.value);
-      console.log(this.form.value['Kode']);
       this.formSubscription = this._directorateService
           .delete(this.form.value['Kode'])
           .subscribe(
@@ -86,7 +84,7 @@ export class DeleteDirectorateComponent implements OnInit, OnDestroy {
               dialogLoading.close();
             },
             () => {
-              console.log('Form Dialog Create Directorate Observer got a complete notification');
+              console.log('Form Dialog Delete Directorate Observer got a complete notification');
             }
           );
     }

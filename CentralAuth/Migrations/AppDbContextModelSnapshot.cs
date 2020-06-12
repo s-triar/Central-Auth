@@ -123,13 +123,18 @@ namespace CentralAuth.Migrations
 
                     b.Property<string>("NamaCabang");
 
+                    b.Property<string>("Singkatan");
+
                     b.Property<DateTime?>("UpdatedAt");
 
                     b.Property<string>("UpdatedBy");
 
                     b.HasKey("Kode");
 
-                    b.ToTable("Cabangs");
+                    b.HasIndex("Singkatan")
+                        .IsUnique();
+
+                    b.ToTable("Branches");
                 });
 
             modelBuilder.Entity("CentralAuth.Commons.Models.BranchUnit", b =>
@@ -171,7 +176,7 @@ namespace CentralAuth.Migrations
 
                     b.HasIndex("DirektoratKode");
 
-                    b.ToTable("Departemens");
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("CentralAuth.Commons.Models.Directorate", b =>
@@ -221,6 +226,15 @@ namespace CentralAuth.Migrations
 
                     b.HasKey("Url");
 
+                    b.HasIndex("ApiName")
+                        .IsUnique();
+
+                    b.HasIndex("ClientId")
+                        .IsUnique();
+
+                    b.HasIndex("ClientSecret")
+                        .IsUnique();
+
                     b.HasIndex("UserDevNik");
 
                     b.ToTable("Projects");
@@ -247,7 +261,7 @@ namespace CentralAuth.Migrations
 
                     b.HasIndex("DepartemenKode");
 
-                    b.ToTable("SubDepartemens");
+                    b.ToTable("SubDepartments");
                 });
 
             modelBuilder.Entity("CentralAuth.Commons.Models.Unit", b =>
@@ -279,7 +293,7 @@ namespace CentralAuth.Migrations
 
                     b.Property<string>("AtasanNik");
 
-                    b.Property<string>("BranchKode");
+                    b.Property<string>("CabangKode");
 
                     b.Property<DateTime>("CreatedAt");
 
@@ -307,7 +321,7 @@ namespace CentralAuth.Migrations
 
                     b.HasIndex("AtasanNik");
 
-                    b.HasIndex("BranchKode");
+                    b.HasIndex("CabangKode");
 
                     b.HasIndex("DepartemenKode");
 
@@ -474,9 +488,9 @@ namespace CentralAuth.Migrations
                         .WithMany("Bawahans")
                         .HasForeignKey("AtasanNik");
 
-                    b.HasOne("CentralAuth.Commons.Models.Branch")
+                    b.HasOne("CentralAuth.Commons.Models.Branch", "Cabang")
                         .WithMany("Users")
-                        .HasForeignKey("BranchKode");
+                        .HasForeignKey("CabangKode");
 
                     b.HasOne("CentralAuth.Commons.Models.Department", "Departemen")
                         .WithMany("Users")
@@ -490,7 +504,7 @@ namespace CentralAuth.Migrations
                         .WithMany("Users")
                         .HasForeignKey("SubDepartemenKode");
 
-                    b.HasOne("CentralAuth.Commons.Models.Unit")
+                    b.HasOne("CentralAuth.Commons.Models.Unit", "Unit")
                         .WithMany("Users")
                         .HasForeignKey("UnitKode");
                 });

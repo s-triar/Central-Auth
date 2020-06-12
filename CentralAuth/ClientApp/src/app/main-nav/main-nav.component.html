@@ -7,11 +7,11 @@
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="isHandset$ | async"
   >
-    <app-user-side-nav
+    <!-- <app-user-side-nav
       [Url]="user.PhotoUrl"
       [Nik]="user.Nik"
       [Name]="user.Name"
-    ></app-user-side-nav>
+    ></app-user-side-nav> -->
     <mat-nav-list>
       <a
         mat-list-item
@@ -57,7 +57,7 @@
       </a>
       <a
         mat-list-item
-        [routerLink]="['/departemen']"
+        [routerLink]="['/sub-departemen']"
         routerLinkActive="router-link-active"
       >
         <mat-icon>domain</mat-icon>
@@ -65,7 +65,7 @@
       </a>
       <a
         mat-list-item
-        [routerLink]="['/departemen']"
+        [routerLink]="['/cabang']"
         routerLinkActive="router-link-active"
       >
         <mat-icon>domain</mat-icon>
@@ -73,7 +73,7 @@
       </a>
       <a
         mat-list-item
-        [routerLink]="['/departemen']"
+        [routerLink]="['/unit']"
         routerLinkActive="router-link-active"
       >
         <mat-icon>domain</mat-icon>

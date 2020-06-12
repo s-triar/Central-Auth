@@ -10,67 +10,67 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace CentralAuth.Commons.Services
 {
-    public class DepartmentService : IDepartmentService
+    public class DepartmentService :SimpleGenericRepository<Department>,  IDepartmentService
     {
-        private readonly AppDbContext _context;
-        public DepartmentService(AppDbContext context)  {
-            this._context = context;
-        }
-
-        public async Task<int> Create(Department entity)
+        public DepartmentService(AppDbContext context): base(context)  
         {
-            entity.CreatedAt = DateTime.Now;
-            this._context.Departemens.Add(entity);
-            return await this._context.SaveChangesAsync();
         }
-
-        public async Task<int> Delete(string Kode)
+        override
+        public GridResponse<Department> GetAllByFilterGrid(object entity)
         {
-            Department entity = await this._context.Departemens.FirstOrDefaultAsync(m => m.Kode == Kode);
-            this._context.Departemens.Remove(entity);
-            return await this._context.SaveChangesAsync();
+            Grid search = entity as Grid;
+            var q = _context.Departments.Where(CustomFilter<Department>.FilterGrid(entity));
+            if (search.Sort != null && search.Sort.Count > 0)
+            {
+                foreach (Sort s in search.Sort)
+                {
+                    PropertyInfo info = CustomFilter<Department>.SortGrid(s);
+                    if (s.SortType == "ASC")
+                    {
+                        q = q.OrderBy(x => info.GetValue(x, null));
+                    }
+                    else if (s.SortType == "DESC")
+                    {
+                        q = q.OrderByDescending(x => info.GetValue(x, null));
+                    }
+                }
+            }
+            var n = q.Count();
+            if (search.Pagination != null)
+            {
+                q = q.Skip(search.Pagination.NumberDisplay * (search.Pagination.PageNumber - 1)).Take(search.Pagination.NumberDisplay);
+            }
+            var q_enum = q.Include(x => x.Direktorat).Select(x => new Department
+            {
+                Kode = x.Kode,
+                Direktorat = new Directorate
+                {
+                    Kode = x.Direktorat.Kode,
+                    NamaDirektorat = x.Direktorat.NamaDirektorat
+                },
+                DirektoratKode = x.DirektoratKode,
+                NamaDepartemen = x.NamaDepartemen
+            }).AsEnumerable();
+            return new GridResponse<Department>
+            {
+                Data = q_enum,
+                NumberData = n
+            };
         }
-
-        public async Task<int> Delete(Department entity)
+        public Department GetBySubDepartment(string Kode)
         {
-            this._context.Departemens.Remove(entity);
-            return await this._context.SaveChangesAsync();
-        }
-
-        public IEnumerable<Department> GetAll()
-        {
-            return this._context.Departemens.AsEnumerable();
-        }
-        public IEnumerable<Department> GetAllByFilter(Department entity)
-        {
-            return this._context.Departemens.Where(CustomFilter<Department>.ContainFilter(entity)).AsEnumerable();
-        }
-
-        public Department GetByID(string Kode)
-        {
-            return this._context.Departemens.FirstOrDefault(x => x.Kode == Kode);
-        }
-        public Department GetBySubDepartemen(string Kode)
-        {
-            return this._context.Departemens.FirstOrDefault(x => x.SubDepartemens.FirstOrDefault(m => m.Kode == Kode) != null);
+            return this._context.Departments.FirstOrDefault(x => x.SubDepartemens.FirstOrDefault(m => m.Kode == Kode) != null);
         }
 
         public Department GetByUser(string Nik)
         {
-            return this._context.Departemens.FirstOrDefault(x => x.Users.FirstOrDefault(m => m.Nik == Nik) != null);
+            return this._context.Departments.FirstOrDefault(x => x.Users.FirstOrDefault(m => m.Nik == Nik) != null);
         }
-
-        public async Task<int> Update(Department entity)
-        {
-            entity.UpdatedAt = DateTime.Now;
-            this._context.Departemens.Update(entity);            
-            return await this._context.SaveChangesAsync();
-        }
-        
     }
 }

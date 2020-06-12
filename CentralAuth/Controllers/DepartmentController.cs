@@ -29,24 +29,20 @@ namespace CentralAuth.Controllers
         }
 
         [HttpGet("[action]")]
-        public HttpResponseMessage GetAll()
+        public IEnumerable<Department> GetAll()
         {
-            var t = this._departemenService.GetAll();
-            var res = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(JsonConvert.SerializeObject(t), System.Text.Encoding.UTF8, "application/json")
-            };
-            return res;
+            return this._departemenService.GetAll();
         }
+
         [HttpGet("[action]/{id}")]
         public Department GetById(string Kode)
         {
-            return this._departemenService.GetByID(Kode);
+            return this._departemenService.FindByKey(Kode);
         }
         [HttpGet("[action]/{id}")]
         public Department GetByIdSubDepartemen(string Kode)
         {
-            return this._departemenService.GetBySubDepartemen(Kode);
+            return this._departemenService.GetBySubDepartment(Kode);
         }
         [HttpGet("[action]/{id}")]
         public Department GetByIdUser(string Nik)
@@ -56,16 +52,74 @@ namespace CentralAuth.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Create([FromBody]Department entity)
         {
-            var t = await this._departemenService.Create(entity);
-            if (t == 0) return BadRequest();
-            return Ok();
+            try
+            {
+                this._departemenService.Add(entity);
+                var t = await this._departemenService.SaveAsync();
+                var res = new CustomResponse()
+                {
+                    errors = null,
+                    message = "Tambah Departemen Berhasil",
+                    title = "Success",
+                    ok = true
+                };
+                if (t == 1) { return Ok(res); }
+                res = new CustomResponse()
+                {
+                    errors = null,
+                    message = "Tambah Departemen Gagal",
+                    title = "Warning",
+                    ok = false
+                };
+                return BadRequest(res);
+            }
+            catch (Exception ex)
+            {
+                var res = new CustomResponse()
+                {
+                    errors = new List<string>() { ex.InnerException.Message },
+                    message = ex.Message,
+                    title = "Error",
+                    ok = false
+                };
+                return BadRequest(res);
+            }
         }
         [HttpPost("[action]")]
         public async Task<IActionResult> Update([FromBody]Department entity)
         {
-            var t = await this._departemenService.Update(entity);
-            if (t == 0) return BadRequest();
-            return Ok();
+            try
+            {
+                this._departemenService.Update(entity);
+                var t = await this._departemenService.SaveAsync();
+                var res = new CustomResponse()
+                {
+                    errors = null,
+                    message = "Update Departemen Berhasil",
+                    title = "Success",
+                    ok = true
+                };
+                if (t == 1) { return Ok(res); }
+                res = new CustomResponse()
+                {
+                    errors = null,
+                    message = "Update Departemen Gagal",
+                    title = "Warning",
+                    ok = false
+                };
+                return BadRequest(res);
+            }
+            catch (Exception ex)
+            {
+                var res = new CustomResponse()
+                {
+                    errors = new List<string>() { ex.InnerException.Message },
+                    message = ex.Message,
+                    title = "Error",
+                    ok = false
+                };
+                return BadRequest(res);
+            }
         }
 
         [HttpGet("[action]")]
@@ -73,12 +127,47 @@ namespace CentralAuth.Controllers
         {
             return this._departemenService.GetAllByFilter(entity);
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> Delete([FromBody]string Kode)
+        [HttpGet("[action]")]
+        public GridResponse<Department> GetByFilterGrid([FromQuery]Grid entity)
         {
-            var t = await this._departemenService.Delete(Kode);
-            if (t == 0) return BadRequest();
-            return Ok();
+           return this._departemenService.GetAllByFilterGrid(entity);
+        }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Delete([FromBody]Department entity)
+        {
+
+            try
+            {
+                this._departemenService.DeleteByKey(entity.Kode);
+                var t = await this._departemenService.SaveAsync();
+                var res = new CustomResponse()
+                {
+                    errors = null,
+                    message = "Delete Departemen Berhasil",
+                    title = "Success",
+                    ok = true
+                };
+                if (t == 1) { return Ok(res); }
+                res = new CustomResponse()
+                {
+                    errors = null,
+                    message = "Delete Departemen Gagal",
+                    title = "Warning",
+                    ok = false
+                };
+                return BadRequest(res);
+            }
+            catch (Exception ex)
+            {
+                var res = new CustomResponse()
+                {
+                    errors = new List<string>() { ex.InnerException.Message },
+                    message = ex.Message,
+                    title = "Error",
+                    ok = false
+                };
+                return BadRequest(res);
+            }
         }
 
 

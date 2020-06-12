@@ -1,3 +1,5 @@
+@import "_theme.scss";
+
 .photo-full {
   height: 170px;
   width: 100%;
@@ -13,10 +15,16 @@
   width: 100%;
   position: absolute;
   bottom: 0;
-  background-color: rgba($color: #444444, $alpha: 0.82);
+  background-color: rgba($color: #444444, $alpha: 0.62);
 }
 
 .nik {
+  $primary: map-get($dark-theme, primary);
+  color: mat-color($primary, lighter);
   font-size: 16px;
   font-weight: 800;
+}
+.name{
+  $primary: map-get($dark-theme, primary);
+  color: mat-color($primary, lighter);
 }

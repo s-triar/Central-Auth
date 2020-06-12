@@ -24,8 +24,11 @@ namespace CentralAuth.Commons.Models.Authentication
         public string Email { get; set; }
         public string Ext { get; set; }
         public string NikAtasan { set; get; }
+        public string KodeDirektorat { get; set; }
         public string KodeDepartemen { get; set; }
         public string KodeSubDepartemen { set; get; }
+        public string KodeCabang { get; set; }
+        public string KodeUnit { set; get; }
 
     }
 }

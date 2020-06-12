@@ -24,6 +24,8 @@ using CentralAuth.Commons.Services;
 using CentralAuth.Commons.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Reflection;
+
 
 namespace CentralAuth
 {
@@ -63,6 +65,7 @@ namespace CentralAuth
             services.AddAuthentication(config =>
                     {
                         config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                        config.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                         config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                     })
                     .AddJwtBearer(options =>
@@ -113,12 +116,20 @@ namespace CentralAuth
                         options.UserInteraction.LoginUrl = "/login";
                         options.UserInteraction.LogoutUrl = "/logout";
                     })
-                    .AddClientStore<AppClient>()
-                    .AddClientStoreCache<AppClient>()
-                    .AddResourceStore<AppApiResource>()
-                    .AddResourceStoreCache<AppApiResource>()
-                    //.AddConfigurationStore()
-                    //.AddOperationalStore()
+                    //.AddClientStore<AppClient>()
+                    //.AddClientStoreCache<AppClient>()
+                    //.AddResourceStore<AppApiResource>()
+                    //.AddResourceStoreCache<AppApiResource>()
+                    
+                    .AddEFConfigurationStore(Configuration.GetConnectionString("DefaultConnection"))
+                    .AddConfigurationStore(options =>
+                    {
+                        options.ConfigureDbContext = b => b.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
+                    })
+                    .AddOperationalStore(options =>
+                    {
+                        options.ConfigureDbContext = b => b.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
+                    })
                     .AddAspNetIdentity<AppUser>()
                     .AddDeveloperSigningCredential();// jika nggak maka pake sertifikat;
 
@@ -131,14 +142,14 @@ namespace CentralAuth
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
+            services.AddScoped<ISubDepartmentService, SubDepartmentService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IDirectorateService, DirectorateService>();
+            services.AddScoped<IBranchService, BranchService>();
+            services.AddScoped<IUnitService, UnitService>();
+            services.AddScoped<IUserService, UserService>();
 
-        }
 
-        private void ConfigureSqlServerDatabaseOptions(MySqlDbContextOptionsBuilder obj)
-        {
-            throw new NotImplementedException();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

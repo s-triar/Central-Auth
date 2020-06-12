@@ -28,14 +28,18 @@ namespace CentralAuth.Commons.Models
         public string UpdatedBy { get; set; }
 
         public string AtasanNik { get; set; }
-        public User Atasan { get; private set; }
+        public User Atasan { get; set; }
 
         public string SubDepartemenKode { get; set; }
-        public SubDepartment SubDepartemen { get; private set; }
+        public SubDepartment SubDepartemen { get; set; }
         public string DepartemenKode { get; set; }
-        public Department Departemen { get; private set; }
+        public Department Departemen { get; set; }
         public string DirektoratKode { get; set; }
-        public Directorate Direktorat { get; private set; }
+        public Directorate Direktorat { get; set; }
+        public string CabangKode { get; set; }
+        public Branch Cabang { get; set; }
+        public string UnitKode { get; set; }
+        public Unit Unit { get; set; }
         public virtual ICollection<User> Bawahans { get; set; }
         public virtual ICollection<Project> DevProjects { get; set; }
         public virtual ICollection<UserProject> Projects { get; set; }

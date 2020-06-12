@@ -1,14 +1,25 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
+import { User } from 'src/app/models/user';
+import { Sort } from 'src/app/models/commons/sort';
+import { Grid } from 'src/app/models/grid';
+import { Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { UserService } from 'src/app/services/user.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Filter } from 'src/app/models/commons/filter';
+import { GridFilterType } from 'src/app/models/enums/gridfiltertype';
+import { GridResponse } from 'src/app/models/grid-response';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ResponseContextGetter } from 'src/app/utils/response-context-getter';
+import { SnackbarNotifComponent } from 'src/app/components/snackbar-notif/snackbar-notif.component';
+import { SnackbarNotifConfig } from 'src/app/models/enums/snackbar-config';
+import { CreateUserComponent } from './dialogs/create-user/create-user.component';
+import { DialogPopUpConfig } from 'src/app/models/enums/dialog-config';
+import { UpdateUserComponent } from './dialogs/update-user/update-user.component';
+import { DeleteUserComponent } from './dialogs/delete-user/delete-user.component';
 
 export interface PeriodicElement {
   name: string;
@@ -22,132 +33,236 @@ export interface PeriodicElement {
   selector: 'app-master-user',
   templateUrl: './master-user.component.html',
   styleUrls: ['./master-user.component.scss'],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition(
-        'expanded <=> collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      ),
-    ]),
-  ],
 })
-export class MasterUserComponent implements OnInit {
-  columnsToDisplay: string[] = ['name', 'weight', 'symbol', 'position'];
-  dataSource: MatTableDataSource<PeriodicElement>;
-  expandedElement: PeriodicElement | null;
+export class MasterUserComponent implements OnInit, OnDestroy {
+  isLoadingResults = false;
+  state: User = {
+    nik : '',
+    atasanNik: '',
+    email: '',
+    ext: '',
+    nama: '',
+    departemenKode: '',
+    subDepartemenKode: '',
+    cabangKode: '',
+    direktoratKode: '',
+    unitKode: ''
+  };
+  lengthData = 0;
+  pageSize = 10;
+  pageSizeOptions = [5, 10, 25, 50, 100];
+  columnsConfig: any[] = [
+    {
+      key: 'nik',
+      title: 'NIK'
+    },
+    {
+      key: 'nama',
+      title: 'Nama'
+    },
+    {
+      key: 'email',
+      title: 'Email'
+    },
+    {
+      key: 'ext',
+      title: 'Ext'
+    },
+    {
+      key: 'atasanNik',
+      title: 'Nik Atasan'
+    },
+    {
+      key: 'atasan.nik',
+      title: 'Atasan'
+    },
+    {
+      key: 'cabang.namaCabang',
+      title: 'Cabang'
+    },
+    {
+      key: 'unit.namaUnit',
+      title: 'Unit'
+    },
+    {
+      key: 'direktorat.namaDirektorat',
+      title: 'Direktorat'
+    },
+    {
+      key: 'departemen.namaDepartemen',
+      title: 'Departemen'
+    },
+    {
+      key: 'subDepartemen.namaSubDepartemen',
+      title: 'Sub Departemen'
+    }
+  ];
+  columnsKey: string[] = this.columnsConfig.map(col => col.key);
+  columnsFilter: string [] = this.columnsConfig.map(col => `search-${col.key}`);
+  dataSource: MatTableDataSource<User>;
+  search: Grid = {
+    filter: [],
+    sort: [],
+    pagination: {
+      numberDisplay: this.pageSize,
+      pageNumber: 1
+    }
+  };
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) matsort: MatSort;
 
-  ELEMENT_DATAS: PeriodicElement[] = [
-    {
-      position: 1,
-      name: 'Hydrogen',
-      weight: 1.0079,
-      symbol: 'H',
-      description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-          atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`,
-    },
-    {
-      position: 2,
-      name: 'Helium',
-      weight: 4.0026,
-      symbol: 'He',
-      description: `Helium is a chemical element with symbol He and atomic number 2. It is a
-          colorless, odorless, tasteless, non-toxic, inert, monatomic gas, the first in the noble gas
-          group in the periodic table. Its boiling point is the lowest among all the elements.`,
-    },
-    {
-      position: 3,
-      name: 'Lithium',
-      weight: 6.941,
-      symbol: 'Li',
-      description: `Lithium is a chemical element with symbol Li and atomic number 3. It is a soft,
-          silvery-white alkali metal. Under standard conditions, it is the lightest metal and the
-          lightest solid element.`,
-    },
-    {
-      position: 4,
-      name: 'Beryllium',
-      weight: 9.0122,
-      symbol: 'Be',
-      description: `Beryllium is a chemical element with symbol Be and atomic number 4. It is a
-          relatively rare element in the universe, usually occurring as a product of the spallation of
-          larger atomic nuclei that have collided with cosmic rays.`,
-    },
-    {
-      position: 5,
-      name: 'Boron',
-      weight: 10.811,
-      symbol: 'B',
-      description: `Boron is a chemical element with symbol B and atomic number 5. Produced entirely
-          by cosmic ray spallation and supernovae and not by stellar nucleosynthesis, it is a
-          low-abundance element in the Solar system and in the Earth's crust.`,
-    },
-    {
-      position: 6,
-      name: 'Carbon',
-      weight: 12.0107,
-      symbol: 'C',
-      description: `Carbon is a chemical element with symbol C and atomic number 6. It is nonmetallic
-          and tetravalent—making four electrons available to form covalent chemical bonds. It belongs
-          to group 14 of the periodic table.`,
-    },
-    {
-      position: 7,
-      name: 'Nitrogen',
-      weight: 14.0067,
-      symbol: 'N',
-      description: `Nitrogen is a chemical element with symbol N and atomic number 7. It was first
-          discovered and isolated by Scottish physician Daniel Rutherford in 1772.`,
-    },
-    {
-      position: 8,
-      name: 'Oxygen',
-      weight: 15.9994,
-      symbol: 'O',
-      description: `Oxygen is a chemical element with symbol O and atomic number 8. It is a member of
-           the chalcogen group on the periodic table, a highly reactive nonmetal, and an oxidizing
-           agent that readily forms oxides with most elements as well as with other compounds.`,
-    },
-    {
-      position: 9,
-      name: 'Fluorine',
-      weight: 18.9984,
-      symbol: 'F',
-      description: `Fluorine is a chemical element with symbol F and atomic number 9. It is the
-          lightest halogen and exists as a highly toxic pale yellow diatomic gas at standard
-          conditions.`,
-    },
-    {
-      position: 10,
-      name: 'Neon',
-      weight: 20.1797,
-      symbol: 'Ne',
-      description: `Neon is a chemical element with symbol Ne and atomic number 10. It is a noble gas.
-          Neon is a colorless, odorless, inert monatomic gas under standard conditions, with about
-          two-thirds the density of air.`,
-    },
-  ];
-
-  constructor() {
-    // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(this.ELEMENT_DATAS);
-  }
+  // DATAS: Directorate[] = [];
+  dataSubscription: Subscription;
+  dialogSubscription: Subscription;
+  constructor(
+    private _dialog: MatDialog,
+    private _userService: UserService,
+    private _snackbar: MatSnackBar
+    ) {
+    this.columnsKey = [...this.columnsKey, ...['edit', 'delete']];
+    this.columnsFilter = [...this.columnsFilter, ...['action-edit', 'action-delete']];
+    this.dataSource = new MatTableDataSource([]);
+   }
 
   ngOnInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    // this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.matsort;
+    this.FetchData();
+  }
+  ngOnDestroy(): void {
+    // Called once, before the instance is destroyed.
+    // Add 'implements OnDestroy' to the class.
+    this.dataSubscription.unsubscribe();
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+    const value = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    for (const key in this.state) {
+      if (this.state.hasOwnProperty(key)) {
+        this.constructFilterData(value, key);
+      }
     }
+    this.FetchData();
+  }
+
+
+  filterColumn(event: Event, namaColumn: string) {
+    const value = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    const key = this.cleanColumnFilterKey(namaColumn);
+    this.constructFilterData(value, key);
+    this.FetchData();
+  }
+  sortColumn(event) {
+   const sort: Sort = {
+      columnName: this.matsort.active,
+      sortType: this.matsort.direction.toUpperCase()
+   };
+   this.search.sort = [sort];
+   this.FetchData();
+  }
+  constructFilterData(value, key) {
+    const index = this.search.filter.findIndex(x => x.columnName === key);
+    if (value === '' || value === null) {
+      if (index !== -1) {
+        this.search.filter = this.search.filter.filter(x => x.columnName !== key);
+      }
+    } else {
+      if (index === -1) {
+        const filter: Filter = {
+          columnName: key,
+          filterType: GridFilterType.CONTAIN,
+          filterValue: value
+        };
+        this.search.filter.push(filter);
+      } else {
+        this.search.filter[index].filterValue = value;
+      }
+    }
+  }
+
+  showData(element: User, key: string) {
+    const keys: string[] = key.split('.');
+    let el: any = element;
+    for (const k of keys) {
+      el = el[k];
+    }
+    return el;
+  }
+  cleanColumnFilterKey(key: string) {
+    key = key.split('-')[1];
+    return key;
+  }
+
+  onPageEvent(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.search.pagination.pageNumber = event.pageIndex + 1;
+    this.search.pagination.numberDisplay = event.pageSize;
+    this.FetchData();
+  }
+
+  FetchData() {
+    this.isLoadingResults = true;
+    this.dataSubscription = this._userService.getByFilterGrid(this.search)
+                                .subscribe(
+                                  (data: GridResponse<User>) => {
+                                    this.lengthData = data.numberData;
+                                    this.dataSource = new MatTableDataSource(data.data);
+                                    this.isLoadingResults = false;
+                                  },
+                                  (err: HttpErrorResponse) => {
+                                    const context = ResponseContextGetter.GetErrorContext<any>(err);
+                                    this._snackbar.openFromComponent(SnackbarNotifComponent, {
+                                      duration: SnackbarNotifConfig.DURATION,
+                                      data: context,
+                                      horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
+                                      verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
+                                    });
+                                    this.isLoadingResults = false;
+                                  }
+                                );
+  }
+  Add(): void {
+    const dialogRef = this._dialog.open(CreateUserComponent, {
+      minWidth: DialogPopUpConfig.MIN_WIDTH + 400,
+      data: new User(),
+      role: <any>DialogPopUpConfig.ROLE,
+    });
+
+    this.dialogSubscription = dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.FetchData();
+      }
+    });
+  }
+
+  Edit(data: User) {
+    const dialogRef = this._dialog.open(UpdateUserComponent, {
+      minWidth: DialogPopUpConfig.MIN_WIDTH,
+      data: data,
+      role: <any>DialogPopUpConfig.ROLE,
+    });
+
+    this.dialogSubscription = dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.FetchData();
+      }
+    });
+  }
+
+  Delete(data: User) {
+    const dialogRef = this._dialog.open(DeleteUserComponent, {
+      minWidth: DialogPopUpConfig.MIN_WIDTH,
+      data: data,
+      role: <any>DialogPopUpConfig.ROLE,
+    });
+
+    this.dialogSubscription = dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.FetchData();
+        this.dialogSubscription.unsubscribe();
+      }
+    });
+
   }
 }

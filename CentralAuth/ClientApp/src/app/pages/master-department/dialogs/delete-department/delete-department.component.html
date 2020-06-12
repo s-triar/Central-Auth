@@ -1,0 +1,51 @@
+<div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="0px">
+    <h1  mat-dialog-title>Delete Departemen</h1>
+    <button 
+        (click)="onNoClick()"
+        matTooltip="Tutup Dialog"
+        matTooltipPosition="above"
+        appChangeIconOnHover 
+        IconNameEnter="remove_circle" 
+        IconNameLeave="remove_circle_outline" 
+        mat-icon-button color="warn" 
+        aria-label="Close button for disposing dialog">
+        <mat-icon >remove_circle_outline</mat-icon>
+    </button>  
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+    
+        <div style="text-align: center;"><mat-icon color="warn" style="width: 120px;height: 120px;font-size: 120px;font-weight: 600px;">error_outline</mat-icon></div>
+        <div style="text-align: center;"><p>Yakin hapus data ini?</p></div>
+    
+    <form [formGroup]="form" fxLayout="column" fxLayoutGap="10px" style="margin: 10px;">
+        <mat-form-field appearance="fill">
+            <mat-label>Kode</mat-label>
+            <input matInput formControlName="kode"  placeholder="Contoh: 02" readonly/>
+            <mat-error
+            *ngIf="kode.invalid && (kode.dirty || kode.touched) && kode.errors.required"
+            >Kode belum terisi.</mat-error
+            >
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Nama Departemen</mat-label>
+            <input
+            matInput
+            formControlName="namaDepartemen"
+            readonly
+            />
+            <mat-error
+            *ngIf="
+            namaDepartemen.invalid &&
+                (namaDepartemen.dirty || namaDepartemen.touched) &&
+                namaDepartemen.errors.required
+            "
+            >Nama Departemen belum terisi.</mat-error
+            >
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions fxLayout="row-reverse" fxLayoutAlign="space-between center" fxLayoutGap="0px">
+    <button color="warn" mat-raised-button type="button" (click)="onSubmitClick()" [disabled]="!form.valid && !process">Delete</button>
+</mat-dialog-actions>

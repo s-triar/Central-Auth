@@ -88,7 +88,7 @@ export class UpdateDirectorateComponent implements OnInit, OnDestroy {
               dialogLoading.close();
             },
             () => {
-              console.log('Form Dialog Create Directorate Observer got a complete notification');
+              console.log('Form Dialog Update Directorate Observer got a complete notification');
             }
           );
     }

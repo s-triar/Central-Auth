@@ -4,15 +4,16 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CentralAuth.Migrations
 {
-    public partial class initDB : Migration
+    public partial class init_db : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cabangs",
+                name: "Branches",
                 columns: table => new
                 {
                     Kode = table.Column<string>(nullable: false),
+                    Singkatan = table.Column<string>(nullable: true),
                     NamaCabang = table.Column<string>(nullable: true),
                     Keterangan = table.Column<string>(nullable: true),
                     Alamat = table.Column<string>(nullable: true),
@@ -23,7 +24,7 @@ namespace CentralAuth.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cabangs", x => x.Kode);
+                    table.PrimaryKey("PK_Branches", x => x.Kode);
                 });
 
             migrationBuilder.CreateTable(
@@ -60,7 +61,7 @@ namespace CentralAuth.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Departemens",
+                name: "Departments",
                 columns: table => new
                 {
                     Kode = table.Column<string>(nullable: false),
@@ -73,9 +74,9 @@ namespace CentralAuth.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Departemens", x => x.Kode);
+                    table.PrimaryKey("PK_Departments", x => x.Kode);
                     table.ForeignKey(
-                        name: "FK_Departemens_Directorates_DirektoratKode",
+                        name: "FK_Departments_Directorates_DirektoratKode",
                         column: x => x.DirektoratKode,
                         principalTable: "Directorates",
                         principalColumn: "Kode",
@@ -95,9 +96,9 @@ namespace CentralAuth.Migrations
                 {
                     table.PrimaryKey("PK_BranchUnit", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BranchUnit_Cabangs_CabangKode",
+                        name: "FK_BranchUnit_Branches_CabangKode",
                         column: x => x.CabangKode,
-                        principalTable: "Cabangs",
+                        principalTable: "Branches",
                         principalColumn: "Kode",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -109,7 +110,7 @@ namespace CentralAuth.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SubDepartemens",
+                name: "SubDepartments",
                 columns: table => new
                 {
                     Kode = table.Column<string>(nullable: false),
@@ -122,11 +123,11 @@ namespace CentralAuth.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SubDepartemens", x => x.Kode);
+                    table.PrimaryKey("PK_SubDepartments", x => x.Kode);
                     table.ForeignKey(
-                        name: "FK_SubDepartemens_Departemens_DepartemenKode",
+                        name: "FK_SubDepartments_Departments_DepartemenKode",
                         column: x => x.DepartemenKode,
-                        principalTable: "Departemens",
+                        principalTable: "Departments",
                         principalColumn: "Kode",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -160,15 +161,15 @@ namespace CentralAuth.Migrations
                         principalColumn: "Nik",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Users_Cabangs_BranchKode",
+                        name: "FK_Users_Branches_BranchKode",
                         column: x => x.BranchKode,
-                        principalTable: "Cabangs",
+                        principalTable: "Branches",
                         principalColumn: "Kode",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Users_Departemens_DepartemenKode",
+                        name: "FK_Users_Departments_DepartemenKode",
                         column: x => x.DepartemenKode,
-                        principalTable: "Departemens",
+                        principalTable: "Departments",
                         principalColumn: "Kode",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -178,9 +179,9 @@ namespace CentralAuth.Migrations
                         principalColumn: "Kode",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Users_SubDepartemens_SubDepartemenKode",
+                        name: "FK_Users_SubDepartments_SubDepartemenKode",
                         column: x => x.SubDepartemenKode,
-                        principalTable: "SubDepartemens",
+                        principalTable: "SubDepartments",
                         principalColumn: "Kode",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -455,6 +456,12 @@ namespace CentralAuth.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Branches_Singkatan",
+                table: "Branches",
+                column: "Singkatan",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BranchUnit_CabangKode",
                 table: "BranchUnit",
                 column: "CabangKode");
@@ -465,9 +472,27 @@ namespace CentralAuth.Migrations
                 column: "UnitKode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Departemens_DirektoratKode",
-                table: "Departemens",
+                name: "IX_Departments_DirektoratKode",
+                table: "Departments",
                 column: "DirektoratKode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_ApiName",
+                table: "Projects",
+                column: "ApiName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_ClientId",
+                table: "Projects",
+                column: "ClientId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_ClientSecret",
+                table: "Projects",
+                column: "ClientSecret",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_UserDevNik",
@@ -475,8 +500,8 @@ namespace CentralAuth.Migrations
                 column: "UserDevNik");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SubDepartemens_DepartemenKode",
-                table: "SubDepartemens",
+                name: "IX_SubDepartments_DepartemenKode",
+                table: "SubDepartments",
                 column: "DepartemenKode");
 
             migrationBuilder.CreateIndex(
@@ -556,16 +581,16 @@ namespace CentralAuth.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Cabangs");
+                name: "Branches");
 
             migrationBuilder.DropTable(
-                name: "SubDepartemens");
+                name: "SubDepartments");
 
             migrationBuilder.DropTable(
                 name: "Units");
 
             migrationBuilder.DropTable(
-                name: "Departemens");
+                name: "Departments");
 
             migrationBuilder.DropTable(
                 name: "Directorates");

@@ -1,0 +1,339 @@
+<div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="0px">
+    <h1  mat-dialog-title>Tambah Pengguna</h1>
+    <button 
+        (click)="onNoClick()"
+        matTooltip="Tutup Dialog"
+        matTooltipPosition="above"
+        appChangeIconOnHover 
+        IconNameEnter="remove_circle" 
+        IconNameLeave="remove_circle_outline" 
+        mat-icon-button color="warn" 
+        aria-label="Close button for disposing dialog">
+        <mat-icon >remove_circle_outline</mat-icon>
+    </button>  
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+    <form [formGroup]="form"  fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="10px" style="margin: 10px;">
+        <div fxLayout="column" fxLayoutGap="10px" fxFlex="50">
+            <mat-form-field appearance="fill">
+                <mat-label>NIK</mat-label>
+                <input matInput formControlName="nik" cdkFocusInitial placeholder="Contoh: 2015169..."/>
+                <mat-icon matSuffix>done</mat-icon>
+                <mat-error
+                *ngIf="nik.invalid && (nik.dirty || nik.touched) && nik.errors.required"
+                >NIK belum terisi.</mat-error
+                >
+                <mat-error
+                *ngIf="nik.invalid && (nik.dirty || nik.touched) && nik.errors.pattern"
+                >NIK harus angka.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Nama</mat-label>
+                <input
+                matInput
+                formControlName="nama"
+                />
+                <mat-error
+                *ngIf="
+                    nama.invalid &&
+                    (nama.dirty || nama.touched) &&
+                    nama.errors.required
+                "
+                >Nama belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Email</mat-label>
+                <input
+                matInput
+                formControlName="email"
+                />
+                <mat-error
+                *ngIf="
+                    email.invalid &&
+                    (email.dirty || email.touched) &&
+                    email.errors.required
+                "
+                >Email belum terisi.</mat-error
+                >
+                <mat-error
+                *ngIf="
+                    email.invalid &&
+                    (email.dirty || email.touched) &&
+                    email.errors.email
+                "
+                >Email harus valid.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Ext</mat-label>
+                <input
+                matInput
+                formControlName="ext"
+                />
+                <mat-error
+                *ngIf="
+                    ext.invalid &&
+                    (ext.dirty || ext.touched) &&
+                    ext.errors.required
+                "
+                >Ext belum terisi.</mat-error
+                >
+                <mat-error
+                *ngIf="
+                    ext.invalid &&
+                    (ext.dirty || ext.touched) &&
+                    ext.errors.pattern
+                "
+                >Ext harus angka.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Atasan</mat-label>
+                <input
+                [matAutocomplete]="atasan"
+                matInput
+                formControlName="atasan"
+                (keyup)="onSearch($event,'USER','nama')"
+                (focus)="onSearch($event,'USER','nama')"
+                />
+                <mat-autocomplete #atasan="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'atasanNik', 'nik')">
+                    <mat-option *ngFor="let option of atasanOptions" [value]="option">
+                        {{option.nama}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error
+                *ngIf="
+                    atasan.invalid &&
+                    (atasan.dirty || atasan.touched) &&
+                    atasan.errors.required
+                "
+                >Atasan belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="false">
+                <mat-label>Nik Atasan</mat-label>
+                <input
+                matInput
+                formControlName="atasanNik"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                atasanNik.invalid &&
+                    (atasanNik.dirty || atasanNik.touched) &&
+                    atasanNik.errors.required
+                "
+                >NIK Atasan belum terisi.</mat-error
+                >
+            </mat-form-field>
+        </div>
+        <div fxLayout="column" fxLayoutGap="10px" fxFlex="50">
+            <mat-form-field appearance="fill">
+                <mat-label>Unit</mat-label>
+                <input
+                [matAutocomplete]="unit"
+                matInput
+                formControlName="unit"
+                (keyup)="onSearch($event,'UNIT', 'namaUnit')"
+                (focus)="onSearch($event,'UNIT', 'namaUnit')"
+                />
+                <mat-autocomplete #unit="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeUnit', 'kode', ['cabang', 'kodeCabang'])">
+                    <mat-option *ngFor="let option of unitOptions" [value]="option">
+                        {{option.namaUnit}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error
+                *ngIf="
+                    unit.invalid &&
+                    (unit.dirty || unit.touched) &&
+                    unit.errors.required
+                "
+                >Unit belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="false">
+                <mat-label>Kode Unit</mat-label>
+                <input
+                matInput
+                formControlName="kodeUnit"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                kodeUnit.invalid &&
+                    (kodeUnit.dirty || kodeUnit.touched) &&
+                    kodeUnit.errors.required
+                "
+                >Kode Unit belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Cabang</mat-label>
+                <input
+                [matAutocomplete]="cabang"
+                matInput
+                formControlName="cabang"
+                (keyup)="onSearch($event,'BRANCH', 'namaCabang')"
+                (focus)="onSearch($event,'BRANCH', 'namaCabang')"
+                />
+                <mat-autocomplete #cabang="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeCabang', 'kode', ['direktorat', 'kodeDirektorat'])">
+                    <mat-option *ngFor="let option of cabangOptions" [value]="option">
+                        {{option.namaCabang}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error
+                *ngIf="
+                cabang.invalid &&
+                    (cabang.dirty || cabang.touched) &&
+                    cabang.errors.required
+                "
+                >Cabang belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="false">
+                <mat-label>Kode Cabang</mat-label>
+                <input
+                matInput
+                formControlName="kodeCabang"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                kodeCabang.invalid &&
+                    (kodeCabang.dirty || kodeCabang.touched) &&
+                    kodeCabang.errors.required
+                "
+                >Kode Cabang belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Direktorat</mat-label>
+                <input
+                [matAutocomplete]="direktorat"
+                matInput
+                formControlName="direktorat"
+                (keyup)="onSearch($event, 'DIRECTORATE', 'namaDirektorat')"
+                (focus)="onSearch($event, 'DIRECTORATE', 'namaDirektorat')"
+                />
+                <mat-autocomplete #direktorat="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeDirektorat', 'kode', ['departemen', 'kodeDepartemen'])">
+                    <mat-option *ngFor="let option of direktoratOptions" [value]="option">
+                        {{option.namaDirektorat}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error
+                *ngIf="
+                    direktorat.invalid &&
+                    (direktorat.dirty || direktorat.touched) &&
+                    direktorat.errors.required
+                "
+                >Direktorat belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="false">
+                <mat-label>Kode Direktorat</mat-label>
+                <input
+                matInput
+                formControlName="kodeDirektorat"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                kodeDirektorat.invalid &&
+                    (kodeDirektorat.dirty || kodeDirektorat.touched) &&
+                    kodeDirektorat.errors.required
+                "
+                >Kode Direktorat belum terisi.</mat-error
+                >
+            </mat-form-field>
+    
+            <mat-form-field appearance="fill">
+                <mat-label>Departemen</mat-label>
+                <input
+                [matAutocomplete]="departemen"
+                matInput
+                formControlName="departemen"
+                (keyup)="onSearch($event,'DEPARTMENT', 'namaDepartemen')"
+                (focus)="onSearch($event,'DEPARTMENT', 'namaDepartemen')"
+                />
+                <mat-autocomplete #departemen="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeDepartemen', 'kode', ['subDepartemen', 'kodeSubDepartemen'])">
+                    <mat-option *ngFor="let option of departemenOptions" [value]="option">
+                        {{option.namaDepartemen}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error
+                *ngIf="
+                    departemen.invalid &&
+                    (departemen.dirty || departemen.touched) &&
+                    departemen.errors.required
+                "
+                >Departemen belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="false">
+                <mat-label>Kode Departemen</mat-label>
+                <input
+                matInput
+                formControlName="kodeDepartemen"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                kodeDepartemen.invalid &&
+                    (kodeDepartemen.dirty || kodeDepartemen.touched) &&
+                    kodeDepartemen.errors.required
+                "
+                >Kode Departemen belum terisi.</mat-error
+                >
+            </mat-form-field>
+    
+            <mat-form-field appearance="fill">
+                <mat-label>Sub Departemen</mat-label>
+                <input
+                [matAutocomplete]="subDepartemen"
+                matInput
+                formControlName="subDepartemen"
+                (keyup)="onSearch($event, 'SUBDEPARTMENT','namaSubDepartemen')"
+                (focus)="onSearch($event, 'SUBDEPARTMENT','namaSubDepartemen')"
+                />
+                <mat-autocomplete #subDepartemen="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeSubDepartemen', 'kode', [])">
+                    <mat-option *ngFor="let option of subDepartemenOptions" [value]="option">
+                        {{option.namaSubDepartemen}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error
+                *ngIf="
+                    subDepartemen.invalid &&
+                    (subDepartemen.dirty || subDepartemen.touched) &&
+                    subDepartemen.errors.required
+                "
+                >Sub Departemen belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="false">
+                <mat-label>Kode Sub Departemen</mat-label>
+                <input
+                matInput
+                formControlName="kodeSubDepartemen"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                kodeSubDepartemen.invalid &&
+                    (kodeSubDepartemen.dirty || kodeSubDepartemen.touched) &&
+                    kodeSubDepartemen.errors.required
+                "
+                >Kode Sub Departemen belum terisi.</mat-error
+                >
+            </mat-form-field>
+        </div>
+        
+        
+    </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions fxLayout="row-reverse" fxLayoutAlign="space-between center" fxLayoutGap="0px">
+    <button color="primary" mat-raised-button type="button" (click)="onSubmitClick()" [disabled]="!form.valid && !process">Submit</button>
+</mat-dialog-actions>

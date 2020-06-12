@@ -36,6 +36,24 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatPaginationCustomProvider } from './providers/mat-pagination-custom-provider';
 import { UpdateDirectorateComponent } from './pages/master-directorate/dialogs/update-directorate/update-directorate.component';
 import { DeleteDirectorateComponent } from './pages/master-directorate/dialogs/delete-directorate/delete-directorate.component';
+import { MasterSubDepartmentComponent } from './pages/master-sub-department/master-sub-department.component';
+import { CreateDepartmentComponent } from './pages/master-department/dialogs/create-department/create-department.component';
+import { DeleteDepartmentComponent } from './pages/master-department/dialogs/delete-department/delete-department.component';
+import { UpdateDepartmentComponent } from './pages/master-department/dialogs/update-department/update-department.component';
+import { CreateSubDepartmentComponent } from './pages/master-sub-department/dialogs/create-sub-department/create-sub-department.component';
+import { DeleteSubDepartmentComponent } from './pages/master-sub-department/dialogs/delete-sub-department/delete-sub-department.component';
+import { UpdateSubDepartmentComponent } from './pages/master-sub-department/dialogs/update-sub-department/update-sub-department.component';
+import { MasterBranchComponent } from './pages/master-branch/master-branch.component';
+import { MasterUnitComponent } from './pages/master-unit/master-unit.component';
+import { CreateBranchComponent } from './pages/master-branch/dialogs/create-branch/create-branch.component';
+import { DeleteBranchComponent } from './pages/master-branch/dialogs/delete-branch/delete-branch.component';
+import { UpdateBranchComponent } from './pages/master-branch/dialogs/update-branch/update-branch.component';
+import { CreateUnitComponent } from './pages/master-unit/dialogs/create-unit/create-unit.component';
+import { UpdateUnitComponent } from './pages/master-unit/dialogs/update-unit/update-unit.component';
+import { DeleteUnitComponent } from './pages/master-unit/dialogs/delete-unit/delete-unit.component';
+import { DeleteUserComponent } from './pages/master-user/dialogs/delete-user/delete-user.component';
+import { UpdateUserComponent } from './pages/master-user/dialogs/update-user/update-user.component';
+import { CreateUserComponent } from './pages/master-user/dialogs/create-user/create-user.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +80,24 @@ import { DeleteDirectorateComponent } from './pages/master-directorate/dialogs/d
     SnackbarNotifComponent,
     UpdateDirectorateComponent,
     DeleteDirectorateComponent,
+    MasterSubDepartmentComponent,
+    CreateDepartmentComponent,
+    DeleteDepartmentComponent,
+    UpdateDepartmentComponent,
+    CreateSubDepartmentComponent,
+    DeleteSubDepartmentComponent,
+    UpdateSubDepartmentComponent,
+    MasterBranchComponent,
+    MasterUnitComponent,
+    CreateBranchComponent,
+    DeleteBranchComponent,
+    UpdateBranchComponent,
+    CreateUnitComponent,
+    UpdateUnitComponent,
+    DeleteUnitComponent,
+    DeleteUserComponent,
+    UpdateUserComponent,
+    CreateUserComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -84,7 +120,27 @@ import { DeleteDirectorateComponent } from './pages/master-directorate/dialogs/d
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    CreateDirectorateComponent
+    DialogLoadingComponent,
+
+    CreateDirectorateComponent,
+    DeleteDirectorateComponent,
+    UpdateDirectorateComponent,
+
+    CreateDepartmentComponent,
+    DeleteDepartmentComponent,
+    UpdateDepartmentComponent,
+
+    CreateSubDepartmentComponent,
+    DeleteSubDepartmentComponent,
+    UpdateSubDepartmentComponent,
+
+    CreateBranchComponent,
+    DeleteBranchComponent,
+    UpdateBranchComponent,
+
+    CreateUnitComponent,
+    DeleteUnitComponent,
+    UpdateUnitComponent
   ]
 })
 export class AppModule {}

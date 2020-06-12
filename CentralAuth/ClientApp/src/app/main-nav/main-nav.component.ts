@@ -14,14 +14,7 @@ import { ThemeService } from '../services/theme.service';
 export class MainNavComponent implements OnInit, OnDestroy {
   theme$: Observable<Theme>;
 
-  user: User = {
-    Nik: '2015169765',
-    Email: 'sulaimantriarjo@indomaret.co.id',
-    Name: 'Sulaiman Triarjo',
-    Phone: '085755519123',
-    PhotoUrl: 'assets/defaults/logo_small_icon_only.png',
-    Token: '',
-  };
+
 
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
