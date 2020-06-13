@@ -4,7 +4,7 @@ import { Department } from '../models/department';
 import { QueryStringBuilder } from '../utils/query-string-builder';
 import { GridResponse } from '../models/grid-response';
 import { Grid } from '../models/grid';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -32,8 +32,13 @@ export class SimpleGenericService<T> {
     const params = QueryStringBuilder.BuildParametersFromSearch<T>(payload);
     return this._http.get(`api/${this.controller}/GetByFilter?${params}`);
   }
-  getByFilterGrid(payload: Grid): Observable<GridResponse<T>> {
+  getByFilterGrid(payload: Grid, isNoLoading: boolean = false): Observable<GridResponse<T>> {
     const params = QueryStringBuilder.BuildParametersFromSearch<Grid>(payload);
-    return this._http.get<GridResponse<T>>(`api/${this.controller}/GetByFilterGrid?${params}`);
+    let header: HttpHeaders = new HttpHeaders();
+    if (isNoLoading) {
+      header = header.set('reqnoloadingdialog', 'true');
+    }
+    return this._http.get<GridResponse<T>>(`api/${this.controller}/GetByFilterGrid?${params}`, {headers: header});
+
   }
 }

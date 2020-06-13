@@ -7,23 +7,16 @@ import { DirectorateService } from 'src/app/services/directorate.service';
 import { Directorate } from 'src/app/models/directorate';
 import { Subscription } from 'rxjs';
 import { Validators, FormBuilder } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Filter } from 'src/app/models/commons/filter';
 import { GridFilterType } from 'src/app/models/enums/gridfiltertype';
 import { Grid } from 'src/app/models/grid';
 import { GridResponse } from 'src/app/models/grid-response';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ResponseContextGetter } from 'src/app/utils/response-context-getter';
-import { SnackbarNotifComponent } from 'src/app/components/snackbar-notif/snackbar-notif.component';
-import { SnackbarNotifConfig } from 'src/app/models/enums/snackbar-config';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { DialogLoadingComponent } from 'src/app/components/dialog-loading/dialog-loading.component';
-import { DialogLoadingConfig } from 'src/app/models/enums/dialog-loading-config';
 import { CustomResponse } from 'src/app/models/custom-response';
-import { SimpleGenericService } from 'src/app/services/simple-generic.service';
 import { Unit } from 'src/app/models/unit';
 import { Branch } from 'src/app/models/branch';
 import { Department } from 'src/app/models/department';
@@ -66,7 +59,6 @@ export class CreateUserComponent implements OnInit, OnDestroy {
   });
 
   constructor(
-    private _dialog: MatDialog,
     private _dialogRef: MatDialogRef<CreateUserComponent>,
     @Inject(MAT_DIALOG_DATA) public data: User,
     private _fb: FormBuilder,
@@ -76,7 +68,6 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     private _subDepartmentService: SubDepartmentService,
     private _branchService: BranchService,
     private _unitService: UnitService,
-    private _snackbar: MatSnackBar
   ) {
 
   }
@@ -160,20 +151,13 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     let filterTambahan: Filter = null;
     switch (kelas) {
       case 'USER':
-        this.formOptionSubscription = this._userService.getByFilterGrid(search)
+        this.formOptionSubscription = this._userService.getByFilterGrid(search, true)
                                       .subscribe(
                                         (data: GridResponse<User>) => {
                                           this.atasanOptions = data.data;
                                           this.formOptionSubscription.unsubscribe();
                                         },
                                         (err: HttpErrorResponse) => {
-                                          const context = ResponseContextGetter.GetErrorContext<any>(err);
-                                          this._snackbar.openFromComponent(SnackbarNotifComponent, {
-                                            duration: SnackbarNotifConfig.DURATION,
-                                            data: context,
-                                            horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
-                                            verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
-                                          });
                                           this.formOptionSubscription.unsubscribe();
                                         }
                                       );
@@ -184,20 +168,13 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                         'departemen', 'kodeDepartemen',
                         'subDepartemen', 'kodeSubDepartemen'];
         this.clearForm(koloms);
-        this.formOptionSubscription = this._unitService.getByFilterGrid(search)
+        this.formOptionSubscription = this._unitService.getByFilterGrid(search, true)
                                         .subscribe(
                                           (data: GridResponse<Unit>) => {
                                             this.unitOptions = data.data;
                                             this.formOptionSubscription.unsubscribe();
                                           },
                                           (err: HttpErrorResponse) => {
-                                            const context = ResponseContextGetter.GetErrorContext<any>(err);
-                                            this._snackbar.openFromComponent(SnackbarNotifComponent, {
-                                              duration: SnackbarNotifConfig.DURATION,
-                                              data: context,
-                                              horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
-                                              verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
-                                            });
                                             this.formOptionSubscription.unsubscribe();
                                           }
                                         );
@@ -207,20 +184,13 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                         'departemen', 'kodeDepartemen',
                         'subDepartemen', 'kodeSubDepartemen'];
         this.clearForm(koloms);
-        this.formOptionSubscription = this._branchService.getByFilterGrid(search)
+        this.formOptionSubscription = this._branchService.getByFilterGrid(search, true)
                                         .subscribe(
                                           (data: GridResponse<Branch>) => {
                                             this.cabangOptions = data.data;
                                             this.formOptionSubscription.unsubscribe();
                                           },
                                           (err: HttpErrorResponse) => {
-                                            const context = ResponseContextGetter.GetErrorContext<any>(err);
-                                            this._snackbar.openFromComponent(SnackbarNotifComponent, {
-                                              duration: SnackbarNotifConfig.DURATION,
-                                              data: context,
-                                              horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
-                                              verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
-                                            });
                                             this.formOptionSubscription.unsubscribe();
                                           }
                                         );
@@ -229,20 +199,13 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         koloms = ['departemen', 'kodeDepartemen',
                         'subDepartemen', 'kodeSubDepartemen'];
         this.clearForm(koloms);
-        this.formOptionSubscription = this._directorateService.getByFilterGrid(search)
+        this.formOptionSubscription = this._directorateService.getByFilterGrid(search, true)
                                         .subscribe(
                                           (data: GridResponse<Directorate>) => {
                                             this.direktoratOptions = data.data;
                                             this.formOptionSubscription.unsubscribe();
                                           },
                                           (err: HttpErrorResponse) => {
-                                            const context = ResponseContextGetter.GetErrorContext<any>(err);
-                                            this._snackbar.openFromComponent(SnackbarNotifComponent, {
-                                              duration: SnackbarNotifConfig.DURATION,
-                                              data: context,
-                                              horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
-                                              verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
-                                            });
                                             this.formOptionSubscription.unsubscribe();
                                           }
                                         );
@@ -256,20 +219,13 @@ export class CreateUserComponent implements OnInit, OnDestroy {
           filterValue: this.kodeDirektorat.value
         };
         search.filter.push(filterTambahan);
-        this.formOptionSubscription = this._departmentService.getByFilterGrid(search)
+        this.formOptionSubscription = this._departmentService.getByFilterGrid(search, true)
                                         .subscribe(
                                           (data: GridResponse<Department>) => {
                                             this.departemenOptions = data.data;
                                             this.formOptionSubscription.unsubscribe();
                                           },
                                           (err: HttpErrorResponse) => {
-                                            const context = ResponseContextGetter.GetErrorContext<any>(err);
-                                            this._snackbar.openFromComponent(SnackbarNotifComponent, {
-                                              duration: SnackbarNotifConfig.DURATION,
-                                              data: context,
-                                              horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
-                                              verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
-                                            });
                                             this.formOptionSubscription.unsubscribe();
                                           }
                                         );
@@ -281,20 +237,13 @@ export class CreateUserComponent implements OnInit, OnDestroy {
           filterValue: this.kodeDepartemen.value
         };
         search.filter.push(filterTambahan);
-        this.formOptionSubscription = this._subDepartmentService.getByFilterGrid(search)
+        this.formOptionSubscription = this._subDepartmentService.getByFilterGrid(search, true)
                                         .subscribe(
                                           (data: GridResponse<SubDepartment>) => {
                                             this.subDepartemenOptions = data.data;
                                             this.formOptionSubscription.unsubscribe();
                                           },
                                           (err: HttpErrorResponse) => {
-                                            const context = ResponseContextGetter.GetErrorContext<any>(err);
-                                            this._snackbar.openFromComponent(SnackbarNotifComponent, {
-                                              duration: SnackbarNotifConfig.DURATION,
-                                              data: context,
-                                              horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
-                                              verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
-                                            });
                                             this.formOptionSubscription.unsubscribe();
                                           }
                                         );
@@ -345,41 +294,21 @@ export class CreateUserComponent implements OnInit, OnDestroy {
   onSubmitClick() {
     if (this.form.valid) {
       this.process = true;
-      const dialogLoading = this._dialog.open(DialogLoadingComponent, {
-        minWidth: DialogLoadingConfig.MIN_WIDTH,
-        disableClose: DialogLoadingConfig.DISABLED_CLOSE
-      });
       const payload = new UserRegister(this.form.value);
       const password = GenerateRandom.GenerateString(3);
       console.log(password);
       payload.password = password;
       payload.confirmPassword = password;
-      console.log(payload);
       this.formSubscription = this._userService
           .registerAccount(payload)
           .subscribe(
             (x: CustomResponse<any>) => {
-              const context = ResponseContextGetter.GetCustomResponseContext<any>(x);
-              this._snackbar.openFromComponent(SnackbarNotifComponent, {
-                duration: SnackbarNotifConfig.DURATION,
-                data: context,
-                horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
-                verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
-              });
               this.formSubscription.unsubscribe();
-              dialogLoading.close();
               this._dialogRef.close(true);
             },
             (err: HttpErrorResponse) => {
-              const context = ResponseContextGetter.GetErrorContext<any>(err);
-                this._snackbar.openFromComponent(SnackbarNotifComponent, {
-                duration: SnackbarNotifConfig.DURATION,
-                data: context,
-                horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
-                verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
-              });
               this.formSubscription.unsubscribe();
-              dialogLoading.close();
+              this.process = false;
             },
             () => {
               console.log('Form Dialog Create User Observer got a complete notification');

@@ -15,20 +15,20 @@
       fxLayoutGap="10px"
       fxLayout.lt-md="column"
     >
-      <form [formGroup]="loginForm" fxLayoutGap="10px">
+      <form [formGroup]="form" fxLayoutGap="10px">
         <mat-form-field appearance="fill">
           <mat-label>NIK</mat-label>
           <mat-icon matPrefix>perm_identity</mat-icon>
-          <input matInput formControlName="Nik" />
+          <input matInput formControlName="nik" />
           <mat-error
             *ngIf="
-              Nik.invalid && (Nik.dirty || Nik.touched) && Nik.errors.required
+              nik.invalid && (nik.dirty || nik.touched) && nik.errors.required
             "
             >NIK belum terisi.</mat-error
           >
           <mat-error
             *ngIf="
-              Nik.invalid && (Nik.dirty || Nik.touched) && Nik.errors.pattern
+              nik.invalid && (nik.dirty || nik.touched) && nik.errors.pattern
             "
             >NIK hanya bisa menerima masukan angka.</mat-error
           >
@@ -38,7 +38,7 @@
           <mat-icon matPrefix>vpn_key</mat-icon>
           <input
             matInput
-            formControlName="Password"
+            formControlName="password"
             [type]="hide ? 'password' : 'text'"
           />
           <button
@@ -52,9 +52,9 @@
           </button>
           <mat-error
             *ngIf="
-              Password.invalid &&
-              (Password.dirty || Password.touched) &&
-              Password.errors.required
+              password.invalid &&
+              (password.dirty || password.touched) &&
+              password.errors.required
             "
             >Password belum terisi.</mat-error
           >
@@ -67,16 +67,16 @@
       fxLayoutGap="0px"
     >
       <div fxFlex>
-        <button mat-raised-button color="accent" [routerLink]="['/dev/login']">
+        <!-- <button mat-raised-button color="accent" [routerLink]="['/dev/login']">
           Login Dev
-        </button>
+        </button> -->
       </div>
 
       <div fxFlex fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="7px">
         <button mat-button color="accent" [routerLink]="['/forget-password']">
           Forget
         </button>
-        <button mat-raised-button color="primary">Login</button>
+        <button mat-raised-button color="primary" (click)="onSubmitClick()" [disabled]="!form.valid && !process">Login</button>
       </div>
     </mat-card-actions>
   </mat-card>

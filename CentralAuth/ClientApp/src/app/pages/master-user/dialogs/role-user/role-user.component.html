@@ -1,0 +1,76 @@
+<div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="0px">
+    <h1  mat-dialog-title>Role Pengguna</h1>
+    <button 
+        (click)="onNoClick()"
+        matTooltip="Tutup Dialog"
+        matTooltipPosition="above"
+        appChangeIconOnHover 
+        IconNameEnter="remove_circle" 
+        IconNameLeave="remove_circle_outline" 
+        mat-icon-button color="warn" 
+        aria-label="Close button for disposing dialog">
+        <mat-icon >remove_circle_outline</mat-icon>
+    </button>  
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+    
+    <form [formGroup]="form" fxLayout="column" fxLayoutGap="10px" style="margin: 10px;">
+        <div fxLayout="row" fxLayoutAlign="space-around start" fxLayoutGap="10px">
+            <mat-form-field appearance="fill" fxFlex>
+                <mat-label>NIK</mat-label>
+                <input matInput formControlName="nik"  placeholder="Contoh: 02" readonly/>
+                <mat-error
+                *ngIf="nik.invalid && (nik.dirty || nik.touched) && nik.errors.required"
+                >NIK belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill" fxFlex>
+                <mat-label>Nama</mat-label>
+                <input
+                matInput
+                formControlName="nama"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                nama.invalid &&
+                    (nama.dirty || nama.touched) &&
+                    nama.errors.required
+                "
+                >Nama belum terisi.</mat-error
+                >
+            </mat-form-field>
+        </div>
+    </form>
+    <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="10px">
+        <mat-form-field appearance="fill" fxFlex="80">
+            <mat-label>Roles</mat-label>
+            <input
+            [matAutocomplete]="roleAuto"
+            matInput
+            (keyup)="onSearch($event)"
+            (click)="onSearch($event)"
+            />
+            <mat-autocomplete #roleAuto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+                <mat-option *ngFor="let option of roleOptions" [value]="option">
+                    {{option}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <div fxFlex="20" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="0px">
+            <button color="primary" mat-raised-button type="button" (click)="onAdd()" [disabled]="process || roleChoosen=== '' || roleChoosen===null">Add</button>
+        </div>
+    </div>
+    <mat-chip-list #chipList aria-label="user roles" style="margin-left: 10px;margin-right:10px;margin-bottom:10px;">
+        <mat-chip *ngFor="let ur of userRoles"
+                 [removable]="true" (removed)="onRemove(ur)">
+          {{ur}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+    </mat-chip-list>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<!-- <mat-dialog-actions fxLayout="row-reverse" fxLayoutAlign="space-between center" fxLayoutGap="0px">
+    <button color="warn" mat-raised-button type="button" (click)="onOk()" [disabled]="!form.valid && !process">Close</button>
+</mat-dialog-actions> -->

@@ -1,10 +1,14 @@
 import { Component, OnInit, Renderer2, OnDestroy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { User } from '../models/user';
 import { Theme } from '../models/theme';
 import { ThemeService } from '../services/theme.service';
+import { AuthService } from '../services/auth.service';
+import { CustomResponse } from '../models/custom-response';
+import { TokenService } from '../services/token.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-main-nav',
@@ -13,9 +17,8 @@ import { ThemeService } from '../services/theme.service';
 })
 export class MainNavComponent implements OnInit, OnDestroy {
   theme$: Observable<Theme>;
-
-
-
+  formSubscription: Subscription;
+  user$: Observable<User>;
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(
@@ -26,15 +29,37 @@ export class MainNavComponent implements OnInit, OnDestroy {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private _renderer: Renderer2,
-    private _themeService: ThemeService
+    private _themeService: ThemeService,
+    private _authService: AuthService,
+    private _tokenService: TokenService
   ) {}
   ngOnDestroy(): void {}
 
   ngOnInit() {
     this.theme$ = this._themeService.currentTheme$;
+    this.user$ = this._authService.user$;
   }
 
   ToggleTheme() {
     this._themeService.ToggleTheme(this._renderer);
+  }
+
+  logout() {
+    this.formSubscription = this._authService
+                                .logout()
+                                .subscribe(
+                                  (x: CustomResponse<any>) => {
+                                    this._tokenService.removeToken();
+                                    this.formSubscription.unsubscribe();
+                                    location.reload();
+                                  },
+                                  (err: HttpErrorResponse) => {
+                                    this.formSubscription.unsubscribe();
+                                  },
+                                  () => {
+                                    console.log('Form Logout Observer got a complete notification');
+                                  }
+                                )
+                                ;
   }
 }

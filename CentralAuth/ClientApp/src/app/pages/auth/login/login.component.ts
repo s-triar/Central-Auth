@@ -1,23 +1,51 @@
-import { Component, OnInit } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { AuthService } from 'src/app/services/auth.service';
+import { Login } from 'src/app/models/auth';
+import { Subscription } from 'rxjs';
+import { CustomResponse } from 'src/app/models/custom-response';
+import { HttpErrorResponse } from '@angular/common/http';
+import { TokenService } from 'src/app/services/token.service';
 
 @Component({
-  selector: "app-login",
-  templateUrl: "./login.component.html",
-  styleUrls: ["./login.component.scss"],
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  hide: boolean = true;
-  loginForm = this.fb.group({
-    Nik: ["", [Validators.required, Validators.pattern("[0-9]+")]],
-    Password: ["", Validators.required],
+  process = false;
+  hide = true;
+  form = this.fb.group({
+    nik: ['', [Validators.required, Validators.pattern('[0-9]+')]],
+    password: ['', Validators.required],
   });
-  constructor(private fb: FormBuilder) {}
+  formSubscription: Subscription;
+  constructor(private fb: FormBuilder, private _authService: AuthService, private _tokenService: TokenService) {}
   ngOnInit(): void {}
-  get Nik() {
-    return this.loginForm.get("Nik");
+  get nik() {
+    return this.form.get('nik');
   }
-  get Password() {
-    return this.loginForm.get("Password");
+  get password() {
+    return this.form.get('password');
+  }
+  onSubmitClick() {
+    this.formSubscription = this._authService
+                                .login(new Login(this.form.value))
+                                .subscribe(
+                                  (x: CustomResponse<any>) => {
+                                    this._tokenService.saveToken(x.data);
+                                    this._authService.setLoggedUser();
+                                    this.formSubscription.unsubscribe();
+                                    location.reload();
+                                  },
+                                  (err: HttpErrorResponse) => {
+                                    this.formSubscription.unsubscribe();
+                                    this.process = false;
+                                  },
+                                  () => {
+                                    console.log('Form Login Observer got a complete notification');
+                                  }
+                                )
+                                ;
   }
 }

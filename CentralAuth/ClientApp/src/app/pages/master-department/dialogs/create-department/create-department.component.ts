@@ -1,16 +1,10 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Validators, FormBuilder } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Department } from 'src/app/models/department';
 import { DepartmentService } from 'src/app/services/department.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { DialogLoadingComponent } from 'src/app/components/dialog-loading/dialog-loading.component';
-import { DialogLoadingConfig } from 'src/app/models/enums/dialog-loading-config';
 import { CustomResponse } from 'src/app/models/custom-response';
-import { ResponseContextGetter } from 'src/app/utils/response-context-getter';
-import { SnackbarNotifConfig } from 'src/app/models/enums/snackbar-config';
-import { SnackbarNotifComponent } from 'src/app/components/snackbar-notif/snackbar-notif.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Filter } from 'src/app/models/commons/filter';
@@ -38,13 +32,11 @@ export class CreateDepartmentComponent implements OnInit, OnDestroy {
   });
 
   constructor(
-    private _dialog: MatDialog,
     private _dialogRef: MatDialogRef<CreateDepartmentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Department,
     private _fb: FormBuilder,
     private _departmentService: DepartmentService,
     private _directorateService: DirectorateService,
-    private _snackbar: MatSnackBar
   ) {
 
   }
@@ -81,20 +73,13 @@ export class CreateDepartmentComponent implements OnInit, OnDestroy {
       sort: null,
       pagination: null
     };
-    this.formOptionSubscription = this._directorateService.getByFilterGrid(search)
+    this.formOptionSubscription = this._directorateService.getByFilterGrid(search, true)
                                       .subscribe(
                                         (data: GridResponse<Directorate>) => {
                                           this.filteredOptions = data.data;
                                           this.formOptionSubscription.unsubscribe();
                                         },
                                         (err: HttpErrorResponse) => {
-                                          const context = ResponseContextGetter.GetErrorContext<any>(err);
-                                          this._snackbar.openFromComponent(SnackbarNotifComponent, {
-                                            duration: SnackbarNotifConfig.DURATION,
-                                            data: context,
-                                            horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
-                                            verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
-                                          });
                                           this.formOptionSubscription.unsubscribe();
                                         }
                                       );
@@ -114,37 +99,18 @@ export class CreateDepartmentComponent implements OnInit, OnDestroy {
   onSubmitClick() {
     if (this.form.valid) {
       this.process = true;
-      const dialogLoading = this._dialog.open(DialogLoadingComponent, {
-        minWidth: DialogLoadingConfig.MIN_WIDTH,
-        disableClose: DialogLoadingConfig.DISABLED_CLOSE
-      });
       const payload = new Department(this.form.value);
       delete payload.direktorat;
       this.formSubscription = this._departmentService
           .create(payload)
           .subscribe(
             (x: CustomResponse<any>) => {
-              const context = ResponseContextGetter.GetCustomResponseContext<any>(x);
-              this._snackbar.openFromComponent(SnackbarNotifComponent, {
-                duration: SnackbarNotifConfig.DURATION,
-                data: context,
-                horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
-                verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
-              });
               this.formSubscription.unsubscribe();
-              dialogLoading.close();
               this._dialogRef.close(true);
             },
             (err: HttpErrorResponse) => {
-              const context = ResponseContextGetter.GetErrorContext<any>(err);
-                this._snackbar.openFromComponent(SnackbarNotifComponent, {
-                duration: SnackbarNotifConfig.DURATION,
-                data: context,
-                horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
-                verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
-              });
               this.formSubscription.unsubscribe();
-              dialogLoading.close();
+              this.process = false;
             },
             () => {
               console.log('Form Dialog Create Department Observer got a complete notification');

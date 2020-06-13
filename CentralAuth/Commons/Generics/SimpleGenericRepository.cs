@@ -95,7 +95,7 @@ namespace CentralAuth.Commons.Generics
         {
             return _context.Set<T>().Where(predicate).AsEnumerable();
         }
-        public T FindByKey(dynamic key)
+        public virtual T FindByKey(dynamic key)
         {
             return _context.Set<T>().Find(key);
         }

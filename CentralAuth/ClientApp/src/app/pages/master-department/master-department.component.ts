@@ -148,25 +148,12 @@ export class MasterDepartmentComponent implements OnInit, OnDestroy {
   }
 
   FetchData() {
-    console.log(this.search);
-    this.isLoadingResults = true;
     this.dataSubscription = this._departmentService.getByFilterGrid(this.search)
                                 .subscribe(
                                   (data: GridResponse<Department>) => {
                                     this.lengthData = data.numberData;
                                     this.dataSource = new MatTableDataSource(data.data);
-                                    this.isLoadingResults = false;
                                   },
-                                  (err: HttpErrorResponse) => {
-                                    const context = ResponseContextGetter.GetErrorContext<any>(err);
-                                    this._snackbar.openFromComponent(SnackbarNotifComponent, {
-                                      duration: SnackbarNotifConfig.DURATION,
-                                      data: context,
-                                      horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
-                                      verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
-                                    });
-                                    this.isLoadingResults = false;
-                                  }
                                 );
   }
   Add(): void {

@@ -93,13 +93,13 @@
             <mat-form-field appearance="fill">
                 <mat-label>Atasan</mat-label>
                 <input
-                [matAutocomplete]="atasan"
+                [matAutocomplete]="atasanAuto"
                 matInput
                 formControlName="atasan"
                 (keyup)="onSearch($event,'USER','nama')"
-                (focus)="onSearch($event,'USER','nama')"
+                (click)="onSearch($event,'USER','nama')"
                 />
-                <mat-autocomplete #atasan="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'atasanNik', 'nik')">
+                <mat-autocomplete #atasanAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'atasanNik', 'nik')">
                     <mat-option *ngFor="let option of atasanOptions" [value]="option">
                         {{option.nama}}
                     </mat-option>
@@ -117,14 +117,14 @@
                 <mat-label>Nik Atasan</mat-label>
                 <input
                 matInput
-                formControlName="atasanNik"
+                formControlName="nikAtasan"
                 readonly
                 />
                 <mat-error
                 *ngIf="
-                atasanNik.invalid &&
-                    (atasanNik.dirty || atasanNik.touched) &&
-                    atasanNik.errors.required
+                nikAtasan.invalid &&
+                    (nikAtasan.dirty || nikAtasan.touched) &&
+                    nikAtasan.errors.required
                 "
                 >NIK Atasan belum terisi.</mat-error
                 >
@@ -134,13 +134,13 @@
             <mat-form-field appearance="fill">
                 <mat-label>Unit</mat-label>
                 <input
-                [matAutocomplete]="unit"
+                [matAutocomplete]="unitAuto"
                 matInput
                 formControlName="unit"
                 (keyup)="onSearch($event,'UNIT', 'namaUnit')"
-                (focus)="onSearch($event,'UNIT', 'namaUnit')"
+                (click)="onSearch($event,'UNIT', 'namaUnit')"
                 />
-                <mat-autocomplete #unit="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeUnit', 'kode', ['cabang', 'kodeCabang'])">
+                <mat-autocomplete #unitAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeUnit', 'kode', ['cabang', 'kodeCabang'])">
                     <mat-option *ngFor="let option of unitOptions" [value]="option">
                         {{option.namaUnit}}
                     </mat-option>
@@ -173,13 +173,13 @@
             <mat-form-field appearance="fill">
                 <mat-label>Cabang</mat-label>
                 <input
-                [matAutocomplete]="cabang"
+                [matAutocomplete]="cabangAuto"
                 matInput
                 formControlName="cabang"
                 (keyup)="onSearch($event,'BRANCH', 'namaCabang')"
-                (focus)="onSearch($event,'BRANCH', 'namaCabang')"
+                (click)="onSearch($event,'BRANCH', 'namaCabang')"
                 />
-                <mat-autocomplete #cabang="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeCabang', 'kode', ['direktorat', 'kodeDirektorat'])">
+                <mat-autocomplete #cabangAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeCabang', 'kode', ['direktorat', 'kodeDirektorat'])">
                     <mat-option *ngFor="let option of cabangOptions" [value]="option">
                         {{option.namaCabang}}
                     </mat-option>
@@ -212,13 +212,13 @@
             <mat-form-field appearance="fill">
                 <mat-label>Direktorat</mat-label>
                 <input
-                [matAutocomplete]="direktorat"
+                [matAutocomplete]="direktoratAuto"
                 matInput
                 formControlName="direktorat"
                 (keyup)="onSearch($event, 'DIRECTORATE', 'namaDirektorat')"
-                (focus)="onSearch($event, 'DIRECTORATE', 'namaDirektorat')"
+                (click)="onSearch($event, 'DIRECTORATE', 'namaDirektorat')"
                 />
-                <mat-autocomplete #direktorat="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeDirektorat', 'kode', ['departemen', 'kodeDepartemen'])">
+                <mat-autocomplete #direktoratAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeDirektorat', 'kode', ['departemen', 'kodeDepartemen'])">
                     <mat-option *ngFor="let option of direktoratOptions" [value]="option">
                         {{option.namaDirektorat}}
                     </mat-option>
@@ -252,13 +252,13 @@
             <mat-form-field appearance="fill">
                 <mat-label>Departemen</mat-label>
                 <input
-                [matAutocomplete]="departemen"
+                [matAutocomplete]="departemenAuto"
                 matInput
                 formControlName="departemen"
                 (keyup)="onSearch($event,'DEPARTMENT', 'namaDepartemen')"
-                (focus)="onSearch($event,'DEPARTMENT', 'namaDepartemen')"
+                (click)="onSearch($event,'DEPARTMENT', 'namaDepartemen')"
                 />
-                <mat-autocomplete #departemen="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeDepartemen', 'kode', ['subDepartemen', 'kodeSubDepartemen'])">
+                <mat-autocomplete #departemenAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeDepartemen', 'kode', ['subDepartemen', 'kodeSubDepartemen'])">
                     <mat-option *ngFor="let option of departemenOptions" [value]="option">
                         {{option.namaDepartemen}}
                     </mat-option>
@@ -292,13 +292,13 @@
             <mat-form-field appearance="fill">
                 <mat-label>Sub Departemen</mat-label>
                 <input
-                [matAutocomplete]="subDepartemen"
+                [matAutocomplete]="subDepartemenAuto"
                 matInput
                 formControlName="subDepartemen"
                 (keyup)="onSearch($event, 'SUBDEPARTMENT','namaSubDepartemen')"
-                (focus)="onSearch($event, 'SUBDEPARTMENT','namaSubDepartemen')"
+                (click)="onSearch($event, 'SUBDEPARTMENT','namaSubDepartemen')"
                 />
-                <mat-autocomplete #subDepartemen="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeSubDepartemen', 'kode', [])">
+                <mat-autocomplete #subDepartemenAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeSubDepartemen', 'kode', [])">
                     <mat-option *ngFor="let option of subDepartemenOptions" [value]="option">
                         {{option.namaSubDepartemen}}
                     </mat-option>

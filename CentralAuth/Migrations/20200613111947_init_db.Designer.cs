@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CentralAuth.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200612071546_init_db_update1")]
-    partial class init_db_update1
+    [Migration("20200613111947_init_db")]
+    partial class init_db
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,31 +24,19 @@ namespace CentralAuth.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
+                    b.Property<string>("ConcurrencyStamp");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(256);
+                    b.Property<string>("Name");
 
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256);
+                    b.Property<string>("NormalizedName");
 
-                    b.Property<string>("ProjectUrl")
-                        .IsRequired();
-
-                    b.Property<string>("ProjectUrl1");
+                    b.Property<string>("ProjectUrl");
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("ProjectUrl");
+                    b.HasIndex("ProjectUrl");
 
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasName("RoleNameIndex");
-
-                    b.HasIndex("ProjectUrl1");
-
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("AppRole");
                 });
 
             modelBuilder.Entity("CentralAuth.Commons.Models.AppUser", b =>
@@ -354,6 +342,29 @@ namespace CentralAuth.Migrations
                     b.ToTable("UserProject");
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -440,9 +451,9 @@ namespace CentralAuth.Migrations
 
             modelBuilder.Entity("CentralAuth.Commons.Models.AppRole", b =>
                 {
-                    b.HasOne("CentralAuth.Commons.Models.Project", "Project")
+                    b.HasOne("CentralAuth.Commons.Models.Project")
                         .WithMany("Roles")
-                        .HasForeignKey("ProjectUrl1");
+                        .HasForeignKey("ProjectUrl");
                 });
 
             modelBuilder.Entity("CentralAuth.Commons.Models.AppUser", b =>
@@ -524,7 +535,7 @@ namespace CentralAuth.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("CentralAuth.Commons.Models.AppRole")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -548,7 +559,7 @@ namespace CentralAuth.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("CentralAuth.Commons.Models.AppRole")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);

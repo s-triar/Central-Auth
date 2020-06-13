@@ -12,10 +12,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Filter } from 'src/app/models/commons/filter';
 import { GridFilterType } from 'src/app/models/enums/gridfiltertype';
 import { GridResponse } from 'src/app/models/grid-response';
-import { HttpErrorResponse } from '@angular/common/http';
-import { ResponseContextGetter } from 'src/app/utils/response-context-getter';
-import { SnackbarNotifComponent } from 'src/app/components/snackbar-notif/snackbar-notif.component';
-import { SnackbarNotifConfig } from 'src/app/models/enums/snackbar-config';
 import { DialogPopUpConfig } from 'src/app/models/enums/dialog-config';
 import { CreateBranchComponent } from './dialogs/create-branch/create-branch.component';
 import { UpdateBranchComponent } from './dialogs/update-branch/update-branch.component';
@@ -154,25 +150,12 @@ export class MasterBranchComponent implements OnInit, OnDestroy {
   }
 
   FetchData() {
-    console.log(this.search);
-    this.isLoadingResults = true;
     this.dataSubscription = this._branchService.getByFilterGrid(this.search)
                                 .subscribe(
                                   (data: GridResponse<Branch>) => {
                                     this.lengthData = data.numberData;
                                     this.dataSource = new MatTableDataSource(data.data);
-                                    this.isLoadingResults = false;
                                   },
-                                  (err: HttpErrorResponse) => {
-                                    const context = ResponseContextGetter.GetErrorContext<any>(err);
-                                    this._snackbar.openFromComponent(SnackbarNotifComponent, {
-                                      duration: SnackbarNotifConfig.DURATION,
-                                      data: context,
-                                      horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
-                                      verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
-                                    });
-                                    this.isLoadingResults = false;
-                                  }
                                 );
   }
   Add(): void {

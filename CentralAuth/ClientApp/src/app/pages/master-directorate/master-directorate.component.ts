@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateDirectorateComponent } from './dialogs/create-directorate/create-directorate.component';
 import { Directorate } from 'src/app/models/directorate';
-import { DialogLoadingComponent } from 'src/app/components/dialog-loading/dialog-loading.component';
 import { DialogPopUpConfig } from 'src/app/models/enums/dialog-config';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -10,19 +9,12 @@ import { MatSort } from '@angular/material/sort';
 import { Grid } from 'src/app/models/grid';
 import { Filter } from 'src/app/models/commons/filter';
 import { Sort } from 'src/app/models/commons/sort';
-import { Pagination } from 'src/app/models/commons/pagination';
 import { DirectorateService } from 'src/app/services/directorate.service';
-import { Observable, Subscription } from 'rxjs';
-import { map, tap, debounceTime } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { GridFilterType } from 'src/app/models/enums/gridfiltertype';
 import { UpdateDirectorateComponent } from './dialogs/update-directorate/update-directorate.component';
 import { DeleteDirectorateComponent } from './dialogs/delete-directorate/delete-directorate.component';
-import { HttpErrorResponse } from '@angular/common/http';
 import { GridResponse } from 'src/app/models/grid-response';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { SnackbarNotifConfig } from 'src/app/models/enums/snackbar-config';
-import { ResponseContextGetter } from 'src/app/utils/response-context-getter';
-import { SnackbarNotifComponent } from 'src/app/components/snackbar-notif/snackbar-notif.component';
 
 @Component({
   selector: 'app-master-directorate',
@@ -68,8 +60,7 @@ export class MasterDirectorateComponent implements OnInit, OnDestroy {
   dialogSubscription: Subscription;
   constructor(
     private _dialog: MatDialog,
-    private _directorateService: DirectorateService,
-    private _snackbar: MatSnackBar
+    private _directorateService: DirectorateService
     ) {
     this.columnsKey = [...this.columnsKey, ...['edit', 'delete']];
     this.columnsFilter = [...this.columnsFilter, ...['action-edit', 'action-delete']];
@@ -145,24 +136,11 @@ export class MasterDirectorateComponent implements OnInit, OnDestroy {
   }
 
   FetchData() {
-    console.log(this.search);
-    this.isLoadingResults = true;
     this.dataSubscription = this._directorateService.getByFilterGrid(this.search)
                                 .subscribe(
                                   (data: GridResponse<Directorate>) => {
                                     this.lengthData = data.numberData;
                                     this.dataSource = new MatTableDataSource(data.data);
-                                    this.isLoadingResults = false;
-                                  },
-                                  (err: HttpErrorResponse) => {
-                                    const context = ResponseContextGetter.GetErrorContext<any>(err);
-                                    this._snackbar.openFromComponent(SnackbarNotifComponent, {
-                                      duration: SnackbarNotifConfig.DURATION,
-                                      data: context,
-                                      horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
-                                      verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
-                                    });
-                                    this.isLoadingResults = false;
                                   }
                                 );
   }

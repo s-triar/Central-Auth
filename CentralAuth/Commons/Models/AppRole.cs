@@ -10,8 +10,5 @@ namespace CentralAuth.Commons.Models
 {
     public class AppRole: IdentityRole<string>
     {
-        [Key]
-        public string ProjectUrl { get; set; }
-        public Project Project { get; private set; }
     }
 }

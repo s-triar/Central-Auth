@@ -7,6 +7,7 @@ namespace CentralAuth.Commons.Constants
 {
     public static class Role
     {
+        public const string SUPERADMIN = "SUPERADMIN";
         public const string ADMIN = "ADMIN";
         public const string USER = "USER";
         public const string DEVELOPER = "DEVELOPER";

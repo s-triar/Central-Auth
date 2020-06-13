@@ -1,24 +1,24 @@
 export class Login {
-  Nik: string;
-  Password: string;
+  nik: string;
+  password: string;
   public constructor(init?: Partial<Login>) {
     Object.assign(this, init);
   }
 }
 
 export class Register {
-  Nik: string;
-  Email: string;
-  Telpon: String;
-  Password: string;
-  ConfirmPassword: string;
+  nik: string;
+  email: string;
+  telpon: String;
+  password: string;
+  confirmPassword: string;
   public constructor(init?: Partial<Register>) {
     Object.assign(this, init);
   }
 }
 
 export class ForgetPassword {
-  Email: string;
+  email: string;
   public constructor(init?: Partial<ForgetPassword>) {
     Object.assign(this, init);
   }

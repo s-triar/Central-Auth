@@ -1,1 +1,51 @@
-<p>delete-user works!</p>
+<div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="0px">
+    <h1  mat-dialog-title>Delete Pengguna</h1>
+    <button 
+        (click)="onNoClick()"
+        matTooltip="Tutup Dialog"
+        matTooltipPosition="above"
+        appChangeIconOnHover 
+        IconNameEnter="remove_circle" 
+        IconNameLeave="remove_circle_outline" 
+        mat-icon-button color="warn" 
+        aria-label="Close button for disposing dialog">
+        <mat-icon >remove_circle_outline</mat-icon>
+    </button>  
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+    
+        <div style="text-align: center;"><mat-icon color="warn" style="width: 120px;height: 120px;font-size: 120px;font-weight: 600px;">error_outline</mat-icon></div>
+        <div style="text-align: center;"><p>Yakin hapus data ini?</p></div>
+    
+    <form [formGroup]="form" fxLayout="column" fxLayoutGap="10px" style="margin: 10px;">
+        <mat-form-field appearance="fill">
+            <mat-label>NIK</mat-label>
+            <input matInput formControlName="nik"  placeholder="Contoh: 02" readonly/>
+            <mat-error
+            *ngIf="nik.invalid && (nik.dirty || nik.touched) && nik.errors.required"
+            >NIK belum terisi.</mat-error
+            >
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Nama</mat-label>
+            <input
+            matInput
+            formControlName="nama"
+            readonly
+            />
+            <mat-error
+            *ngIf="
+            nama.invalid &&
+                (nama.dirty || nama.touched) &&
+                nama.errors.required
+            "
+            >Nama belum terisi.</mat-error
+            >
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions fxLayout="row-reverse" fxLayoutAlign="space-between center" fxLayoutGap="0px">
+    <button color="warn" mat-raised-button type="button" (click)="onSubmitClick()" [disabled]="!form.valid && !process">Delete</button>
+</mat-dialog-actions>

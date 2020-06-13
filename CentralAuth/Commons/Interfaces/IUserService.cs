@@ -13,5 +13,6 @@ namespace CentralAuth.Commons.Interfaces
         IEnumerable<User> GetBySubDepartment(string Kode);
         IEnumerable<User> GetByUnit(string Kode);
         IEnumerable<User> GetByDirectorate(string Kode);
+        User GetUserDetail(string Kode);
     }
 }

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace CentralAuth.Datas
 {
-    public class AppDbContext : IdentityDbContext<AppUser, AppRole, string>
+    public class AppDbContext : IdentityDbContext<AppUser, IdentityRole, string>
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Directorate> Directorates { get; set; }

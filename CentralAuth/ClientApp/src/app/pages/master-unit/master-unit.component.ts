@@ -8,14 +8,9 @@ import { MatSort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { UnitService } from 'src/app/services/unit.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Filter } from 'src/app/models/commons/filter';
 import { GridFilterType } from 'src/app/models/enums/gridfiltertype';
 import { GridResponse } from 'src/app/models/grid-response';
-import { HttpErrorResponse } from '@angular/common/http';
-import { ResponseContextGetter } from 'src/app/utils/response-context-getter';
-import { SnackbarNotifComponent } from 'src/app/components/snackbar-notif/snackbar-notif.component';
-import { SnackbarNotifConfig } from 'src/app/models/enums/snackbar-config';
 import { CreateUnitComponent } from './dialogs/create-unit/create-unit.component';
 import { DialogPopUpConfig } from 'src/app/models/enums/dialog-config';
 import { UpdateUnitComponent } from './dialogs/update-unit/update-unit.component';
@@ -72,7 +67,6 @@ export class MasterUnitComponent implements OnInit, OnDestroy {
   constructor(
     private _dialog: MatDialog,
     private _unitService: UnitService,
-    private _snackbar: MatSnackBar
     ) {
     this.columnsKey = [...this.columnsKey, ...['edit', 'delete']];
     this.columnsFilter = [...this.columnsFilter, ...['action-edit', 'action-delete']];
@@ -148,24 +142,12 @@ export class MasterUnitComponent implements OnInit, OnDestroy {
   }
 
   FetchData() {
-    this.isLoadingResults = true;
     this.dataSubscription = this._unitService.getByFilterGrid(this.search)
                                 .subscribe(
                                   (data: GridResponse<Unit>) => {
                                     this.lengthData = data.numberData;
                                     this.dataSource = new MatTableDataSource(data.data);
-                                    this.isLoadingResults = false;
                                   },
-                                  (err: HttpErrorResponse) => {
-                                    const context = ResponseContextGetter.GetErrorContext<any>(err);
-                                    this._snackbar.openFromComponent(SnackbarNotifComponent, {
-                                      duration: SnackbarNotifConfig.DURATION,
-                                      data: context,
-                                      horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
-                                      verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
-                                    });
-                                    this.isLoadingResults = false;
-                                  }
                                 );
   }
   Add(): void {

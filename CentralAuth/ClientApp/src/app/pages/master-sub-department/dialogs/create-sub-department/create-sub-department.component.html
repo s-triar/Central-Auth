@@ -46,7 +46,7 @@
             matInput
             formControlName="departemen"
             (keyup)="onSearch($event)"
-            (focus)="onSearch($event)"
+            (click)="onSearch($event)"
             />
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event)">
                 <mat-option *ngFor="let option of filteredOptions" [value]="option">

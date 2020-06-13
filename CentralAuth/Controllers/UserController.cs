@@ -22,12 +22,12 @@ namespace CentralAuth.Controllers
         private readonly IUserService _userService;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly RoleManager<AppRole> _roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public UserController(IUserService userService,
                               UserManager<AppUser> userManager, 
                               SignInManager<AppUser> signInManager, 
-                              RoleManager<AppRole> roleManager)
+                              RoleManager<IdentityRole> roleManager)
         {
             _userService = userService;
             _userManager = userManager;
@@ -40,6 +40,16 @@ namespace CentralAuth.Controllers
             AppUser user = await _userManager.FindByNameAsync(entity.Nik);
             if (user != null)
             {
+                if(entity.Claims == null)
+                {
+                    return BadRequest(new CustomResponse
+                    {
+                        errors = null,
+                        message = "Claims tidak dicantumkan",
+                        title = "Error",
+                        ok = false
+                    });
+                }
                 List<Claim> claim_list = new List<Claim>();
                 foreach(ClaimStandard c in entity.Claims)
                 {
@@ -236,14 +246,14 @@ namespace CentralAuth.Controllers
                         }
                     }
                     User userlama = this._userService.FindByKey(userUpdate.Nik);
-                    userlama.Ext = userlama.Ext.ToLower() == userUpdate.Ext.ToLower() ? userlama.Ext : userUpdate.Ext;
-                    userlama.DirektoratKode = userlama.DirektoratKode.ToLower() == userUpdate.KodeDirektorat.ToLower() ? userlama.DirektoratKode : userUpdate.KodeDirektorat;
-                    userlama.DepartemenKode = userlama.DepartemenKode.ToLower() == userUpdate.KodeDepartemen.ToLower() ? userlama.DepartemenKode : userUpdate.KodeDepartemen;
-                    userlama.SubDepartemenKode = userlama.SubDepartemenKode.ToLower() == userUpdate.KodeSubDepartemen.ToLower() ? userlama.SubDepartemenKode : userUpdate.KodeSubDepartemen;
-                    userlama.CabangKode = userlama.CabangKode.ToLower() == userUpdate.KodeCabang.ToLower() ? userlama.CabangKode : userUpdate.KodeCabang;
-                    userlama.UnitKode = userlama.UnitKode.ToLower() == userUpdate.KodeUnit.ToLower() ? userlama.UnitKode : userUpdate.KodeUnit;
+                    userlama.Ext = userlama.Ext == userUpdate.Ext ? userlama.Ext : userUpdate.Ext;
+                    userlama.DirektoratKode = userlama.DirektoratKode == userUpdate.KodeDirektorat ? userlama.DirektoratKode : userUpdate.KodeDirektorat;
+                    userlama.DepartemenKode = userlama.DepartemenKode == userUpdate.KodeDepartemen ? userlama.DepartemenKode : userUpdate.KodeDepartemen;
+                    userlama.SubDepartemenKode = userlama.SubDepartemenKode == userUpdate.KodeSubDepartemen ? userlama.SubDepartemenKode : userUpdate.KodeSubDepartemen;
+                    userlama.CabangKode = userlama.CabangKode == userUpdate.KodeCabang ? userlama.CabangKode : userUpdate.KodeCabang;
+                    userlama.UnitKode = userlama.UnitKode == userUpdate.KodeUnit ? userlama.UnitKode : userUpdate.KodeUnit;
                     userlama.Nama = userlama.Nama.ToLower() == userUpdate.Nama.ToLower() ? userlama.Nama : userUpdate.Nama;
-                    userlama.AtasanNik = userlama.AtasanNik.ToLower() == userUpdate.NikAtasan.ToLower() ? userlama.AtasanNik : userUpdate.NikAtasan;
+                    userlama.AtasanNik = userlama.AtasanNik == userUpdate.NikAtasan ? userlama.AtasanNik : userUpdate.NikAtasan;
                     this._userService.Update(userlama);
                     var res_save = await this._userService.SaveAsync();
                     if (res_save == 1)
@@ -357,10 +367,68 @@ namespace CentralAuth.Controllers
             return this._userService.GetAll();
         }
 
-        [HttpGet("[action]/{id}")]
-        public User GetById(string Kode)
+        [HttpGet("[action]")]
+        public User GetById([FromQuery]string Kode)
         {
             return this._userService.FindByKey(Kode);
         }
+
+        [HttpGet("[action]")]
+        public async Task<List<string>> GetAvailableRole([FromQuery]string Kode, [FromQuery]string cari=null)
+        {
+            if(cari == null)
+            {
+                cari = "";
+            }
+            var user = await this._userManager.FindByNameAsync(Kode);
+            var user_roles = await this._userManager.GetRolesAsync(user);
+            var roles = this._roleManager.Roles.Where(x=>x.Name.ToLower().Contains(cari.ToLower()))
+                                               .Where(x => !x.Name.Contains(":"))
+                                               .Where(x => !user_roles.Contains(x.Name))
+                                               .Where(x => !x.Name.Equals("USER"))
+                                               .OrderBy(x=>x.Name)
+                                               .Select(x=> x.Name).ToList();
+            return roles;
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IList<string>> GetUserRole([FromQuery]string Kode)
+        {
+            var user = await this._userManager.FindByNameAsync(Kode);
+            var user_roles = await this._userManager.GetRolesAsync(user);
+            user_roles = user_roles.Where(x => !x.Equals("USER")).OrderBy(x=>x).ToList();
+            return user_roles;
+        }
+
+        [HttpGet("[action]")]
+        public User GetDetail([FromQuery]string Kode)
+        {
+            return this._userService.GetUserDetail(Kode);
+        }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> RemoveRoleFromUser([FromBody]UserAddRole user)
+        {
+            var user_app = await this._userManager.FindByNameAsync(user.Nik);
+            var result = await this._userManager.RemoveFromRoleAsync(user_app, user.Roles.ElementAt(0));
+            if (result.Succeeded)
+            {
+                return Ok(new CustomResponse
+                {
+                    errors = null,
+                    message = "Delete Role User Berhasil",
+                    title = "Success",
+                    ok = true
+
+                });
+            }
+            return BadRequest(new CustomResponse
+            {
+                errors = null,
+                message = "Gagal Menghapus Role User pada IdentityUser",
+                title = "Error",
+                ok = false
+            });
+        }
+
     }
 }

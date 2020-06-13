@@ -14,6 +14,7 @@
     ></app-user-side-nav> -->
     <mat-nav-list>
       <a
+        *appRoles="['ADMIN']"
         mat-list-item
         [routerLink]="['/dashboard']"
         routerLinkActive="router-link-active"
@@ -23,6 +24,7 @@
       </a>
 
       <a
+        *appRoles="['ADMIN']"
         mat-list-item
         [routerLink]="['/pengguna']"
         routerLinkActive="router-link-active"
@@ -32,6 +34,7 @@
       </a>
 
       <a
+        *appRoles="['ADMIN']"
         mat-list-item
         [routerLink]="['/project']"
         routerLinkActive="router-link-active"
@@ -40,6 +43,7 @@
         Project
       </a>
       <a
+        *appRoles="['ADMIN']"
         mat-list-item
         [routerLink]="['/direktorat']"
         routerLinkActive="router-link-active"
@@ -48,6 +52,7 @@
         Direktorat
       </a>
       <a
+        *appRoles="['ADMIN']"
         mat-list-item
         [routerLink]="['/departemen']"
         routerLinkActive="router-link-active"
@@ -56,6 +61,7 @@
         Departemen
       </a>
       <a
+        *appRoles="['ADMIN']"
         mat-list-item
         [routerLink]="['/sub-departemen']"
         routerLinkActive="router-link-active"
@@ -64,6 +70,7 @@
         SubDepartemen
       </a>
       <a
+        *appRoles="['ADMIN']"
         mat-list-item
         [routerLink]="['/cabang']"
         routerLinkActive="router-link-active"
@@ -72,6 +79,7 @@
         Cabang
       </a>
       <a
+        *appRoles="['ADMIN']"
         mat-list-item
         [routerLink]="['/unit']"
         routerLinkActive="router-link-active"
@@ -93,7 +101,7 @@
         aria-label="Toggle sidenav"
         mat-icon-button
         (click)="drawer.toggle()"
-        *ngIf="!(isHandset$ | async)"
+        *ngIf="(user$ | async) != null"
         fxFlex="none"
       >
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
@@ -118,10 +126,12 @@
         }}</mat-icon>
       </button>
       <button
+        *ngIf="(user$ | async) != null"
         mat-icon-button
         type="button"
         matTooltip="Logout"
         matTooltipPosition="below"
+        (click)="logout()"
       >
         <mat-icon>meeting_room</mat-icon>
       </button>

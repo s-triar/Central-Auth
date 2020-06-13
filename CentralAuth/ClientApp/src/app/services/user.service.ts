@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserAddRole } from '../models/auth/user-add-role';
 import { SimpleGenericService } from './simple-generic.service';
 import { User } from '../models/user';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserRegister } from '../models/auth/user-register';
 import { UserUpdate } from '../models/auth/user-update';
@@ -30,4 +30,20 @@ export class UserService extends SimpleGenericService<User> {
   deleteAccount(payload: User): Observable<any> {
     return this._http.post(`api/User/DeleteAccount`, payload);
   }
+  getUserRole(payload: string): Observable<any> {
+    let header: HttpHeaders = new HttpHeaders();
+    header = header.set('reqnoloadingdialog', 'true');
+    return this._http.get(`api/User/GetUserRole`, {headers: header, params: {'Kode': payload}});
+  }
+  getAvailableRole(payload: string, cari: string): Observable<any> {
+    let header: HttpHeaders = new HttpHeaders();
+    header = header.set('reqnoloadingdialog', 'true');
+    return this._http.get(`api/User/GetAvailableRole`, {headers: header, params: {'Kode': payload, 'cari': cari}});
+  }
+  removeRoleFromUser(payload: UserAddRole): Observable<any> {
+    return this._http.post(`api/User/RemoveRoleFromUser`, payload);
+  }
+
+
+
 }

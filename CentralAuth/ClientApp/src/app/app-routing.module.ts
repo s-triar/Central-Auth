@@ -14,6 +14,10 @@ import { MasterDepartmentComponent } from './pages/master-department/master-depa
 import { MasterSubDepartmentComponent } from './pages/master-sub-department/master-sub-department.component';
 import { MasterBranchComponent } from './pages/master-branch/master-branch.component';
 import { MasterUnitComponent } from './pages/master-unit/master-unit.component';
+import { LoggedGuard } from './guards/logged.guard';
+import { GuestGuard } from './guards/guest.guard';
+import { RoleGuard } from './guards/role.guard';
+import { Role } from './models/enums/role.enum';
 
 const routes: Routes = [
   {
@@ -21,17 +25,68 @@ const routes: Routes = [
     component: MainNavComponent,
     children: [
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'pengguna', component: MasterUserComponent },
-      { path: 'project', component: MasterProjectComponent },
-      { path: 'departemen', component: MasterDepartmentComponent },
-      { path: 'sub-departemen', component: MasterSubDepartmentComponent },
-      { path: 'direktorat', component: MasterDirectorateComponent },
-      { path: 'cabang', component: MasterBranchComponent },
-      { path: 'unit', component: MasterUnitComponent },
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
-      { path: 'forget-password', component: ForgetPasswordComponent },
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+        canActivate: [LoggedGuard],
+      },
+      {
+        path: 'pengguna',
+        component: MasterUserComponent,
+        canActivate: [LoggedGuard, RoleGuard],
+        data: { roles: [Role.ADMIN] }
+      },
+      {
+        path: 'project',
+        component: MasterProjectComponent,
+        canActivate: [LoggedGuard, RoleGuard] ,
+        data: { roles: [Role.ADMIN] }
+      },
+      {
+        path: 'departemen',
+        component: MasterDepartmentComponent,
+        canActivate: [LoggedGuard, RoleGuard] ,
+        data: { roles: [Role.ADMIN] }
+      },
+      {
+        path: 'sub-departemen',
+        component: MasterSubDepartmentComponent,
+        canActivate: [LoggedGuard, RoleGuard] ,
+        data: { roles: [Role.ADMIN] }
+      },
+      {
+        path: 'direktorat',
+        component: MasterDirectorateComponent,
+        canActivate: [LoggedGuard, RoleGuard] ,
+        data: { roles: [Role.ADMIN] }
+      },
+      {
+        path: 'cabang',
+        component: MasterBranchComponent,
+        canActivate: [LoggedGuard, RoleGuard] ,
+        data: { roles: [Role.ADMIN] }
+      },
+      {
+        path: 'unit',
+        component: MasterUnitComponent,
+        canActivate: [LoggedGuard, RoleGuard] ,
+        data: { roles: [Role.ADMIN] }
+      },
+      {
+        path: 'login',
+        component: LoginComponent,
+        canActivate: [GuestGuard]
+      },
+      {
+        path: 'register',
+        component: RegisterComponent,
+        canActivate: [GuestGuard]
+      },
+      {
+        path: 'forget-password',
+        component: ForgetPasswordComponent,
+        canActivate: [GuestGuard]
+      },
     ],
   },
   {

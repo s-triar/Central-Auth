@@ -54,9 +54,14 @@ import { DeleteUnitComponent } from './pages/master-unit/dialogs/delete-unit/del
 import { DeleteUserComponent } from './pages/master-user/dialogs/delete-user/delete-user.component';
 import { UpdateUserComponent } from './pages/master-user/dialogs/update-user/update-user.component';
 import { CreateUserComponent } from './pages/master-user/dialogs/create-user/create-user.component';
+import { interceptorProviders } from './interceptors';
+import { RolesDirective } from './directives/roles.directive';
+import { RoleUserComponent } from './pages/master-user/dialogs/role-user/role-user.component';
+// import { JwtModule } from '@auth0/angular-jwt';
 
 @NgModule({
   declarations: [
+    RolesDirective,
     AppComponent,
     MainNavComponent,
     DevNavComponent,
@@ -98,6 +103,7 @@ import { CreateUserComponent } from './pages/master-user/dialogs/create-user/cre
     DeleteUserComponent,
     UpdateUserComponent,
     CreateUserComponent,
+    RoleUserComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -110,9 +116,16 @@ import { CreateUserComponent } from './pages/master-user/dialogs/create-user/cre
     MaterialModule,
     HttpClientModule,
     ReactiveFormsModule,
-
+    // JwtModule.forRoot({
+    //   config: {
+    //     tokenGetter: () => {
+    //       return localStorage.getItem('access_token');
+    //     }
+    //   },
+    // }),
   ],
   providers: [
+    ...interceptorProviders
     // {
     //   provide: MatPaginatorIntl,
     //   useClass: MatPaginationCustomProvider,
@@ -140,7 +153,12 @@ import { CreateUserComponent } from './pages/master-user/dialogs/create-user/cre
 
     CreateUnitComponent,
     DeleteUnitComponent,
-    UpdateUnitComponent
+    UpdateUnitComponent,
+
+    CreateUserComponent,
+    DeleteUserComponent,
+    UpdateUserComponent,
+    RoleUserComponent
   ]
 })
 export class AppModule {}

@@ -9,6 +9,20 @@ namespace CentralAuth.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "AspNetRoles",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Branches",
                 columns: table => new
                 {
@@ -58,6 +72,27 @@ namespace CentralAuth.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Units", x => x.Kode);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetRoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    RoleId = table.Column<string>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -148,7 +183,7 @@ namespace CentralAuth.Migrations
                     SubDepartemenKode = table.Column<string>(nullable: true),
                     DepartemenKode = table.Column<string>(nullable: true),
                     DirektoratKode = table.Column<string>(nullable: true),
-                    BranchKode = table.Column<string>(nullable: true),
+                    CabangKode = table.Column<string>(nullable: true),
                     UnitKode = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -161,8 +196,8 @@ namespace CentralAuth.Migrations
                         principalColumn: "Nik",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Users_Branches_BranchKode",
-                        column: x => x.BranchKode,
+                        name: "FK_Users_Branches_CabangKode",
+                        column: x => x.CabangKode,
                         principalTable: "Branches",
                         principalColumn: "Kode",
                         onDelete: ReferentialAction.Restrict);
@@ -295,6 +330,30 @@ namespace CentralAuth.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    RoleId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
@@ -315,23 +374,21 @@ namespace CentralAuth.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetRoles",
+                name: "AppRole",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    NormalizedName = table.Column<string>(nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
-                    ProjectUrl = table.Column<string>(nullable: false),
-                    ProjectUrl1 = table.Column<string>(nullable: true)
+                    ProjectUrl = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                    table.UniqueConstraint("AK_AspNetRoles_ProjectUrl", x => x.ProjectUrl);
+                    table.PrimaryKey("PK_AppRole", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetRoles_Projects_ProjectUrl1",
-                        column: x => x.ProjectUrl1,
+                        name: "FK_AppRole_Projects_ProjectUrl",
+                        column: x => x.ProjectUrl,
                         principalTable: "Projects",
                         principalColumn: "Url",
                         onDelete: ReferentialAction.Restrict);
@@ -363,50 +420,10 @@ namespace CentralAuth.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    RoleId = table.Column<string>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(nullable: false),
-                    RoleId = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_AppRole_ProjectUrl",
+                table: "AppRole",
+                column: "ProjectUrl");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -418,11 +435,6 @@ namespace CentralAuth.Migrations
                 table: "AspNetRoles",
                 column: "NormalizedName",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetRoles_ProjectUrl1",
-                table: "AspNetRoles",
-                column: "ProjectUrl1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -520,9 +532,9 @@ namespace CentralAuth.Migrations
                 column: "AtasanNik");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_BranchKode",
+                name: "IX_Users_CabangKode",
                 table: "Users",
-                column: "BranchKode");
+                column: "CabangKode");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_DepartemenKode",
@@ -547,6 +559,9 @@ namespace CentralAuth.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AppRole");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 

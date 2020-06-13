@@ -59,6 +59,13 @@
               <mat-icon>delete</mat-icon>
             </button> </td>
         </ng-container>
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
+          <td mat-cell *matCellDef="let element"> <button mat-icon-button matTooltip="Click to Configure Roles User" class="iconbutton"
+              (click)="Role(element)" color="accent">
+              <mat-icon>verified_user</mat-icon>
+            </button> </td>
+        </ng-container>
         <tr mat-header-row *matHeaderRowDef="columnsKey; sticky:true;" ></tr>
         <tr mat-header-row *matHeaderRowDef="columnsFilter; sticky:true;"></tr>
         <tr

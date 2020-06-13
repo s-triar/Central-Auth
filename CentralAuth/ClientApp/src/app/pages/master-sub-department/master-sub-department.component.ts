@@ -10,17 +10,11 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Filter } from 'src/app/models/commons/filter';
 import { GridFilterType } from 'src/app/models/enums/gridfiltertype';
 import { GridResponse } from 'src/app/models/grid-response';
-import { HttpErrorResponse } from '@angular/common/http';
-import { ResponseContextGetter } from 'src/app/utils/response-context-getter';
-import { SnackbarNotifComponent } from 'src/app/components/snackbar-notif/snackbar-notif.component';
-import { SnackbarNotifConfig } from 'src/app/models/enums/snackbar-config';
 import { DialogPopUpConfig } from 'src/app/models/enums/dialog-config';
 import { Sort } from 'src/app/models/commons/sort';
-import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-master-sub-department',
@@ -72,8 +66,7 @@ export class MasterSubDepartmentComponent implements OnInit, OnDestroy {
   dialogSubscription: Subscription;
   constructor(
     private _dialog: MatDialog,
-    private _subDepartmentService: SubDepartmentService,
-    private _snackbar: MatSnackBar
+    private _subDepartmentService: SubDepartmentService
     ) {
     this.columnsKey = [...this.columnsKey, ...['edit', 'delete']];
     this.columnsFilter = [...this.columnsFilter, ...['action-edit', 'action-delete']];
@@ -149,40 +142,12 @@ export class MasterSubDepartmentComponent implements OnInit, OnDestroy {
   }
 
   FetchData() {
-    this.isLoadingResults = true;
     this.dataSubscription = this._subDepartmentService.getByFilterGrid(this.search)
-                                .pipe(
-                                  tap(x => console.log(x)),
-                                  // map(x => {
-                                  //   const res = new GridResponse();
-                                  //   res.numberData = x.numberData;
-                                  //   const d = [];
-                                  //   for (const iterator of x.data) {
-                                  //     const td = new SubDepartment(iterator);
-                                  //     td.departemenKode = iterator.departemen.namaDepartemen;
-                                  //     d.push(td);
-                                  //   }
-                                  //   res.data = d;
-                                  //   return res;
-                                  // })
-                                )
                                 .subscribe(
                                   (data: GridResponse<SubDepartment>) => {
                                     this.lengthData = data.numberData;
                                     this.dataSource = new MatTableDataSource(data.data);
-                                    this.isLoadingResults = false;
                                   },
-                                  (err: HttpErrorResponse) => {
-                                    console.log(err);
-                                    const context = ResponseContextGetter.GetErrorContext<any>(err);
-                                    this._snackbar.openFromComponent(SnackbarNotifComponent, {
-                                      duration: SnackbarNotifConfig.DURATION,
-                                      data: context,
-                                      horizontalPosition: <any>SnackbarNotifConfig.HORIZONTAL_POSITION,
-                                      verticalPosition: <any>SnackbarNotifConfig.VERTICAL_POSITION
-                                    });
-                                    this.isLoadingResults = false;
-                                  }
                                 );
   }
   Add(): void {
