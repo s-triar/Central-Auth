@@ -1,4 +1,6 @@
-﻿using System;
+﻿using IdentityModel;
+using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,27 +8,30 @@ using System.Threading.Tasks;
 
 namespace CentralAuth.Commons.Models
 {
-    public class Project
+    public class Project : MetaClass
     {
         public Project()
         {
             this.Users = new HashSet<UserProject>();
-            this.Roles = new HashSet<AppRole>();
+            this.Roles = new HashSet<IdentityRole>();
+            this.Collaborations = new HashSet<ProjectToProject>();
         }
         [Key]
-        public string Url { get; set; }
-        public string NamaProject { get; set; }
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
         public string ApiName { get; set; }
-        public string ScopeApi { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public string CreatedBy { get; set; }
-        public Nullable<DateTime> UpdatedAt { get; set; }
-        public string UpdatedBy { get; set; }
-        public string UserDevNik { get; set; }
-        public User UserDev { get; private set; }
-        public virtual ICollection<UserProject> Users { get; }
-        public virtual ICollection<AppRole> Roles { get; }
+        [Required]
+        public string Url { get; set; }
+        [Required]
+        public string Type { get; set; }
+        [Required]
+        public string NamaProject { get; set; }
+        [Required]
+        public string ClientId { get; set; }
+        [Required]
+        public string ClientSecret { get; set; }
+        public string DeveloperNik { get; set; }
+        public User Developer { get; set; }
+        public ICollection<UserProject> Users { get; set; }
+        public ICollection<IdentityRole> Roles { get; set; }
+        public ICollection<ProjectToProject> Collaborations { get; set; }
     }
 }

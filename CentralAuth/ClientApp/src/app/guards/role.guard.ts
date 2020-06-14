@@ -16,6 +16,9 @@ export class RoleGuard implements CanActivate {
       const currentUser = this._authService.user.value;
       if (currentUser && currentUser.nik !== null) {
         const rolesUser = this._authService.user_roles.value;
+        if (rolesUser.includes('SUPERADMIN')) { // just by pass route for super admin
+          return true;
+        }
         if (next.data.roles && this.checkRoles(next.data.roles, rolesUser) === false) {
           this._router.navigate(['/']);
           return false;

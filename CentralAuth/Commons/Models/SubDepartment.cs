@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CentralAuth.Commons.Models
 {
-    public class SubDepartment
+    public class SubDepartment : MetaClass
     {
 
         public SubDepartment()
@@ -15,11 +15,8 @@ namespace CentralAuth.Commons.Models
         }
         [Key]
         public string Kode { get; set; }
+        [Required]
         public string NamaSubDepartemen { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public string CreatedBy { get; set; }
-        public Nullable<DateTime> UpdatedAt { get; set; }
-        public string UpdatedBy { get; set; }
         public string DepartemenKode { get; set; }
         public virtual Department Departemen { get; set; }
         public virtual ICollection<User> Users { get;  }

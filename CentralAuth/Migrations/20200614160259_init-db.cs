@@ -4,37 +4,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CentralAuth.Migrations
 {
-    public partial class init_db : Migration
+    public partial class initdb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "AspNetRoles",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Branches",
                 columns: table => new
                 {
                     Kode = table.Column<string>(nullable: false),
-                    Singkatan = table.Column<string>(nullable: true),
-                    NamaCabang = table.Column<string>(nullable: true),
-                    Keterangan = table.Column<string>(nullable: true),
-                    Alamat = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     UpdatedAt = table.Column<DateTime>(nullable: true),
-                    UpdatedBy = table.Column<string>(nullable: true)
+                    UpdatedBy = table.Column<string>(nullable: true),
+                    Singkatan = table.Column<string>(nullable: false),
+                    NamaCabang = table.Column<string>(nullable: false),
+                    Keterangan = table.Column<string>(nullable: true),
+                    Alamat = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -46,11 +32,11 @@ namespace CentralAuth.Migrations
                 columns: table => new
                 {
                     Kode = table.Column<string>(nullable: false),
-                    NamaDirektorat = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     UpdatedAt = table.Column<DateTime>(nullable: true),
-                    UpdatedBy = table.Column<string>(nullable: true)
+                    UpdatedBy = table.Column<string>(nullable: true),
+                    NamaDirektorat = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,12 +48,12 @@ namespace CentralAuth.Migrations
                 columns: table => new
                 {
                     Kode = table.Column<string>(nullable: false),
-                    NamaUnit = table.Column<string>(nullable: true),
-                    Keterangan = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     UpdatedAt = table.Column<DateTime>(nullable: true),
-                    UpdatedBy = table.Column<string>(nullable: true)
+                    UpdatedBy = table.Column<string>(nullable: true),
+                    NamaUnit = table.Column<string>(nullable: false),
+                    Keterangan = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -75,36 +61,15 @@ namespace CentralAuth.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    RoleId = table.Column<string>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Departments",
                 columns: table => new
                 {
                     Kode = table.Column<string>(nullable: false),
-                    NamaDepartemen = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     UpdatedAt = table.Column<DateTime>(nullable: true),
                     UpdatedBy = table.Column<string>(nullable: true),
+                    NamaDepartemen = table.Column<string>(nullable: false),
                     DirektoratKode = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -119,25 +84,29 @@ namespace CentralAuth.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BranchUnit",
+                name: "BranchUnits",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    UpdatedAt = table.Column<DateTime>(nullable: true),
+                    UpdatedBy = table.Column<string>(nullable: true),
                     CabangKode = table.Column<string>(nullable: true),
                     UnitKode = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BranchUnit", x => x.Id);
+                    table.PrimaryKey("PK_BranchUnits", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BranchUnit_Branches_CabangKode",
+                        name: "FK_BranchUnits_Branches_CabangKode",
                         column: x => x.CabangKode,
                         principalTable: "Branches",
                         principalColumn: "Kode",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_BranchUnit_Units_UnitKode",
+                        name: "FK_BranchUnits_Units_UnitKode",
                         column: x => x.UnitKode,
                         principalTable: "Units",
                         principalColumn: "Kode",
@@ -149,11 +118,11 @@ namespace CentralAuth.Migrations
                 columns: table => new
                 {
                     Kode = table.Column<string>(nullable: false),
-                    NamaSubDepartemen = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     UpdatedAt = table.Column<DateTime>(nullable: true),
                     UpdatedBy = table.Column<string>(nullable: true),
+                    NamaSubDepartemen = table.Column<string>(nullable: false),
                     DepartemenKode = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -172,13 +141,13 @@ namespace CentralAuth.Migrations
                 columns: table => new
                 {
                     Nik = table.Column<string>(nullable: false),
-                    Nama = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    Ext = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     UpdatedAt = table.Column<DateTime>(nullable: true),
                     UpdatedBy = table.Column<string>(nullable: true),
+                    Nama = table.Column<string>(nullable: false),
+                    Email = table.Column<string>(nullable: false),
+                    Ext = table.Column<string>(nullable: true),
                     AtasanNik = table.Column<string>(nullable: true),
                     SubDepartemenKode = table.Column<string>(nullable: true),
                     DepartemenKode = table.Column<string>(nullable: true),
@@ -265,24 +234,24 @@ namespace CentralAuth.Migrations
                 name: "Projects",
                 columns: table => new
                 {
-                    Url = table.Column<string>(nullable: false),
-                    NamaProject = table.Column<string>(nullable: true),
-                    ClientId = table.Column<string>(nullable: true),
-                    ClientSecret = table.Column<string>(nullable: true),
-                    ApiName = table.Column<string>(nullable: true),
-                    ScopeApi = table.Column<string>(nullable: true),
+                    ApiName = table.Column<string>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     UpdatedAt = table.Column<DateTime>(nullable: true),
                     UpdatedBy = table.Column<string>(nullable: true),
-                    UserDevNik = table.Column<string>(nullable: true)
+                    Url = table.Column<string>(nullable: false),
+                    Type = table.Column<string>(nullable: false),
+                    NamaProject = table.Column<string>(nullable: false),
+                    ClientId = table.Column<string>(nullable: false),
+                    ClientSecret = table.Column<string>(nullable: false),
+                    DeveloperNik = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Projects", x => x.Url);
+                    table.PrimaryKey("PK_Projects", x => x.ApiName);
                     table.ForeignKey(
-                        name: "FK_Projects_Users_UserDevNik",
-                        column: x => x.UserDevNik,
+                        name: "FK_Projects_Users_DeveloperNik",
+                        column: x => x.DeveloperNik,
                         principalTable: "Users",
                         principalColumn: "Nik",
                         onDelete: ReferentialAction.Restrict);
@@ -330,6 +299,123 @@ namespace CentralAuth.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetUserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Value = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetRoles",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    ProjectApiName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoles_Projects_ProjectApiName",
+                        column: x => x.ProjectApiName,
+                        principalTable: "Projects",
+                        principalColumn: "ApiName",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectToProjects",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    UpdatedAt = table.Column<DateTime>(nullable: true),
+                    UpdatedBy = table.Column<string>(nullable: true),
+                    ProjekApiName = table.Column<string>(nullable: false),
+                    KolaborasiApiName = table.Column<string>(nullable: false),
+                    Approve = table.Column<bool>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectToProjects", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectToProjects_Projects_ProjekApiName",
+                        column: x => x.ProjekApiName,
+                        principalTable: "Projects",
+                        principalColumn: "ApiName",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserProjects",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    UpdatedAt = table.Column<DateTime>(nullable: true),
+                    UpdatedBy = table.Column<string>(nullable: true),
+                    PenggunaNik = table.Column<string>(nullable: true),
+                    ProjekApiName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserProjects", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserProjects_Users_PenggunaNik",
+                        column: x => x.PenggunaNik,
+                        principalTable: "Users",
+                        principalColumn: "Nik",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserProjects_Projects_ProjekApiName",
+                        column: x => x.ProjekApiName,
+                        principalTable: "Projects",
+                        principalColumn: "ApiName",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetRoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    RoleId = table.Column<string>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
@@ -353,78 +439,6 @@ namespace CentralAuth.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "AspNetUserTokens",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Value = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AppRole",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    NormalizedName = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    ProjectUrl = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AppRole", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AppRole_Projects_ProjectUrl",
-                        column: x => x.ProjectUrl,
-                        principalTable: "Projects",
-                        principalColumn: "Url",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserProject",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UserNik = table.Column<string>(nullable: true),
-                    ProjectUrl = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserProject", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserProject_Projects_ProjectUrl",
-                        column: x => x.ProjectUrl,
-                        principalTable: "Projects",
-                        principalColumn: "Url",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_UserProject_Users_UserNik",
-                        column: x => x.UserNik,
-                        principalTable: "Users",
-                        principalColumn: "Nik",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AppRole_ProjectUrl",
-                table: "AppRole",
-                column: "ProjectUrl");
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -435,6 +449,11 @@ namespace CentralAuth.Migrations
                 table: "AspNetRoles",
                 column: "NormalizedName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetRoles_ProjectApiName",
+                table: "AspNetRoles",
+                column: "ProjectApiName");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -474,13 +493,13 @@ namespace CentralAuth.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BranchUnit_CabangKode",
-                table: "BranchUnit",
+                name: "IX_BranchUnits_CabangKode",
+                table: "BranchUnits",
                 column: "CabangKode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BranchUnit_UnitKode",
-                table: "BranchUnit",
+                name: "IX_BranchUnits_UnitKode",
+                table: "BranchUnits",
                 column: "UnitKode");
 
             migrationBuilder.CreateIndex(
@@ -489,27 +508,20 @@ namespace CentralAuth.Migrations
                 column: "DirektoratKode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_ApiName",
-                table: "Projects",
-                column: "ApiName",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Projects_ClientId",
                 table: "Projects",
                 column: "ClientId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_ClientSecret",
+                name: "IX_Projects_DeveloperNik",
                 table: "Projects",
-                column: "ClientSecret",
-                unique: true);
+                column: "DeveloperNik");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_UserDevNik",
-                table: "Projects",
-                column: "UserDevNik");
+                name: "IX_ProjectToProjects_ProjekApiName",
+                table: "ProjectToProjects",
+                column: "ProjekApiName");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SubDepartments_DepartemenKode",
@@ -517,14 +529,14 @@ namespace CentralAuth.Migrations
                 column: "DepartemenKode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserProject_ProjectUrl",
-                table: "UserProject",
-                column: "ProjectUrl");
+                name: "IX_UserProjects_PenggunaNik",
+                table: "UserProjects",
+                column: "PenggunaNik");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserProject_UserNik",
-                table: "UserProject",
-                column: "UserNik");
+                name: "IX_UserProjects_ProjekApiName",
+                table: "UserProjects",
+                column: "ProjekApiName");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_AtasanNik",
@@ -560,9 +572,6 @@ namespace CentralAuth.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AppRole");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -578,10 +587,13 @@ namespace CentralAuth.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BranchUnit");
+                name: "BranchUnits");
 
             migrationBuilder.DropTable(
-                name: "UserProject");
+                name: "ProjectToProjects");
+
+            migrationBuilder.DropTable(
+                name: "UserProjects");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

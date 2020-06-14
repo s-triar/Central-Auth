@@ -12,7 +12,7 @@
       [Nik]="user.Nik"
       [Name]="user.Name"
     ></app-user-side-nav> -->
-    <mat-nav-list>
+    <mat-nav-list >
       <a
         *appRoles="['ADMIN']"
         mat-list-item
@@ -22,16 +22,34 @@
         <mat-icon>dashboard</mat-icon>
         Dashboard
       </a>
-
+      
       <a
+        *appRoles="['DEVELOPER']"
+        mat-list-item
+        [routerLink]="['/my-project']"
+        routerLinkActive="router-link-active"
+      >
+        <mat-icon>dashboard</mat-icon>
+        Projek Saya
+      </a>
+      <a
+        *appRoles="['ADMIN']"
+        mat-list-item
+        (click)="toggleMenuMaster()"
+      >
+        <mat-icon>menu</mat-icon>
+        Master
+      </a>
+      <mat-nav-list *ngIf="showMenuMaster" class="child">
+        <a
         *appRoles="['ADMIN']"
         mat-list-item
         [routerLink]="['/pengguna']"
         routerLinkActive="router-link-active"
-      >
-        <mat-icon>people</mat-icon>
-        Pengguna
-      </a>
+        >
+          <mat-icon>people</mat-icon>
+          Pengguna
+        </a>
 
       <a
         *appRoles="['ADMIN']"
@@ -40,7 +58,7 @@
         routerLinkActive="router-link-active"
       >
         <mat-icon>vertical_split</mat-icon>
-        Project
+        Projek
       </a>
       <a
         *appRoles="['ADMIN']"
@@ -87,6 +105,8 @@
         <mat-icon>domain</mat-icon>
         Unit
       </a>
+      </mat-nav-list>
+
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

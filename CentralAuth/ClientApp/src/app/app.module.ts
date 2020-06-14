@@ -57,6 +57,7 @@ import { CreateUserComponent } from './pages/master-user/dialogs/create-user/cre
 import { interceptorProviders } from './interceptors';
 import { RolesDirective } from './directives/roles.directive';
 import { RoleUserComponent } from './pages/master-user/dialogs/role-user/role-user.component';
+import { MyProjectComponent } from './pages/my-project/my-project.component';
 // import { JwtModule } from '@auth0/angular-jwt';
 
 @NgModule({
@@ -104,6 +105,7 @@ import { RoleUserComponent } from './pages/master-user/dialogs/role-user/role-us
     UpdateUserComponent,
     CreateUserComponent,
     RoleUserComponent,
+    MyProjectComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

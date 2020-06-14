@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CentralAuth.Commons.Models
 {
-    public class BranchUnit
+    public class BranchUnit : MetaClass
     {
         [Key]
         public int Id { get; set; }

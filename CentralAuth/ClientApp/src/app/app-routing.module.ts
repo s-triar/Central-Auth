@@ -18,6 +18,7 @@ import { LoggedGuard } from './guards/logged.guard';
 import { GuestGuard } from './guards/guest.guard';
 import { RoleGuard } from './guards/role.guard';
 import { Role } from './models/enums/role.enum';
+import { MyProjectComponent } from './pages/my-project/my-project.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,21 @@ const routes: Routes = [
     component: MainNavComponent,
     children: [
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+      {
+        path: 'login',
+        component: LoginComponent,
+        canActivate: [GuestGuard]
+      },
+      {
+        path: 'register',
+        component: RegisterComponent,
+        canActivate: [GuestGuard]
+      },
+      {
+        path: 'forget-password',
+        component: ForgetPasswordComponent,
+        canActivate: [GuestGuard]
+      },
       {
         path: 'dashboard',
         component: DashboardComponent,
@@ -73,32 +89,13 @@ const routes: Routes = [
         data: { roles: [Role.ADMIN] }
       },
       {
-        path: 'login',
-        component: LoginComponent,
-        canActivate: [GuestGuard]
-      },
-      {
-        path: 'register',
-        component: RegisterComponent,
-        canActivate: [GuestGuard]
-      },
-      {
-        path: 'forget-password',
-        component: ForgetPasswordComponent,
-        canActivate: [GuestGuard]
+        path: 'my-project',
+        component: MyProjectComponent,
+        canActivate: [LoggedGuard, RoleGuard] ,
+        data: { roles: [Role.DEVELOPER] }
       },
     ],
-  },
-  {
-    path: 'dev',
-    component: DevNavComponent,
-    children: [
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
-      { path: 'forget-password', component: ForgetPasswordComponent },
-    ],
-  },
+  }
 ];
 
 @NgModule({

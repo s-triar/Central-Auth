@@ -10,5 +10,6 @@ namespace CentralAuth.Commons.Models
 {
     public class AppRole: IdentityRole<string>
     {
+        
     }
 }

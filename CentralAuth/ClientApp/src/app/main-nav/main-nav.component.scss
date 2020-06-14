@@ -17,11 +17,8 @@
   top: 0;
   z-index: 1;
 }
-.child,
-.hr-child {
-  display: none;
-}
-.child a span {
+
+.child > a{
   padding-left: 16px;
 }
 .router-link-active {
@@ -36,10 +33,10 @@
 
 .light-lighter-color{
   $primary: map-get($light-theme, accent);
-  color: mat-color($primary, lighter);
+  color: mat-color($primary);
 }
 
 .dark-lighter-color{
   $accent: map-get($dark-theme, accent);
-  color: mat-color($accent, lighter);
+  color: mat-color($accent);
 }

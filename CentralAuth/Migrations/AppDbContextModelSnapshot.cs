@@ -17,26 +17,6 @@ namespace CentralAuth.Migrations
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("CentralAuth.Commons.Models.AppRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ConcurrencyStamp");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("NormalizedName");
-
-                    b.Property<string>("ProjectUrl");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectUrl");
-
-                    b.ToTable("AppRole");
-                });
-
             modelBuilder.Entity("CentralAuth.Commons.Models.AppUser", b =>
                 {
                     b.Property<string>("Id")
@@ -109,9 +89,11 @@ namespace CentralAuth.Migrations
 
                     b.Property<string>("Keterangan");
 
-                    b.Property<string>("NamaCabang");
+                    b.Property<string>("NamaCabang")
+                        .IsRequired();
 
-                    b.Property<string>("Singkatan");
+                    b.Property<string>("Singkatan")
+                        .IsRequired();
 
                     b.Property<DateTime?>("UpdatedAt");
 
@@ -132,7 +114,15 @@ namespace CentralAuth.Migrations
 
                     b.Property<string>("CabangKode");
 
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<string>("CreatedBy");
+
                     b.Property<string>("UnitKode");
+
+                    b.Property<DateTime?>("UpdatedAt");
+
+                    b.Property<string>("UpdatedBy");
 
                     b.HasKey("Id");
 
@@ -140,7 +130,7 @@ namespace CentralAuth.Migrations
 
                     b.HasIndex("UnitKode");
 
-                    b.ToTable("BranchUnit");
+                    b.ToTable("BranchUnits");
                 });
 
             modelBuilder.Entity("CentralAuth.Commons.Models.Department", b =>
@@ -154,7 +144,8 @@ namespace CentralAuth.Migrations
 
                     b.Property<string>("DirektoratKode");
 
-                    b.Property<string>("NamaDepartemen");
+                    b.Property<string>("NamaDepartemen")
+                        .IsRequired();
 
                     b.Property<DateTime?>("UpdatedAt");
 
@@ -176,7 +167,8 @@ namespace CentralAuth.Migrations
 
                     b.Property<string>("CreatedBy");
 
-                    b.Property<string>("NamaDirektorat");
+                    b.Property<string>("NamaDirektorat")
+                        .IsRequired();
 
                     b.Property<DateTime?>("UpdatedAt");
 
@@ -189,43 +181,70 @@ namespace CentralAuth.Migrations
 
             modelBuilder.Entity("CentralAuth.Commons.Models.Project", b =>
                 {
-                    b.Property<string>("Url")
+                    b.Property<string>("ApiName")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ApiName");
+                    b.Property<string>("ClientId")
+                        .IsRequired();
 
-                    b.Property<string>("ClientId");
-
-                    b.Property<string>("ClientSecret");
+                    b.Property<string>("ClientSecret")
+                        .IsRequired();
 
                     b.Property<DateTime>("CreatedAt");
 
                     b.Property<string>("CreatedBy");
 
-                    b.Property<string>("NamaProject");
+                    b.Property<string>("DeveloperNik");
 
-                    b.Property<string>("ScopeApi");
+                    b.Property<string>("NamaProject")
+                        .IsRequired();
+
+                    b.Property<string>("Type")
+                        .IsRequired();
 
                     b.Property<DateTime?>("UpdatedAt");
 
                     b.Property<string>("UpdatedBy");
 
-                    b.Property<string>("UserDevNik");
+                    b.Property<string>("Url")
+                        .IsRequired();
 
-                    b.HasKey("Url");
-
-                    b.HasIndex("ApiName")
-                        .IsUnique();
+                    b.HasKey("ApiName");
 
                     b.HasIndex("ClientId")
                         .IsUnique();
 
-                    b.HasIndex("ClientSecret")
-                        .IsUnique();
-
-                    b.HasIndex("UserDevNik");
+                    b.HasIndex("DeveloperNik");
 
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("CentralAuth.Commons.Models.ProjectToProject", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool?>("Approve");
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<string>("KolaborasiApiName")
+                        .IsRequired();
+
+                    b.Property<string>("ProjekApiName")
+                        .IsRequired();
+
+                    b.Property<DateTime?>("UpdatedAt");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjekApiName");
+
+                    b.ToTable("ProjectToProjects");
                 });
 
             modelBuilder.Entity("CentralAuth.Commons.Models.SubDepartment", b =>
@@ -239,7 +258,8 @@ namespace CentralAuth.Migrations
 
                     b.Property<string>("DepartemenKode");
 
-                    b.Property<string>("NamaSubDepartemen");
+                    b.Property<string>("NamaSubDepartemen")
+                        .IsRequired();
 
                     b.Property<DateTime?>("UpdatedAt");
 
@@ -263,7 +283,8 @@ namespace CentralAuth.Migrations
 
                     b.Property<string>("Keterangan");
 
-                    b.Property<string>("NamaUnit");
+                    b.Property<string>("NamaUnit")
+                        .IsRequired();
 
                     b.Property<DateTime?>("UpdatedAt");
 
@@ -291,11 +312,13 @@ namespace CentralAuth.Migrations
 
                     b.Property<string>("DirektoratKode");
 
-                    b.Property<string>("Email");
+                    b.Property<string>("Email")
+                        .IsRequired();
 
                     b.Property<string>("Ext");
 
-                    b.Property<string>("Nama");
+                    b.Property<string>("Nama")
+                        .IsRequired();
 
                     b.Property<string>("SubDepartemenKode");
 
@@ -327,17 +350,25 @@ namespace CentralAuth.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ProjectUrl");
+                    b.Property<DateTime>("CreatedAt");
 
-                    b.Property<string>("UserNik");
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<string>("PenggunaNik");
+
+                    b.Property<string>("ProjekApiName");
+
+                    b.Property<DateTime?>("UpdatedAt");
+
+                    b.Property<string>("UpdatedBy");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProjectUrl");
+                    b.HasIndex("PenggunaNik");
 
-                    b.HasIndex("UserNik");
+                    b.HasIndex("ProjekApiName");
 
-                    b.ToTable("UserProject");
+                    b.ToTable("UserProjects");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -354,11 +385,15 @@ namespace CentralAuth.Migrations
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256);
 
+                    b.Property<string>("ProjectApiName");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
                         .HasName("RoleNameIndex");
+
+                    b.HasIndex("ProjectApiName");
 
                     b.ToTable("AspNetRoles");
                 });
@@ -447,13 +482,6 @@ namespace CentralAuth.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("CentralAuth.Commons.Models.AppRole", b =>
-                {
-                    b.HasOne("CentralAuth.Commons.Models.Project")
-                        .WithMany("Roles")
-                        .HasForeignKey("ProjectUrl");
-                });
-
             modelBuilder.Entity("CentralAuth.Commons.Models.AppUser", b =>
                 {
                     b.HasOne("CentralAuth.Commons.Models.User", "Detail")
@@ -481,9 +509,17 @@ namespace CentralAuth.Migrations
 
             modelBuilder.Entity("CentralAuth.Commons.Models.Project", b =>
                 {
-                    b.HasOne("CentralAuth.Commons.Models.User", "UserDev")
-                        .WithMany("DevProjects")
-                        .HasForeignKey("UserDevNik");
+                    b.HasOne("CentralAuth.Commons.Models.User", "Developer")
+                        .WithMany("DevProjeks")
+                        .HasForeignKey("DeveloperNik");
+                });
+
+            modelBuilder.Entity("CentralAuth.Commons.Models.ProjectToProject", b =>
+                {
+                    b.HasOne("CentralAuth.Commons.Models.Project", "Projek")
+                        .WithMany("Collaborations")
+                        .HasForeignKey("ProjekApiName")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("CentralAuth.Commons.Models.SubDepartment", b =>
@@ -522,13 +558,20 @@ namespace CentralAuth.Migrations
 
             modelBuilder.Entity("CentralAuth.Commons.Models.UserProject", b =>
                 {
-                    b.HasOne("CentralAuth.Commons.Models.Project", "Project")
-                        .WithMany("Users")
-                        .HasForeignKey("ProjectUrl");
+                    b.HasOne("CentralAuth.Commons.Models.User", "Pengguna")
+                        .WithMany("Projeks")
+                        .HasForeignKey("PenggunaNik");
 
-                    b.HasOne("CentralAuth.Commons.Models.User", "User")
-                        .WithMany("Projects")
-                        .HasForeignKey("UserNik");
+                    b.HasOne("CentralAuth.Commons.Models.Project", "Projek")
+                        .WithMany("Users")
+                        .HasForeignKey("ProjekApiName");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.HasOne("CentralAuth.Commons.Models.Project")
+                        .WithMany("Roles")
+                        .HasForeignKey("ProjectApiName");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

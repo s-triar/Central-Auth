@@ -31,11 +31,14 @@ export class AuthService {
   }
 
   setLoggedUser() {
+
     const u = this._tokenService.getUserInfo();
-    const userDataString = u['http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata'];
-    const userData = new User(JSON.parse(userDataString));
-    const rolesData = u['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-    this.user.next(userData);
-    this.user_roles.next(rolesData);
+    if (u) {
+      const userDataString = u['http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata'];
+      const userData = new User(JSON.parse(userDataString));
+      const rolesData = u['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+      this.user.next(userData);
+      this.user_roles.next(rolesData);
+    }
   }
 }

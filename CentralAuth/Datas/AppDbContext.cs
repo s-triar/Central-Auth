@@ -21,6 +21,9 @@ namespace CentralAuth.Datas
         public DbSet<Project> Projects { get; set; }
         public DbSet<Unit> Units { get; set; }
         public DbSet<Branch> Branches { get; set; }
+        public DbSet<ProjectToProject> ProjectToProjects { get; set; }
+        public DbSet<UserProject> UserProjects { get; set; }
+        public DbSet<BranchUnit> BranchUnits { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
@@ -30,19 +33,12 @@ namespace CentralAuth.Datas
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            
             base.OnModelCreating(builder);
             builder.Entity<Branch>()
                    .HasIndex(b => b.Singkatan)
                    .IsUnique();
             builder.Entity<Project>()
                    .HasIndex(b => b.ClientId)
-                   .IsUnique();
-            builder.Entity<Project>()
-                   .HasIndex(b => b.ClientSecret)
-                   .IsUnique();
-            builder.Entity<Project>()
-                   .HasIndex(b => b.ApiName)
                    .IsUnique();
         }
     }

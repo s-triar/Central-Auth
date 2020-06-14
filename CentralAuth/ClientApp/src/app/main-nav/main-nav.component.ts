@@ -16,6 +16,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./main-nav.component.scss'],
 })
 export class MainNavComponent implements OnInit, OnDestroy {
+  showMenuMaster = false;
   theme$: Observable<Theme>;
   formSubscription: Subscription;
   user$: Observable<User>;
@@ -61,5 +62,8 @@ export class MainNavComponent implements OnInit, OnDestroy {
                                   }
                                 )
                                 ;
+  }
+  toggleMenuMaster() {
+    this.showMenuMaster = !this.showMenuMaster;
   }
 }
