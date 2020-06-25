@@ -12,8 +12,10 @@ export class ResponseContextGetter {
             response.title = 'Error';
         } else {
             const errorContent: CustomResponse<T> = obj.error;
-            response.message = errorContent.message.toLowerCase().includes('see') ? errorContent.errors[0] : errorContent.message;
-            response.ok = obj.ok;
+            response.message = errorContent.message.toLowerCase().includes('see') ? errorContent.errors[0] :
+                                errorContent.message ? errorContent.message :
+                                errorContent.errors.toString();
+            response.ok = obj.ok ? obj.ok  : false;
             response.statusCode = obj.status;
             response.title = errorContent.title;
         }

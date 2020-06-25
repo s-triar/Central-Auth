@@ -1,0 +1,123 @@
+<div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="0px">
+    <h1  mat-dialog-title>Tambah Departemen</h1>
+    <button 
+        (click)="onNoClick()"
+        matTooltip="Tutup Dialog"
+        matTooltipPosition="above"
+        appChangeIconOnHover 
+        IconNameEnter="remove_circle" 
+        IconNameLeave="remove_circle_outline" 
+        mat-icon-button color="warn" 
+        aria-label="Close button for disposing dialog">
+        <mat-icon >remove_circle_outline</mat-icon>
+    </button>  
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+    <form [formGroup]="form" fxLayout="column" fxLayoutGap="10px" style="margin: 10px;">
+        <mat-form-field appearance="fill">
+            <mat-label>Nama Projek</mat-label>
+            <input matInput formControlName="namaProject" cdkFocusInitial/>
+            <mat-error
+            *ngIf="namaProject.invalid && (namaProject.dirty || namaProject.touched) && namaProject.errors.required"
+            >Nama Projek belum terisi.</mat-error
+            >
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Nama API</mat-label>
+            <input matInput formControlName="apiName" 
+            (blur)="onCheckApiName($event)"
+            (keyup)="setLoadingChecking($event)"
+            />
+            <mat-icon *ngIf="(apiName.dirty || apiName.touched)" matSuffix [color]="apiChecking ? 'accent' : isApiNameAvailable ? 'primary':'warn'">{{apiChecking ? 'cached' : isApiNameAvailable ? 'done':'close'}}</mat-icon>
+            <mat-error
+            *ngIf="apiName.invalid && (apiName.dirty || apiName.touched) && apiName.errors.required"
+            >Nama API belum terisi.</mat-error
+            >
+            <mat-error
+            *ngIf="apiName.invalid && (apiName.dirty || apiName.touched) && apiName.errors.notUnique"
+            >Nama API sudah dipakai.</mat-error
+            >
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>URL Projek</mat-label>
+            <input
+            matInput
+            formControlName="url"
+            placeholder="contoh: https:127.0.0.1:5334/namaprojek"
+            />
+            <mat-error
+            *ngIf="
+            url.invalid &&
+                (url.dirty || url.touched) &&
+                url.errors.required
+            "
+            >URL Projek belum terisi.</mat-error
+            >
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>NIK Developer</mat-label>
+            <input
+            [matAutocomplete]="auto"
+            matInput
+            formControlName="developerNik"
+            (keyup)="onSearch($event)"
+            (click)="onSearch($event)"
+            />
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event)">
+                <mat-option *ngFor="let option of filteredOptions" [value]="option">
+                    {{option.nik +'-'+ option.nama}}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-error
+            *ngIf="
+            developerNik.invalid &&
+                (developerNik.dirty || developerNik.touched) &&
+                developerNik.errors.required
+            "
+            >NIK Developer belum terisi.</mat-error
+            >
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Developer</mat-label>
+            <input
+            matInput
+            formControlName="developer"
+            readonly
+            />
+            <mat-error
+            *ngIf="
+            developer.invalid &&
+            (developer.dirty || developer.touched) &&
+            developer.errors.required
+            "
+            >Developer belum terisi.</mat-error
+            >
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Tipe Projek</mat-label>
+            <input
+            [matAutocomplete]="autoType"
+            matInput
+            formControlName="type"
+            />
+            <mat-autocomplete #autoType="matAutocomplete" >
+                <mat-option *ngFor="let opt of filteredTypeOptions" [value]="opt">
+                    {{opt}}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-error
+            *ngIf="
+            type.invalid &&
+                (type.dirty || type.touched) &&
+                type.errors.required
+            "
+            >Tipe Projek belum terisi.</mat-error
+            >
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions fxLayout="row-reverse" fxLayoutAlign="space-between center" fxLayoutGap="0px">
+    <button color="primary" mat-raised-button type="button" (click)="onSubmitClick()" [disabled]="!form.valid && !process">Submit</button>
+</mat-dialog-actions>

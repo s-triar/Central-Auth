@@ -47,7 +47,7 @@ export class DeleteDepartmentComponent implements OnInit, OnDestroy {
     if (this.form.valid) {
       this.process = true;
       this.formSubscription = this._departmentService
-          .delete(this.form.value['kode'])
+          .delete(new Department(this.form.value))
           .subscribe(
             (x: CustomResponse<any>) => {
               this.formSubscription.unsubscribe();

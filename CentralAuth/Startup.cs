@@ -47,7 +47,6 @@ namespace CentralAuth
             {
                 config.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
             });
-
             services.AddIdentity<AppUser, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = false;
@@ -60,6 +59,38 @@ namespace CentralAuth
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
+
+            //services.ConfigureApplicationCookie(config =>
+            //{
+            //    config.Cookie.Name = "IdentityServer.Cookie";
+            //    config.LoginPath = "/AuthId/Login";
+            //    config.LogoutPath = "/AuthId/Logout";
+            //});
+
+            services.AddIdentityServer()
+                    //(options =>
+                    //    {
+                    //        options.UserInteraction.LoginUrl = "/IdServer/login";
+                    //        options.UserInteraction.LogoutUrl = "/IdServer/logout";
+                    //    })
+                    //.AddClientStore<AppClient>()
+                    //.AddClientStoreCache<AppClient>()
+                    //.AddResourceStore<AppApiResource>()
+                    //.AddResourceStoreCache<AppApiResource>()
+
+                    .AddEFConfigurationStore(Configuration.GetConnectionString("DefaultConnection"))
+                    .AddConfigurationStore(options =>
+                    {
+                        options.ConfigureDbContext = b => b.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
+                    })
+                    .AddOperationalStore(options =>
+                    {
+                        options.ConfigureDbContext = b => b.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
+                    })
+                    .AddAspNetIdentity<AppUser>()
+                    .AddDeveloperSigningCredential()
+                    //.AddJwtBearerClientAuthentication()
+                    ;// jika nggak maka pake sertifikat;
 
             JwtConfig jwtConfig = Configuration.GetSection("Jwt").Get<JwtConfig>();
             services.AddAuthentication(config =>
@@ -85,7 +116,7 @@ namespace CentralAuth
                         };
                     });
 
-            
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             //X509Certificate2 cert = null;
@@ -110,44 +141,32 @@ namespace CentralAuth
             //    cert = new X509Certificate2(Path.Combine("~", "nama_certificate.pfx"), "password_certificate");
             //}
 
+            
 
-            services.AddIdentityServer(options =>
-                    {
-                        options.UserInteraction.LoginUrl = "/login";
-                        options.UserInteraction.LogoutUrl = "/logout";
-                    })
-                    //.AddClientStore<AppClient>()
-                    //.AddClientStoreCache<AppClient>()
-                    //.AddResourceStore<AppApiResource>()
-                    //.AddResourceStoreCache<AppApiResource>()
-                    
-                    .AddEFConfigurationStore(Configuration.GetConnectionString("DefaultConnection"))
-                    .AddConfigurationStore(options =>
-                    {
-                        options.ConfigureDbContext = b => b.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
-                    })
-                    .AddOperationalStore(options =>
-                    {
-                        options.ConfigureDbContext = b => b.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
-                    })
-                    .AddAspNetIdentity<AppUser>()
-                    .AddDeveloperSigningCredential();// jika nggak maka pake sertifikat;
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+
+
+
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
+
+            services.AddHttpContextAccessor();
+            services.AddScoped<IUtilityService, UtilityService>();
             services.AddScoped<ISubDepartmentService, SubDepartmentService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IDirectorateService, DirectorateService>();
             services.AddScoped<IBranchService, BranchService>();
             services.AddScoped<IUnitService, UnitService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IProjectService, ProjectService>();
 
 
         }
@@ -169,9 +188,9 @@ namespace CentralAuth
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-            app.UseAuthentication();
-            //app.UseIdentityServer();
-            
+            //app.UseAuthentication();
+            app.UseIdentityServer();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

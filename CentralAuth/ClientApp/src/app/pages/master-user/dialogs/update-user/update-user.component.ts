@@ -71,31 +71,31 @@ export class UpdateUserComponent implements OnInit {
     private _unitService: UnitService,
   ) {
     this.form.controls['unit'].setValue(data.unit);
-    this.form.controls['kodeUnit'].setValue(data.unit.kode);
+    this.form.controls['kodeUnit'].setValue(data.unit?.kode);
     if (data.unit != null) {
       this.form.controls['cabang'].enable();
       this.form.controls['kodeCabang'].enable();
     }
     this.form.controls['cabang'].setValue(data.cabang);
-    this.form.controls['kodeCabang'].setValue(data.cabang.kode);
+    this.form.controls['kodeCabang'].setValue(data.cabang?.kode);
     if (data.cabang != null) {
       this.form.controls['direktorat'].enable();
       this.form.controls['kodeDirektorat'].enable();
     }
     this.form.controls['direktorat'].setValue(data.direktorat);
-    this.form.controls['kodeDirektorat'].setValue(data.direktorat.kode);
+    this.form.controls['kodeDirektorat'].setValue(data.direktorat?.kode);
     if (data.direktorat != null) {
       this.form.controls['departemen'].enable();
       this.form.controls['kodeDepartemen'].enable();
     }
     this.form.controls['departemen'].setValue(data.departemen);
-    this.form.controls['kodeDepartemen'].setValue(data.departemen.kode);
+    this.form.controls['kodeDepartemen'].setValue(data.departemen?.kode);
     if (data.departemen != null) {
       this.form.controls['subDepartemen'].enable();
       this.form.controls['kodeSubDepartemen'].enable();
     }
     this.form.controls['subDepartemen'].setValue(data.subDepartemen);
-    this.form.controls['kodeSubDepartemen'].setValue(data.subDepartemen.kode);
+    this.form.controls['kodeSubDepartemen'].setValue(data.subDepartemen?.kode);
   }
 
   ngOnInit(): void {

@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CentralAuth.Migrations
+namespace CentralAuth.Migrations.Db.AppDb
 {
-    public partial class initdb : Migration
+    public partial class InitialAppDbContext : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

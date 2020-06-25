@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CentralAuth.Migrations.ConfigurationDb
+namespace CentralAuth.Migrations.IdentityServer.ConfigurationDb
 {
-    public partial class init_config_db : Migration
+    public partial class InitialIdentityServerConfigurationDbMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

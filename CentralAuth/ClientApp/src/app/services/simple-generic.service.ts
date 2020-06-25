@@ -18,8 +18,8 @@ export class SimpleGenericService<T> {
   update(payload: T): Observable<any> {
     return this._http.post(`api/${this.controller}/Update`, payload);
   }
-  delete(payload: string): Observable<any> {
-    return this._http.post(`api/${this.controller}/Delete`, {Kode: payload});
+  delete(payload: T): Observable<any> {
+    return this._http.post(`api/${this.controller}/Delete`, payload);
   }
   getAll(): Observable<any> {
     return this._http.get('api/${this.controller}/GetAll');

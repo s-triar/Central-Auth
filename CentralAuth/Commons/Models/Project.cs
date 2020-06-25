@@ -24,9 +24,7 @@ namespace CentralAuth.Commons.Models
         public string Type { get; set; }
         [Required]
         public string NamaProject { get; set; }
-        [Required]
         public string ClientId { get; set; }
-        [Required]
         public string ClientSecret { get; set; }
         public string DeveloperNik { get; set; }
         public User Developer { get; set; }

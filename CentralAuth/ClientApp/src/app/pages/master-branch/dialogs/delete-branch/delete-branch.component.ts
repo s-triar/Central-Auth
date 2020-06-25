@@ -51,7 +51,7 @@ export class DeleteBranchComponent implements OnInit, OnDestroy {
     if (this.form.valid) {
       this.process = true;
       this.formSubscription = this._branchService
-          .delete(this.form.value['kode'])
+          .delete(new Branch(this.form.value))
           .subscribe(
             (x: CustomResponse<any>) => {
               this.formSubscription.unsubscribe();

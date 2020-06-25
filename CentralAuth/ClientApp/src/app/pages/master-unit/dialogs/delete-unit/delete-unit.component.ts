@@ -47,7 +47,7 @@ export class DeleteUnitComponent implements OnInit, OnDestroy {
     if (this.form.valid) {
       this.process = true;
       this.formSubscription = this._unitService
-          .delete(this.form.value['kode'])
+          .delete(new Unit(this.form.value))
           .subscribe(
             (x: CustomResponse<any>) => {
               this.formSubscription.unsubscribe();

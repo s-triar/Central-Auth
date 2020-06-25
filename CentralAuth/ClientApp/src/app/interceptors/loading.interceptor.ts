@@ -23,12 +23,11 @@ export class LoadingInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       tap(
         (event: HttpEvent<any>) => {
-          if (event instanceof HttpResponse) {
+          // if (event instanceof HttpResponse) {
             setTimeout(() => {
               this._loadingService.hideLoading();
             }, 300);
-          }
-
+          // }
         },
         // (error: any) => {
         //   if (error instanceof HttpErrorResponse) {
@@ -37,9 +36,7 @@ export class LoadingInterceptor implements HttpInterceptor {
         // }
       ),
       catchError((error: any) => {
-        if (error instanceof HttpErrorResponse) {
-          this._loadingService.hideLoading();
-        }
+        this._loadingService.hideLoading();
         return throwError(error);
       })
     );

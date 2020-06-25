@@ -58,6 +58,10 @@ import { interceptorProviders } from './interceptors';
 import { RolesDirective } from './directives/roles.directive';
 import { RoleUserComponent } from './pages/master-user/dialogs/role-user/role-user.component';
 import { MyProjectComponent } from './pages/my-project/my-project.component';
+import { CreateProjectComponent } from './pages/master-project/dialogs/create-project/create-project.component';
+import { DeleteProjectComponent } from './pages/master-project/dialogs/delete-project/delete-project.component';
+import { ListUserComponent } from './pages/master-project/dialogs/list-user/list-user.component';
+import { DeveloperComponent } from './pages/master-project/dialogs/developer/developer.component';
 // import { JwtModule } from '@auth0/angular-jwt';
 
 @NgModule({
@@ -106,6 +110,10 @@ import { MyProjectComponent } from './pages/my-project/my-project.component';
     CreateUserComponent,
     RoleUserComponent,
     MyProjectComponent,
+    CreateProjectComponent,
+    DeleteProjectComponent,
+    ListUserComponent,
+    DeveloperComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

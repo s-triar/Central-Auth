@@ -46,7 +46,7 @@ export class DeleteDirectorateComponent implements OnInit, OnDestroy {
     if (this.form.valid) {
       this.process = true;
       this.formSubscription = this._directorateService
-          .delete(this.form.value['Kode'])
+          .delete(new Directorate(this.form.value))
           .subscribe(
             (x: CustomResponse<any>) => {
               this.formSubscription.unsubscribe();
