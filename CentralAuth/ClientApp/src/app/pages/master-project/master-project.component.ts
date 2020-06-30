@@ -17,6 +17,7 @@ import { CreateProjectComponent } from './dialogs/create-project/create-project.
 import { User } from 'src/app/models/user';
 import { DeveloperComponent } from './dialogs/developer/developer.component';
 import { ListUserComponent } from './dialogs/list-user/list-user.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-master-project',
@@ -79,7 +80,8 @@ export class MasterProjectComponent implements OnInit, OnDestroy {
   dialogSubscription: Subscription;
   constructor(
     private _dialog: MatDialog,
-    private _projectService: ProjectService
+    private _projectService: ProjectService,
+    private _router: Router
     ) {
     this.columnsKey = [...this.columnsKey, ...['userlist', 'devinfo', 'edit', 'delete']];
     this.columnsFilter = [...this.columnsFilter, ...['action-userlist', 'action-devinfo', 'action-edit', 'action-delete']];
@@ -194,6 +196,7 @@ export class MasterProjectComponent implements OnInit, OnDestroy {
 
   Edit(data: Project) {
     // pergi ke halaman projek
+    this._router.navigate(['dev', data.apiName, 'dashboard']);
   }
 
   OpenDeveloperInfo(data: Project) {

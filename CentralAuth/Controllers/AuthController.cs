@@ -101,9 +101,9 @@ namespace CentralAuth.Controllers
             {
                 claims.Add(new Claim(ClaimTypes.Role, r));
             }
-            User u = this._userService.GetUserDetail(user.DetailNik);
-            string u_detail = JsonConvert.SerializeObject(u);
-            claims.Add(new Claim(ClaimTypes.UserData, u_detail));
+            //User u = this._userService.GetUserDetail(user.DetailNik);
+            //string u_detail = JsonConvert.SerializeObject(u);
+            //claims.Add(new Claim(ClaimTypes.UserData, u_detail));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.SecretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

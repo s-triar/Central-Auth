@@ -11,6 +11,6 @@ namespace CentralAuth.Commons.Models
         public string title { get; set; }
         public bool ok { get; set; }
         public IEnumerable<string> errors { get; set; }
-        public object data { get; set; }
+        public dynamic data { get; set; }
     }
 }

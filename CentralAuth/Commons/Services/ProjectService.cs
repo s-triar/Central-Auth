@@ -421,6 +421,11 @@ namespace CentralAuth.Commons.Services
             this._configContext.ApiResources.RemoveRange(apiresources);
         }
 
+        public void DeleteUserProject(string ApiName)
+        {
+            var users = this._context.UserProjects.Where(x => x.ProjekApiName == ApiName).AsEnumerable();
+            this._context.UserProjects.RemoveRange(users);
+        }
         public void DeleteProjectCollab(string ApiName)
         {
             var connections = this._context.ProjectToProjects
@@ -435,15 +440,15 @@ namespace CentralAuth.Commons.Services
         {
             var clients = this._configContext
                                    .Clients
+                                   .Include(x=>x.AllowedScopes)
                                    .Where(x => x.AllowedScopes.Where(y => y.Scope == ApiName).Count() > 0)
-                                   .AsEnumerable();
+                                   .ToList();
             if (clients.Count() > 0)
             {
                 foreach (var c in clients)
                 {
-                    var cs = c.AllowedScopes.FirstOrDefault(y => y.Scope == ApiName);
-                    if (cs != null)
-                    {
+                    if (c.AllowedScopes!=null) { 
+                        var cs = c.AllowedScopes.FirstOrDefault(y => y.Scope == ApiName);
                         c.AllowedScopes.Remove(cs);
                     }
                 }
@@ -455,6 +460,23 @@ namespace CentralAuth.Commons.Services
         {
             var p = this._context.Projects.FirstOrDefault(x => x.ApiName == ApiName);
             this._context.Projects.Remove(p);
+        }
+
+        public int GetNumberUser(string ApiName)
+        {
+            return this._context.UserProjects.Where(x => x.ProjekApiName == ApiName).Count();
+        }
+        public int GetNumberRole(string ApiName)
+        {
+            return this._context.Roles.Where(x => x.Name.Contains(ApiName)).Count();
+        }
+        public int GetNumberFollower(string ApiName)
+        {
+            return this._context.ProjectToProjects.Where(x => x.KolaborasiApiName == ApiName).Count();
+        }
+        public int GetNumberFollowing(string ApiName)
+        {
+            return this._context.ProjectToProjects.Where(x => x.ProjekApiName == ApiName).Count();
         }
     }
 }

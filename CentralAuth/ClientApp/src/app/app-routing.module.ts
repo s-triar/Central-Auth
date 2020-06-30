@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/auth/login/login.component';
 import { RegisterComponent } from './pages/auth/register/register.component';
 import { ForgetPasswordComponent } from './pages/auth/forget-password/forget-password.component';
 import { MainNavComponent } from './main-nav/main-nav.component';
-import { DevNavComponent } from './dev-nav/dev-nav.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { MasterUserComponent } from './pages/master-user/master-user.component';
 import { MasterProjectComponent } from './pages/master-project/master-project.component';
@@ -94,8 +92,9 @@ const routes: Routes = [
         canActivate: [LoggedGuard, RoleGuard] ,
         data: { roles: [Role.DEVELOPER] }
       },
+      { path: 'dev', loadChildren: () => import('./pages/dev/dev.module').then(m => m.DevModule) }
     ],
-  }
+  },
 ];
 
 @NgModule({

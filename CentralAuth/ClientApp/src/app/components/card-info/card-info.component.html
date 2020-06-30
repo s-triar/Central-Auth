@@ -1,0 +1,13 @@
+<mat-card appCardHover class="dashboard-card" (click)="goTo(Url)" fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="5px">
+    <div fxFlex="55" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="0px">
+        <div fxFlex="70" style="text-align: center;">
+            <mat-icon color="primary" style="text-align: center;font-size:128px;width:128px;">{{Icon}}</mat-icon>
+        </div>
+        <div fxFlex="30">
+            <p style="text-align: center;">{{Title}}</p>
+        </div>
+    </div>
+    <div fxFlex="45">
+        <p style="text-align: center; font-size: 76px;">{{Number}}</p>
+    </div>
+</mat-card>

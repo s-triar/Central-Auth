@@ -18,13 +18,16 @@ export class NotifyInterceptor implements HttpInterceptor {
   constructor(private _notifService: NotifSnackbarService) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+
     return next.handle(request).pipe(
       tap(
         (event: HttpEvent<any>) => {
           if (event instanceof HttpResponse) {
             try {
               const context = ResponseContextGetter.GetCustomResponseContext<any>(event.body);
-              this._notifService.showSnack(context);
+              if (!request.headers.has('reqnonotify')) {
+                this._notifService.showSnack(context);
+              }
             } catch (error) {
 
             }

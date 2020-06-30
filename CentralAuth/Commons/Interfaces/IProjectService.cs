@@ -11,6 +11,7 @@ namespace CentralAuth.Commons.Interfaces
 {
     public interface IProjectService : ISimpleGenericService<Project>
     {
+        void DeleteUserProject(string ApiName);
         void DeleteProject(string ApiName);
         void CreateClient(Project entity);
         void DeleteClient(string ApiName);
@@ -40,5 +41,10 @@ namespace CentralAuth.Commons.Interfaces
         void AddClaimToUserProject(string ClaimKey, string ClaimValue, string Nik, string ApiName);
         void AddClaimToRoleOfUserProject(string ClaimKey, string ClaimValue, string RoleName, string Nik, string ApiName);
         bool checkAvailabilityApiName(string ApiName);
+
+        int GetNumberUser(string ApiName);
+        int GetNumberRole(string ApiName);
+        int GetNumberFollower(string ApiName);
+        int GetNumberFollowing(string ApiName);
     }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Project } from '../models/project';
 import { SimpleGenericService } from './simple-generic.service';
 import { Observable } from 'rxjs';
@@ -7,6 +7,8 @@ import { GridResponse } from '../models/grid-response';
 import { QueryStringBuilder } from '../utils/query-string-builder';
 import { Grid } from '../models/grid';
 import { User } from '../models/user';
+import { URLSearchParams } from 'url';
+import { CustomResponse } from '../models/custom-response';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +35,13 @@ export class ProjectService extends SimpleGenericService<Project> {
     return this._http.get<GridResponse<User>>(`api/Project/GetListUserByFilterGrid?${params}`, {headers: header});
   }
 
+  getProjectDashboard(payload: string): Observable<any> {
+    let header: HttpHeaders = new HttpHeaders();
+    header = header.set('reqnonotify', 'true');
+    return this._http.get<CustomResponse<any>>(`api/Project/GetProjectDashboard`, {headers: header, params : {'ApiName': payload}});
+  }
+
+  
 
 
 }

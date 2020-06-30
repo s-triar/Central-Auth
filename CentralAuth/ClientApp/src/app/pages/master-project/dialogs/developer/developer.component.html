@@ -100,10 +100,8 @@
                 matInput
                 readonly
                 formControlName="atasan"
-                (keyup)="onSearch($event,'USER','nama')"
-                (click)="onSearch($event,'USER','nama')"
                 />
-                <mat-autocomplete #atasanAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'atasanNik', 'nik')">
+                <mat-autocomplete #atasanAuto="matAutocomplete" >
                     <mat-option *ngFor="let option of atasanOptions" [value]="option">
                         {{option.nama}}
                     </mat-option>
@@ -142,10 +140,8 @@
                 matInput
                 formControlName="unit"
                 readonly
-                (keyup)="onSearch($event,'UNIT', 'namaUnit')"
-                (click)="onSearch($event,'UNIT', 'namaUnit')"
                 />
-                <mat-autocomplete #unitAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeUnit', 'kode', ['cabang', 'kodeCabang'])">
+                <mat-autocomplete #unitAuto="matAutocomplete" >
                     <mat-option *ngFor="let option of unitOptions" [value]="option">
                         {{option.namaUnit}}
                     </mat-option>
@@ -182,10 +178,9 @@
                 matInput
                 readonly
                 formControlName="cabang"
-                (keyup)="onSearch($event,'BRANCH', 'namaCabang')"
-                (click)="onSearch($event,'BRANCH', 'namaCabang')"
+
                 />
-                <mat-autocomplete #cabangAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeCabang', 'kode', ['direktorat', 'kodeDirektorat'])">
+                <mat-autocomplete #cabangAuto="matAutocomplete" >
                     <mat-option *ngFor="let option of cabangOptions" [value]="option">
                         {{option.namaCabang}}
                     </mat-option>
@@ -222,10 +217,8 @@
                 matInput
                 readonly
                 formControlName="direktorat"
-                (keyup)="onSearch($event, 'DIRECTORATE', 'namaDirektorat')"
-                (click)="onSearch($event, 'DIRECTORATE', 'namaDirektorat')"
                 />
-                <mat-autocomplete #direktoratAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeDirektorat', 'kode', ['departemen', 'kodeDepartemen'])">
+                <mat-autocomplete #direktoratAuto="matAutocomplete" >
                     <mat-option *ngFor="let option of direktoratOptions" [value]="option">
                         {{option.namaDirektorat}}
                     </mat-option>
@@ -263,10 +256,8 @@
                 matInput
                 readonly
                 formControlName="departemen"
-                (keyup)="onSearch($event,'DEPARTMENT', 'namaDepartemen')"
-                (click)="onSearch($event,'DEPARTMENT', 'namaDepartemen')"
                 />
-                <mat-autocomplete #departemenAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeDepartemen', 'kode', ['subDepartemen', 'kodeSubDepartemen'])">
+                <mat-autocomplete #departemenAuto="matAutocomplete" >
                     <mat-option *ngFor="let option of departemenOptions" [value]="option">
                         {{option.namaDepartemen}}
                     </mat-option>
@@ -304,10 +295,8 @@
                 matInput
                 readonly
                 formControlName="subDepartemen"
-                (keyup)="onSearch($event, 'SUBDEPARTMENT','namaSubDepartemen')"
-                (click)="onSearch($event, 'SUBDEPARTMENT','namaSubDepartemen')"
                 />
-                <mat-autocomplete #subDepartemenAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'kodeSubDepartemen', 'kode', [])">
+                <mat-autocomplete #subDepartemenAuto="matAutocomplete">
                     <mat-option *ngFor="let option of subDepartemenOptions" [value]="option">
                         {{option.namaSubDepartemen}}
                     </mat-option>

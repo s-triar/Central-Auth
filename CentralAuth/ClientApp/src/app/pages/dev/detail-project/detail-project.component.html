@@ -1,0 +1,48 @@
+<div class="grid-container">
+    <h1>{{project.namaProject}}</h1>
+    <div>
+        <p>
+            {{project.url}}
+            <button
+                mat-icon-button
+                matTooltip="Open link"
+                (click)="goToOutworldLink(project.url)"
+            >
+                <mat-icon>open_in_new</mat-icon>
+            </button>
+        </p>
+    </div>
+    <mat-divider></mat-divider>
+    <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px" style="margin-top:5px;padding-top:10px; padding-bottom:5px;">
+        <mat-form-field appearance="legacy" fxFlex style="width:600px;">
+            <mat-label>API Name</mat-label>
+            <input matInput type="text" readonly aria-readonly="true" [value]="project.apiName">
+        </mat-form-field>
+        <mat-form-field appearance="legacy" fxFlex style="width:600px;">
+            <mat-label>Kategori</mat-label>
+            <input matInput type="text" readonly aria-readonly="true" [value]="project.type">
+        </mat-form-field>
+        <mat-form-field appearance="legacy" fxFlex style="width:600px;">
+            <mat-label>Client ID</mat-label>
+            <input matInput type="text" readonly aria-readonly="true" [value]="project.clientId" #clientid>
+            <button mat-icon-button matSuffix [attr.aria-label]="'copy value'" matTooltip="Click to copy value" (click)="copyText(clientid)">
+                <mat-icon>content_copy</mat-icon>
+            </button>
+        </mat-form-field>
+        <mat-form-field appearance="legacy" fxFlex style="width:600px;">
+            <mat-label>Client Secret</mat-label>
+            <input matInput type="text" readonly aria-readonly="true" [value]="project.clientSecret" #clientsecret>
+            <button mat-icon-button matSuffix [attr.aria-label]="'copy value'" matTooltip="Click to copy value" (click)="copyText(clientsecret)">
+                <mat-icon>content_copy</mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-grid-list cols="4" rowHeight="222">
+        <mat-grid-tile colspan="1" *ngFor="let item of infoProject">
+            <app-card-info [Icon]="item.icon" [Title]="item.title" [Number]="item.number" [Url]="item.link"></app-card-info>
+        </mat-grid-tile>
+    </mat-grid-list>
+
+
+</div>

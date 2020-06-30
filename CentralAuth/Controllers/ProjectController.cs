@@ -27,7 +27,6 @@ namespace CentralAuth.Controllers
             _projectService = projectService;
             _utilityService = utilityService;
         }
-        
 
         [HttpGet("[action]")]
         public IEnumerable<Project> GetAll()
@@ -167,7 +166,8 @@ namespace CentralAuth.Controllers
                 }
                 using (trans)
                 {
-                    //TODO DELETE ProjetToProject
+                    //TODO DELETE UserProject
+                    this._projectService.DeleteUserProject(entity.ApiName);
                     this._projectService.DeleteProjectCollab(entity.ApiName);
                     this._projectService.DeleteProject(entity.ApiName);
                     t = await this._projectService.SaveAsync();
@@ -226,6 +226,41 @@ namespace CentralAuth.Controllers
         public GridResponse<User> GetListUserByFilterGrid([FromQuery]Grid entity, [FromQuery]string ApiName)
         {
             return this._projectService.GetListUserGrid(entity, ApiName);
+        }
+
+        [HttpGet("[action]")]
+        public async Task<ObjectResult> GetProjectDashboard([FromQuery]string ApiName)
+        {
+            var project = this._projectService.FindByKey(ApiName);
+            project = new Project
+            {
+                NamaProject = project.NamaProject,
+                ApiName = project.ApiName,
+                ClientId = project.ClientId,
+                ClientSecret = project.ClientSecret,
+                Type = project.Type,
+                Url = project.Url
+            };
+
+            var nUser = this._projectService.GetNumberUser(ApiName);
+            var nRole = this._projectService.GetNumberRole(ApiName);
+            var nFollower = this._projectService.GetNumberFollower(ApiName);
+            var nFollowing = this._projectService.GetNumberFollowing(ApiName);
+
+            List<int> infos = new List<int> { nUser, nRole, nFollower, nFollowing };
+
+            return Ok(new CustomResponse
+            {
+                data = new
+                {
+                    project = project,
+                    infos = infos
+                },
+                errors = null,
+                message = "Data Projek berhasil didapatkan",
+                title = "Success",
+                ok = true
+            });
         }
 
     }

@@ -43,6 +43,11 @@ export class UserService extends SimpleGenericService<User> {
   removeRoleFromUser(payload: UserAddRole): Observable<any> {
     return this._http.post(`api/User/RemoveRoleFromUser`, payload);
   }
+  getUserDetail(payload: string): Observable<any> {
+    let header: HttpHeaders = new HttpHeaders();
+    header = header.set('reqnoloadingdialog', 'true');
+    return this._http.get(`api/User/GetDetail`, {headers: header, params: {'Kode': payload}});
+  }
 
 
 

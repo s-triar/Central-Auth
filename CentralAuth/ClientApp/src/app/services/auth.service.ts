@@ -4,6 +4,7 @@ import { Login } from '../models/auth';
 import { User } from '../models/user';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { TokenService } from './token.service';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class AuthService {
   user$: Observable<User>;
   user_roles$: Observable<string[]>;
 
-  constructor(private _http: HttpClient, private _tokenService: TokenService) {
+  constructor(private _http: HttpClient, private _tokenService: TokenService, private _userService: UserService) {
     this.user = new BehaviorSubject<User>(null);
     this.user_roles = new BehaviorSubject<string[]>([]);
     this.user$ = this.user.asObservable();
@@ -34,10 +35,11 @@ export class AuthService {
 
     const u = this._tokenService.getUserInfo();
     if (u) {
-      const userDataString = u['http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata'];
-      const userData = new User(JSON.parse(userDataString));
+      const username = u['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'];
+      this._userService.getUserDetail(username).subscribe(
+        x => this.user.next(x)
+      );
       const rolesData = u['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-      this.user.next(userData);
       this.user_roles.next(rolesData);
     }
   }

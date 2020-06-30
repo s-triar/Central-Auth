@@ -11,13 +11,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { MainNavComponent } from './main-nav/main-nav.component';
-import { DevNavComponent } from './dev-nav/dev-nav.component';
 import { LoginComponent } from './pages/auth/login/login.component';
 import { RegisterComponent } from './pages/auth/register/register.component';
 import { ForgetPasswordComponent } from './pages/auth/forget-password/forget-password.component';
 import { UserSideNavComponent } from './components/user-side-nav/user-side-nav.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { MaterialModule } from './material.module';
+import { MaterialModule } from './modules/material.module';
 import { CardProjectItemComponent } from './components/card-project-item/card-project-item.component';
 import { CardUserLoginComponent } from './components/card-user-login/card-user-login.component';
 import { GoogleChartsModule } from 'angular-google-charts';
@@ -29,7 +28,6 @@ import { MasterProjectComponent } from './pages/master-project/master-project.co
 import { MasterDirectorateComponent } from './pages/master-directorate/master-directorate.component';
 import { MasterDepartmentComponent } from './pages/master-department/master-department.component';
 import { CreateDirectorateComponent } from './pages/master-directorate/dialogs/create-directorate/create-directorate.component';
-import { ChangeIconOnHoverDirective } from './directives/change-icon-on-hover.directive';
 import { DialogLoadingComponent } from './components/dialog-loading/dialog-loading.component';
 import { SnackbarNotifComponent } from './components/snackbar-notif/snackbar-notif.component';
 import { MatPaginatorIntl } from '@angular/material/paginator';
@@ -57,19 +55,26 @@ import { CreateUserComponent } from './pages/master-user/dialogs/create-user/cre
 import { interceptorProviders } from './interceptors';
 import { RolesDirective } from './directives/roles.directive';
 import { RoleUserComponent } from './pages/master-user/dialogs/role-user/role-user.component';
-import { MyProjectComponent } from './pages/my-project/my-project.component';
+
 import { CreateProjectComponent } from './pages/master-project/dialogs/create-project/create-project.component';
 import { DeleteProjectComponent } from './pages/master-project/dialogs/delete-project/delete-project.component';
 import { ListUserComponent } from './pages/master-project/dialogs/list-user/list-user.component';
 import { DeveloperComponent } from './pages/master-project/dialogs/developer/developer.component';
+
+import { MyProjectComponent } from './pages/my-project/my-project.component';
+import { CreateMyProjectComponent } from './pages/my-project/dialogs/create-my-project/create-my-project.component';
+import { DeleteMyProjectComponent } from './pages/my-project/dialogs/delete-my-project/delete-my-project.component';
+import { SharedModule } from './modules/shared/shared.module';
 // import { JwtModule } from '@auth0/angular-jwt';
 
 @NgModule({
   declarations: [
+    MyProjectComponent,
+    CreateMyProjectComponent,
+    DeleteMyProjectComponent,
     RolesDirective,
     AppComponent,
     MainNavComponent,
-    DevNavComponent,
     LoginComponent,
     RegisterComponent,
     ForgetPasswordComponent,
@@ -85,7 +90,6 @@ import { DeveloperComponent } from './pages/master-project/dialogs/developer/dev
     MasterDirectorateComponent,
     MasterDepartmentComponent,
     CreateDirectorateComponent,
-    ChangeIconOnHoverDirective,
     DialogLoadingComponent,
     SnackbarNotifComponent,
     UpdateDirectorateComponent,
@@ -109,7 +113,6 @@ import { DeveloperComponent } from './pages/master-project/dialogs/developer/dev
     UpdateUserComponent,
     CreateUserComponent,
     RoleUserComponent,
-    MyProjectComponent,
     CreateProjectComponent,
     DeleteProjectComponent,
     ListUserComponent,
@@ -120,10 +123,9 @@ import { DeveloperComponent } from './pages/master-project/dialogs/developer/dev
     GoogleChartsModule,
     HttpClientModule,
     FormsModule,
-    FlexLayoutModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MaterialModule,
+    SharedModule.forRoot(),
     HttpClientModule,
     ReactiveFormsModule,
     // JwtModule.forRoot({
@@ -168,7 +170,13 @@ import { DeveloperComponent } from './pages/master-project/dialogs/developer/dev
     CreateUserComponent,
     DeleteUserComponent,
     UpdateUserComponent,
-    RoleUserComponent
+    RoleUserComponent,
+
+    CreateProjectComponent,
+    DeleteProjectComponent,
+
+    CreateMyProjectComponent,
+    DeleteMyProjectComponent,
   ]
 })
 export class AppModule {}
