@@ -184,11 +184,9 @@ namespace CentralAuth.Migrations.Db.AppDb
                     b.Property<string>("ApiName")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ClientId")
-                        .IsRequired();
+                    b.Property<string>("ClientId");
 
-                    b.Property<string>("ClientSecret")
-                        .IsRequired();
+                    b.Property<string>("ClientSecret");
 
                     b.Property<DateTime>("CreatedAt");
 
@@ -219,6 +217,32 @@ namespace CentralAuth.Migrations.Db.AppDb
                     b.ToTable("Projects");
                 });
 
+            modelBuilder.Entity("CentralAuth.Commons.Models.ProjectClaim", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ClaimName")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<string>("ProjekApiName")
+                        .IsRequired();
+
+                    b.Property<DateTime?>("UpdatedAt");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjekApiName");
+
+                    b.ToTable("ProjectClaims");
+                });
+
             modelBuilder.Entity("CentralAuth.Commons.Models.ProjectToProject", b =>
                 {
                     b.Property<int>("Id")
@@ -241,6 +265,8 @@ namespace CentralAuth.Migrations.Db.AppDb
                     b.Property<string>("UpdatedBy");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("KolaborasiApiName");
 
                     b.HasIndex("ProjekApiName");
 
@@ -514,10 +540,23 @@ namespace CentralAuth.Migrations.Db.AppDb
                         .HasForeignKey("DeveloperNik");
                 });
 
-            modelBuilder.Entity("CentralAuth.Commons.Models.ProjectToProject", b =>
+            modelBuilder.Entity("CentralAuth.Commons.Models.ProjectClaim", b =>
                 {
                     b.HasOne("CentralAuth.Commons.Models.Project", "Projek")
-                        .WithMany("Collaborations")
+                        .WithMany("ProjectClaims")
+                        .HasForeignKey("ProjekApiName")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("CentralAuth.Commons.Models.ProjectToProject", b =>
+                {
+                    b.HasOne("CentralAuth.Commons.Models.Project", "Kolaborasi")
+                        .WithMany()
+                        .HasForeignKey("KolaborasiApiName")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CentralAuth.Commons.Models.Project", "Projek")
+                        .WithMany()
                         .HasForeignKey("ProjekApiName")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

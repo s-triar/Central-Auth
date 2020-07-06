@@ -1,3 +1,4 @@
+@import "theme";
 .sidenav-container {
   height: calc(100%-64px);
 }
@@ -10,4 +11,7 @@
 .sidenav .mat-toolbar {
   background: inherit;
 }
-
+.router-link-active {
+  $primary: map-get($light-theme, primary);
+  background-color: mat-color($primary, darker);
+}

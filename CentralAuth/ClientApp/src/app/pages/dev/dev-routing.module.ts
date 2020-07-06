@@ -11,6 +11,7 @@ import { UserProjectComponent } from './user-project/user-project.component';
 import { RoleProjectComponent } from './role-project/role-project.component';
 import { FollowerProjectComponent } from './follower-project/follower-project.component';
 import { FollowingProjectComponent } from './following-project/following-project.component';
+import { ClaimProjectComponent } from './claim-project/claim-project.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,10 @@ const routes: Routes = [
       {
         path: 'role-project',
         component: RoleProjectComponent
+      },
+      {
+        path: 'claim-project',
+        component: ClaimProjectComponent
       },
       {
         path: 'follower-project',

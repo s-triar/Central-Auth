@@ -1,0 +1,36 @@
+<div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="0px">
+    <h1  mat-dialog-title>Delete Role dari Projek Ini</h1>
+    <button 
+        (click)="onNoClick()"
+        matTooltip="Tutup Dialog"
+        matTooltipPosition="above"
+        appChangeIconOnHover 
+        IconNameEnter="remove_circle" 
+        IconNameLeave="remove_circle_outline" 
+        mat-icon-button color="warn" 
+        aria-label="Close button for disposing dialog">
+        <mat-icon >remove_circle_outline</mat-icon>
+    </button>  
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+    
+        <div style="text-align: center;"><mat-icon color="warn" style="width: 120px;height: 120px;font-size: 120px;font-weight: 600px;">error_outline</mat-icon></div>
+        <div style="text-align: center;"><p>Yakin hapus data ini?</p></div>
+    
+    <form [formGroup]="form" fxLayout="column" fxLayoutGap="10px" style="margin: 10px;">
+        <mat-form-field appearance="fill">
+            <mat-label>Nama Role</mat-label>
+            <span matPrefix>{{apiname + separator}}</span>
+            <input matInput formControlName="name" readonly/>
+            <mat-error
+            *ngIf="name.invalid && (name.dirty || name.touched) && name.errors.required"
+            >Nama Role belum terisi.</mat-error
+            >
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions fxLayout="row-reverse" fxLayoutAlign="space-between center" fxLayoutGap="0px">
+    <button color="warn" mat-raised-button type="button" (click)="onSubmitClick()" [disabled]="!form.valid && !process">Delete</button>
+</mat-dialog-actions>

@@ -12,7 +12,8 @@ export class Project {
     developer: User;
     users?: User[];
     roles?: string[];
-    collaborations ?: ProjectToProject[];
+    followers ?: ProjectToProject[];
+    followings ?: ProjectToProject[];
     public constructor(init?: Partial<Project>) {
         Object.assign(this, init);
     }

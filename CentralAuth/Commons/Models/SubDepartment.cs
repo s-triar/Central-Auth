@@ -19,6 +19,6 @@ namespace CentralAuth.Commons.Models
         public string NamaSubDepartemen { get; set; }
         public string DepartemenKode { get; set; }
         public virtual Department Departemen { get; set; }
-        public virtual ICollection<User> Users { get;  }
+        public virtual ICollection<User> Users { get; set; }
     }
 }

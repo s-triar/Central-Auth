@@ -1,0 +1,310 @@
+<div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="0px">
+    <h1  mat-dialog-title>Tambah Pengguna Projek Ini</h1>
+    <button 
+        (click)="onNoClick()"
+        matTooltip="Tutup Dialog"
+        matTooltipPosition="above"
+        appChangeIconOnHover 
+        IconNameEnter="remove_circle" 
+        IconNameLeave="remove_circle_outline" 
+        mat-icon-button color="warn" 
+        aria-label="Close button for disposing dialog">
+        <mat-icon >remove_circle_outline</mat-icon>
+    </button>  
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+    <form [formGroup]="form"  fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="10px" style="margin: 10px;">
+        <div fxLayout="column" fxLayoutGap="10px" fxFlex="50">
+            <mat-form-field appearance="fill">
+                <mat-label>NIK</mat-label>
+                <input 
+                [matAutocomplete]="Auto"
+                matInput formControlName="nik" cdkFocusInitial placeholder="Contoh: 2015169..."
+                (keyup)="onSearch($event)"
+                (click)="onSearch($event)"
+                />
+                <mat-autocomplete #Auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event)">
+                    <mat-option *ngFor="let option of userOptions" [value]="option">
+                        {{option.nik +' - '+option.nama}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error
+                *ngIf="nik.invalid && (nik.dirty || nik.touched) && nik.errors.required"
+                >NIK belum terisi.</mat-error
+                >
+                <mat-error
+                *ngIf="nik.invalid && (nik.dirty || nik.touched) && nik.errors.pattern"
+                >NIK harus angka.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Nama</mat-label>
+                <input
+                matInput
+                formControlName="nama"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                    nama.invalid &&
+                    (nama.dirty || nama.touched) &&
+                    nama.errors.required
+                "
+                >Nama belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Email</mat-label>
+                <input
+                matInput
+                formControlName="email"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                    email.invalid &&
+                    (email.dirty || email.touched) &&
+                    email.errors.required
+                "
+                >Email belum terisi.</mat-error
+                >
+                <mat-error
+                *ngIf="
+                    email.invalid &&
+                    (email.dirty || email.touched) &&
+                    email.errors.email
+                "
+                >Email harus valid.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Ext</mat-label>
+                <input
+                matInput
+                formControlName="ext"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                    ext.invalid &&
+                    (ext.dirty || ext.touched) &&
+                    ext.errors.required
+                "
+                >Ext belum terisi.</mat-error
+                >
+                <mat-error
+                *ngIf="
+                    ext.invalid &&
+                    (ext.dirty || ext.touched) &&
+                    ext.errors.pattern
+                "
+                >Ext harus angka.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Atasan</mat-label>
+                <input
+                matInput
+                formControlName="atasan"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                    atasan.invalid &&
+                    (atasan.dirty || atasan.touched) &&
+                    atasan.errors.required
+                "
+                >Atasan belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="false">
+                <mat-label>Nik Atasan</mat-label>
+                <input
+                matInput
+                formControlName="nikAtasan"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                nikAtasan.invalid &&
+                    (nikAtasan.dirty || nikAtasan.touched) &&
+                    nikAtasan.errors.required
+                "
+                >NIK Atasan belum terisi.</mat-error
+                >
+            </mat-form-field>
+        </div>
+        <div fxLayout="column" fxLayoutGap="10px" fxFlex="50">
+            <mat-form-field appearance="fill">
+                <mat-label>Unit</mat-label>
+                <input
+                matInput
+                formControlName="unit"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                    unit.invalid &&
+                    (unit.dirty || unit.touched) &&
+                    unit.errors.required
+                "
+                >Unit belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="false">
+                <mat-label>Kode Unit</mat-label>
+                <input
+                matInput
+                formControlName="kodeUnit"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                kodeUnit.invalid &&
+                    (kodeUnit.dirty || kodeUnit.touched) &&
+                    kodeUnit.errors.required
+                "
+                >Kode Unit belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Cabang</mat-label>
+                <input
+                matInput
+                formControlName="cabang"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                cabang.invalid &&
+                    (cabang.dirty || cabang.touched) &&
+                    cabang.errors.required
+                "
+                >Cabang belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="false">
+                <mat-label>Kode Cabang</mat-label>
+                <input
+                matInput
+                formControlName="kodeCabang"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                kodeCabang.invalid &&
+                    (kodeCabang.dirty || kodeCabang.touched) &&
+                    kodeCabang.errors.required
+                "
+                >Kode Cabang belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Direktorat</mat-label>
+                <input
+                matInput
+                formControlName="direktorat"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                    direktorat.invalid &&
+                    (direktorat.dirty || direktorat.touched) &&
+                    direktorat.errors.required
+                "
+                >Direktorat belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="false">
+                <mat-label>Kode Direktorat</mat-label>
+                <input
+                matInput
+                formControlName="kodeDirektorat"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                kodeDirektorat.invalid &&
+                    (kodeDirektorat.dirty || kodeDirektorat.touched) &&
+                    kodeDirektorat.errors.required
+                "
+                >Kode Direktorat belum terisi.</mat-error
+                >
+            </mat-form-field>
+    
+            <mat-form-field appearance="fill">
+                <mat-label>Departemen</mat-label>
+                <input
+                matInput
+                formControlName="departemen"
+                readonly
+                />
+                
+                <mat-error
+                *ngIf="
+                    departemen.invalid &&
+                    (departemen.dirty || departemen.touched) &&
+                    departemen.errors.required
+                "
+                >Departemen belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="false">
+                <mat-label>Kode Departemen</mat-label>
+                <input
+                matInput
+                formControlName="kodeDepartemen"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                kodeDepartemen.invalid &&
+                    (kodeDepartemen.dirty || kodeDepartemen.touched) &&
+                    kodeDepartemen.errors.required
+                "
+                >Kode Departemen belum terisi.</mat-error
+                >
+            </mat-form-field>
+    
+            <mat-form-field appearance="fill">
+                <mat-label>Sub Departemen</mat-label>
+                <input
+                matInput
+                formControlName="subDepartemen"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                    subDepartemen.invalid &&
+                    (subDepartemen.dirty || subDepartemen.touched) &&
+                    subDepartemen.errors.required
+                "
+                >Sub Departemen belum terisi.</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="false">
+                <mat-label>Kode Sub Departemen</mat-label>
+                <input
+                matInput
+                formControlName="kodeSubDepartemen"
+                readonly
+                />
+                <mat-error
+                *ngIf="
+                kodeSubDepartemen.invalid &&
+                    (kodeSubDepartemen.dirty || kodeSubDepartemen.touched) &&
+                    kodeSubDepartemen.errors.required
+                "
+                >Kode Sub Departemen belum terisi.</mat-error
+                >
+            </mat-form-field>
+        </div>
+        
+        
+    </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions fxLayout="row-reverse" fxLayoutAlign="space-between center" fxLayoutGap="0px">
+    <button color="primary" mat-raised-button type="button" (click)="onSubmitClick()" [disabled]="!form.valid && !process">Submit</button>
+</mat-dialog-actions>

@@ -20,6 +20,12 @@ export class DetailProjectComponent implements OnInit {
       link: 'user-project'
     },
     {
+      title: 'Claim',
+      number: 0,
+      icon: 'policy',
+      link: 'claim-project'
+    },
+    {
       title: 'Role',
       number: 0,
       icon: 'verified_user',

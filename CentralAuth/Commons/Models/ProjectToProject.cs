@@ -16,6 +16,7 @@ namespace CentralAuth.Commons.Models
         public Project Projek { get; set; }
         [Required]
         public string KolaborasiApiName { get; set; }
+        public Project Kolaborasi { get; set; }
         public Nullable<bool> Approve { get; set; }
     }
 }

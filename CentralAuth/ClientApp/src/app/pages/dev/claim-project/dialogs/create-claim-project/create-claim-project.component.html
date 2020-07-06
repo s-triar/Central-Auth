@@ -1,0 +1,41 @@
+<div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="0px">
+    <h1  mat-dialog-title>Tambah Claim di Projek Ini</h1>
+    <button 
+        (click)="onNoClick()"
+        matTooltip="Tutup Dialog"
+        matTooltipPosition="above"
+        appChangeIconOnHover 
+        IconNameEnter="remove_circle" 
+        IconNameLeave="remove_circle_outline" 
+        mat-icon-button color="warn" 
+        aria-label="Close button for disposing dialog">
+        <mat-icon >remove_circle_outline</mat-icon>
+    </button>  
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+    <form [formGroup]="form" fxLayout="column" fxLayoutGap="10px" style="margin: 10px;">
+        <mat-form-field appearance="fill">
+            <mat-label>Nama Claim</mat-label>
+            <span matPrefix>{{apiname + separator}}</span>
+            <input matInput formControlName="claimName" 
+            (blur)="onCheck($event)"
+            (keyup)="setLoadingChecking($event)"
+            cdkFocusInitial
+            />
+            <mat-icon *ngIf="(claimName.dirty || claimName.touched)" matSuffix [color]="checking ? 'accent' : isAvailable ? 'primary':'warn'">{{checking ? 'cached' : isAvailable ? 'done':'close'}}</mat-icon>
+            <mat-error
+            *ngIf="claimName.invalid && (claimName.dirty || claimName.touched) && claimName.errors.required"
+            >Nama Claim belum terisi.</mat-error
+            >
+            <mat-error
+            *ngIf="claimName.invalid && (claimName.dirty || claimName.touched) && claimName.errors.notUnique"
+            >Nama Claim sudah dipakai.</mat-error
+            >
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions fxLayout="row-reverse" fxLayoutAlign="space-between center" fxLayoutGap="0px">
+    <button color="primary" mat-raised-button type="button" (click)="onSubmitClick()" [disabled]="!form.valid && !process">Submit</button>
+</mat-dialog-actions>

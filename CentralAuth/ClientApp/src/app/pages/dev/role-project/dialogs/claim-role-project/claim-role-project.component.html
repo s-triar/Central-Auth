@@ -1,0 +1,61 @@
+<div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="0px">
+    <h1  mat-dialog-title>Tambah Claim di Role Ini</h1>
+    <button 
+        (click)="onNoClick()"
+        matTooltip="Tutup Dialog"
+        matTooltipPosition="above"
+        appChangeIconOnHover 
+        IconNameEnter="remove_circle" 
+        IconNameLeave="remove_circle_outline" 
+        mat-icon-button color="warn" 
+        aria-label="Close button for disposing dialog">
+        <mat-icon >remove_circle_outline</mat-icon>
+    </button>  
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+    
+    <form [formGroup]="form" fxLayout="column" fxLayoutGap="10px" style="margin: 10px;">
+        <div fxLayout="row" fxLayoutAlign="space-around start" fxLayoutGap="10px">
+            <mat-form-field appearance="fill" fxFlex>
+                <mat-label>Nama Role</mat-label>
+                <span matPrefix>{{apiname + separator}}</span>
+                <input matInput formControlName="name" readonly/>
+                <mat-error
+                *ngIf="name.invalid && (name.dirty || name.touched) && name.errors.required"
+                >Nama Role belum terisi.</mat-error
+                >
+            </mat-form-field>
+        </div>
+    </form>
+    <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="10px">
+        <mat-form-field appearance="fill" fxFlex="80">
+            <mat-label>Claim</mat-label>
+            <input
+            [matAutocomplete]="claimAuto"
+            matInput
+            (keyup)="onSearch($event)"
+            (click)="onSearch($event)"
+            />
+            <mat-autocomplete #claimAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event)">
+                <mat-option *ngFor="let option of claimOptions" [value]="option">
+                    {{option.claimName}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <div fxFlex="20" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="0px">
+            <button color="primary" mat-raised-button type="button" (click)="onAdd()" [disabled]="process || claimChoosen===null">Add</button>
+        </div>
+    </div>
+    <mat-chip-list #chipList aria-label="role's claims" style="margin-left: 10px;margin-right:10px;margin-bottom:10px;">
+        <mat-chip *ngFor="let rc of rolesClaims"
+                 [removable]="true" (removed)="onRemove(rc)">
+          {{rc.claimName}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+    </mat-chip-list>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<!-- <mat-dialog-actions fxLayout="row-reverse" fxLayoutAlign="space-between center" fxLayoutGap="0px">
+    <button color="warn" mat-raised-button type="button" (click)="onOk()" [disabled]="!form.valid && !process">Close</button>
+</mat-dialog-actions> -->

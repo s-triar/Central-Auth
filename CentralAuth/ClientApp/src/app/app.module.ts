@@ -59,7 +59,6 @@ import { RoleUserComponent } from './pages/master-user/dialogs/role-user/role-us
 import { CreateProjectComponent } from './pages/master-project/dialogs/create-project/create-project.component';
 import { DeleteProjectComponent } from './pages/master-project/dialogs/delete-project/delete-project.component';
 import { ListUserComponent } from './pages/master-project/dialogs/list-user/list-user.component';
-import { DeveloperComponent } from './pages/master-project/dialogs/developer/developer.component';
 
 import { MyProjectComponent } from './pages/my-project/my-project.component';
 import { CreateMyProjectComponent } from './pages/my-project/dialogs/create-my-project/create-my-project.component';
@@ -116,7 +115,6 @@ import { SharedModule } from './modules/shared/shared.module';
     CreateProjectComponent,
     DeleteProjectComponent,
     ListUserComponent,
-    DeveloperComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

@@ -1,0 +1,80 @@
+<div class="grid-container">
+    <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="0px">
+        <div fxFlex>
+            <h1 class="mat-h1"><mat-icon>policy</mat-icon>Claim Projek</h1>
+        </div>
+        <span fxFlex="grow"></span>
+        <div fxFlex fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+          <button appChangeIconOnHover IconNameEnter="add_circle" IconNameLeave="add_circle_outline" mat-raised-button color="primary" (click)="Add()"><mat-icon>add_circle_outline</mat-icon>Tambah Data</button>
+        </div>
+    </div>
+
+    <!-- <div fxLayout="row-reverse" fxLayoutAlign="space-between start" fxLayoutGap="0px">
+        <mat-form-field>
+            <mat-label>Pencarian Umum</mat-label>
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput (blur)="applyFilter($event)" placeholder="Contoh : apa saja" />
+        </mat-form-field>
+    </div> -->
+
+    <div class="mat-elevation-z8">
+      <div class="example-loading-shade"
+       *ngIf="isLoadingResults">
+        <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+        </div>
+    <div class="mat-container ">
+        <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
+          <ng-container
+            [matColumnDef]="column.key"
+            *ngFor="let column of columnsConfig;"
+          >
+            <th mat-header-cell *matHeaderCellDef mat-sort-header (click)="sortColumn($event)">
+                {{ column.title }}
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element[column.key] }}</td>
+          </ng-container>
+          <ng-container
+            [matColumnDef]="column"
+            *ngFor="let column of columnsFilter;"
+          >
+            <th mat-header-cell *matHeaderCellDef > 
+              <mat-form-field *ngIf="!column.includes('action')" class="form-column-filter">
+                <mat-label>Cari</mat-label>
+                <mat-icon matPrefix>search</mat-icon>
+                <input matInput (blur)="filterColumn($event, column)" placeholder="Cari: ..." />
+              </mat-form-field>
+            </th>
+          </ng-container>
+          <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Edit </th>
+            <td mat-cell *matCellDef="let element"> <button mat-icon-button matTooltip="Click to Edit" class="iconbutton"
+                color="primary" (click)="Edit(element)">
+                <mat-icon>edit</mat-icon>
+              </button> </td>
+          </ng-container>
+          <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Delete </th>
+            <td mat-cell *matCellDef="let element"> <button mat-icon-button matTooltip="Click to Delete" class="iconbutton"
+                (click)="Delete(element)" color="warn">
+                <mat-icon>delete</mat-icon>
+              </button> </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="columnsKey; sticky:true;" ></tr>
+          <tr mat-header-row *matHeaderRowDef="columnsFilter; sticky:true;"></tr>
+          <tr
+            mat-row
+            *matRowDef="let element; columns: columnsKey"
+            class="example-element-row"
+          ></tr>
+        </table>
+        
+        <!-- <mat-paginator [length]="dataLength" showFirstLastButtons [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator> -->
+      </div>
+      <mat-paginator [length]="lengthData"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      showFirstLastButtons
+      (page)="onPageEvent($event)">
+</mat-paginator>
+</div>
+</div>

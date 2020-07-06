@@ -7,6 +7,8 @@ import { ProjectService } from 'src/app/services/project.service';
 import { UtilityService } from 'src/app/services/utility.service';
 import { CardHoverDirective } from '../../directives/card-hover.directive';
 import { ChangeIconOnHoverDirective } from 'src/app/directives/change-icon-on-hover.directive';
+import { DeveloperComponent } from 'src/app/components/developer/developer.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const listModules: any[]  = [
   MaterialModule,
@@ -14,17 +16,20 @@ const listModules: any[]  = [
 ];
 
 @NgModule({
-  declarations: [CardInfoComponent, CardHoverDirective, ChangeIconOnHoverDirective],
+  declarations: [CardInfoComponent, CardHoverDirective, ChangeIconOnHoverDirective, DeveloperComponent],
   imports: [
     CommonModule,
-    listModules
+    listModules,
+    ReactiveFormsModule
   ],
   exports: [
     CardInfoComponent,
     CardHoverDirective,
     ChangeIconOnHoverDirective,
     listModules,
-  ]
+    DeveloperComponent
+  ],
+  entryComponents: [DeveloperComponent]
 })
 export class SharedModule {
   static forRoot(): ModuleWithProviders<SharedModule> {

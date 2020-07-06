@@ -22,12 +22,13 @@ namespace CentralAuth.Controllers
         private readonly IUserService _userService;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<AppRole> _roleManager;
 
         public UserController(IUserService userService,
                               UserManager<AppUser> userManager, 
                               SignInManager<AppUser> signInManager, 
-                              RoleManager<IdentityRole> roleManager)
+                              RoleManager<AppRole> roleManager
+                              )
         {
             _userService = userService;
             _userManager = userManager;

@@ -31,7 +31,8 @@ export class MyProjectComponent implements OnInit, OnDestroy {
     namaProject: '',
     type: '',
     url: '',
-    collaborations: [],
+    followers: [],
+    followings: [],
     roles: [],
     users: []
   };

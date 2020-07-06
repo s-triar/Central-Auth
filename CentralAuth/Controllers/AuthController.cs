@@ -27,14 +27,14 @@ namespace CentralAuth.Controllers
         private readonly AppDbContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<AppRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
 
         public AuthController(AppDbContext context, 
                               UserManager<AppUser> userManager, 
                               SignInManager<AppUser> signInManager, 
-                              RoleManager<IdentityRole> roleManager, 
+                              RoleManager<AppRole> roleManager, 
                               IConfiguration configuration,
                               IUserService userService)
         {

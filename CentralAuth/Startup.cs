@@ -47,7 +47,7 @@ namespace CentralAuth
             {
                 config.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
             });
-            services.AddIdentity<AppUser, IdentityRole>(options =>
+            services.AddIdentity<AppUser, AppRole>(options =>
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 3;

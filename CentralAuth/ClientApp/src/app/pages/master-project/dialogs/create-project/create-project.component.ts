@@ -49,7 +49,6 @@ export class CreateProjectComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.filteredTypeOptions);
     this.apiName.setErrors({
       notUnique: null
     });
@@ -101,8 +100,8 @@ export class CreateProjectComponent implements OnInit {
                                             this.apiName.setErrors({
                                               notUnique: null
                                             });
-                                          }
                                           this.apiName.updateValueAndValidity();
+                                          }
                                           this.formOptionSubscription.unsubscribe();
                                         },
                                         (err: HttpErrorResponse) => {

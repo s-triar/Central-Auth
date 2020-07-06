@@ -99,7 +99,7 @@
                 (keyup)="onSearch($event,'USER','nama')"
                 (click)="onSearch($event,'USER','nama')"
                 />
-                <mat-autocomplete #atasanAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'atasanNik', 'nik')">
+                <mat-autocomplete #atasanAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event, 'atasanNik', 'nik',[])">
                     <mat-option *ngFor="let option of atasanOptions" [value]="option">
                         {{option.nama}}
                     </mat-option>

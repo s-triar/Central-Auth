@@ -15,7 +15,7 @@ import { DialogPopUpConfig } from 'src/app/models/enums/dialog-config';
 import { DeleteProjectComponent } from './dialogs/delete-project/delete-project.component';
 import { CreateProjectComponent } from './dialogs/create-project/create-project.component';
 import { User } from 'src/app/models/user';
-import { DeveloperComponent } from './dialogs/developer/developer.component';
+import { DeveloperComponent } from '../../components/developer/developer.component';
 import { ListUserComponent } from './dialogs/list-user/list-user.component';
 import { Router } from '@angular/router';
 
@@ -35,7 +35,8 @@ export class MasterProjectComponent implements OnInit, OnDestroy {
     namaProject: '',
     type: '',
     url: '',
-    collaborations: [],
+    followers: [],
+    followings: [],
     roles: [],
     users: []
   };

@@ -1,0 +1,41 @@
+<div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="0px">
+    <h1  mat-dialog-title>Tambah Role di Projek Ini</h1>
+    <button 
+        (click)="onNoClick()"
+        matTooltip="Tutup Dialog"
+        matTooltipPosition="above"
+        appChangeIconOnHover 
+        IconNameEnter="remove_circle" 
+        IconNameLeave="remove_circle_outline" 
+        mat-icon-button color="warn" 
+        aria-label="Close button for disposing dialog">
+        <mat-icon >remove_circle_outline</mat-icon>
+    </button>  
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+    <form [formGroup]="form" fxLayout="column" fxLayoutGap="10px" style="margin: 10px;">
+        <mat-form-field appearance="fill">
+            <mat-label>Nama Role</mat-label>
+            <span matPrefix>{{apiname + separator}}</span>
+            <input matInput formControlName="name" 
+            (blur)="onCheck($event)"
+            (keyup)="setLoadingChecking($event)"
+            cdkFocusInitial
+            />
+            <mat-icon *ngIf="(name.dirty || name.touched)" matSuffix [color]="checking ? 'accent' : isAvailable ? 'primary':'warn'">{{checking ? 'cached' : isAvailable ? 'done':'close'}}</mat-icon>
+            <mat-error
+            *ngIf="name.invalid && (name.dirty || name.touched) && name.errors.required"
+            >Nama Role belum terisi.</mat-error
+            >
+            <mat-error
+            *ngIf="name.invalid && (name.dirty || name.touched) && name.errors.notUnique"
+            >Nama Role sudah dipakai.</mat-error
+            >
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions fxLayout="row-reverse" fxLayoutAlign="space-between center" fxLayoutGap="0px">
+    <button color="primary" mat-raised-button type="button" (click)="onSubmitClick()" [disabled]="!form.valid && !process">Submit</button>
+</mat-dialog-actions>
