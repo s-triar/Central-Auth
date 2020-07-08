@@ -15,12 +15,14 @@ import { CreateMyProjectComponent } from './dialogs/create-my-project/create-my-
 import { DialogPopUpConfig } from 'src/app/models/enums/dialog-config';
 import { DeleteMyProjectComponent } from './dialogs/delete-my-project/delete-my-project.component';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   templateUrl: './my-project.component.html',
   styleUrls: ['./my-project.component.scss']
 })
 export class MyProjectComponent implements OnInit, OnDestroy {
+  nik: any;
   isLoadingResults = false;
   state: Project = {
     apiName : '',
@@ -78,6 +80,7 @@ export class MyProjectComponent implements OnInit, OnDestroy {
   constructor(
     private _dialog: MatDialog,
     private _projectService: ProjectService,
+    private _authService: AuthService,
     private _router: Router,
     private _route: ActivatedRoute
     ) {
@@ -87,6 +90,13 @@ export class MyProjectComponent implements OnInit, OnDestroy {
    }
 
   ngOnInit() {
+    this.nik = this._authService.user.value.nik;
+    const filter: Filter = {
+      columnName: 'developerNik',
+      filterType: GridFilterType.EQUAL,
+      filterValue: this.nik
+    };
+    this.search.filter.push(filter);
     // this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.matsort;
     this.FetchData();

@@ -25,7 +25,7 @@ using CentralAuth.Commons.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Reflection;
-
+using System.Runtime.ConstrainedExecution;
 
 namespace CentralAuth
 {
@@ -66,8 +66,7 @@ namespace CentralAuth
             //    config.LoginPath = "/AuthId/Login";
             //    config.LogoutPath = "/AuthId/Logout";
             //});
-
-            services.AddIdentityServer()
+            var builder =  services.AddIdentityServer()
                     //(options =>
                     //    {
                     //        options.UserInteraction.LoginUrl = "/IdServer/login";
@@ -88,9 +87,17 @@ namespace CentralAuth
                         options.ConfigureDbContext = b => b.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
                     })
                     .AddAspNetIdentity<AppUser>()
-                    .AddDeveloperSigningCredential()
-                    //.AddJwtBearerClientAuthentication()
-                    ;// jika nggak maka pake sertifikat;
+                    .AddJwtBearerClientAuthentication();
+
+            X509Certificate2 certif = GetCertificate();
+            if(certif == null)
+            {
+                builder.AddDeveloperSigningCredential(); // jika nggak maka pake sertifikat;
+            }
+            else
+            {
+                builder.AddSigningCredential(certif);
+            }
 
             JwtConfig jwtConfig = Configuration.GetSection("Jwt").Get<JwtConfig>();
             services.AddAuthentication(config =>
@@ -119,29 +126,8 @@ namespace CentralAuth
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            //X509Certificate2 cert = null;
-            //using (X509Store certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser)) // grab certificate to generate token from azure if deploy into azure
-            //{
-            //    certStore.Open(OpenFlags.ReadOnly);
-            //    X509Certificate2Collection certCollection = certStore.Certificates.Find(
-            //        X509FindType.FindByThumbprint,
-            //        "RWQYT8W9TGWG0QG0P", // replace with our own certificate thumbprint
-            //        false
-            //    );
-            //    if(certCollection.Count > 0)
-            //    {
-            //        cert = certCollection[0];
-
-            //    }
-            //}
-
-            //Fallback to local file or development
-            //if(cert == null)
-            //{
-            //    cert = new X509Certificate2(Path.Combine("~", "nama_certificate.pfx"), "password_certificate");
-            //}
-
             
+
 
 
             // In production, the Angular files will be served from this directory
@@ -169,6 +155,41 @@ namespace CentralAuth
             services.AddScoped<IProjectService, ProjectService>();
 
 
+        }
+
+        public X509Certificate2 GetCertificate()
+        {
+            X509Certificate2 certificate = null;
+
+            // Load certificate from Certificate Store using the configured Thumbprint
+            using (X509Store store = new X509Store(StoreName.My, StoreLocation.LocalMachine))
+            {
+                store.Open(OpenFlags.ReadOnly);
+                X509Certificate2Collection certificates = store.Certificates.Find(X509FindType.FindByThumbprint, Configuration.GetSection("Certificate").GetSection("Thumbprint").Value, false);
+
+                if (certificates.Count > 0)
+                    certificate = certificates[0];
+            }
+
+            // Fallback to load certificate from local file
+            if (certificate == null)
+            {
+                string path = Path.Combine(Configuration.GetSection("Certificate").GetSection("PathFile").Value);
+
+                try
+                {
+                    certificate = new X509Certificate2(path, "CertificateSecret123$");
+                }
+                catch (Exception ex)
+                {
+                    certificate = null;
+                }
+            }
+
+            if (certificate == null)
+                throw new Exception($"Certificate {Configuration.GetSection("Certificate").GetSection("Thumbprint").Value} not found.");
+
+            return certificate;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

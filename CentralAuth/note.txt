@@ -1,0 +1,3 @@
+﻿Get tumbprint certificate:
+powershell command Get-ChildItem -path cert:\LocalMachine\My
+

@@ -17,7 +17,7 @@ export class AuthService {
   user_roles$: Observable<string[]>;
 
   constructor(private _http: HttpClient, private _tokenService: TokenService, private _userService: UserService) {
-    this.user = new BehaviorSubject<User>(null);
+    this.user = new BehaviorSubject<User>(new User());
     this.user_roles = new BehaviorSubject<string[]>([]);
     this.user$ = this.user.asObservable();
     this.user_roles$ = this.user_roles.asObservable();

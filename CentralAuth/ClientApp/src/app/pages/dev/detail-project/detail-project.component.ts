@@ -22,7 +22,7 @@ export class DetailProjectComponent implements OnInit {
     {
       title: 'Claim',
       number: 0,
-      icon: 'policy',
+      icon: 'assignment_turned_in',
       link: 'claim-project'
     },
     {

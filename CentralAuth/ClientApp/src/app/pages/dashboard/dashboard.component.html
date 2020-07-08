@@ -1,15 +1,25 @@
 <div class="grid-container">
   <h1 class="mat-h1"><mat-icon>dashboard</mat-icon>Dashboard</h1>
 
-  <mat-grid-list cols="2" rowHeight="420">
-    <mat-grid-tile colspan="2" rowspan="1">
-      <app-card-user-login></app-card-user-login>
-    </mat-grid-tile>
-    <mat-grid-tile colspan="1" rowspan="1">
-      <app-card-project-list></app-card-project-list>
-    </mat-grid-tile>
-    <mat-grid-tile colspan="1" rowspan="1">
-      <app-card-project-admin-list></app-card-project-admin-list>
+  <h2 class="mat-h2">Admin</h2>
+  <mat-grid-list cols="4" rowHeight="222" *ngIf="roles.includes('ADMIN') ||roles.includes('SUPERADMIN') ">
+    <mat-grid-tile colspan="1" *ngFor="let item of adminCards">
+        <app-card-info [Icon]="item.icon" [Title]="item.title" [Number]="item.number" [Url]="item.link"></app-card-info>
     </mat-grid-tile>
   </mat-grid-list>
+  <hr>
+  <h2 class="mat-h2">Developer</h2>
+  <mat-grid-list cols="4" rowHeight="222" *ngIf="roles.includes('DEVELOPER') ||roles.includes('SUPERADMIN') ">
+    <mat-grid-tile colspan="1" *ngFor="let item of devCards">
+        <app-card-info [Icon]="item.icon" [Title]="item.title" [Number]="item.number" [Url]="item.link"></app-card-info>
+    </mat-grid-tile>
+  </mat-grid-list>
+  <hr>
+  <h2 class="mat-h2">Pengguna</h2>
+  <mat-grid-list cols="4" rowHeight="222" *ngIf="roles.includes('USER') ||roles.includes('SUPERADMIN') ">
+    <mat-grid-tile colspan="1" *ngFor="let item of userCards">
+        <app-card-info [Icon]="item.icon" [Title]="item.title" [Number]="item.number" [Url]="item.link"></app-card-info>
+    </mat-grid-tile>
+  </mat-grid-list>
+
 </div>

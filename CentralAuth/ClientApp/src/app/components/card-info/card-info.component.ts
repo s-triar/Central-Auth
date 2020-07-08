@@ -22,7 +22,9 @@ export class CardInfoComponent implements OnInit {
   }
 
   goTo(url)  {
-    this._router.navigate(['../' + url], {relativeTo: this._activatedRoute});
+    if (url !== '' && url !== null) {
+      this._router.navigate(['../' + url], {relativeTo: this._activatedRoute});
+    }
   }
 
 }

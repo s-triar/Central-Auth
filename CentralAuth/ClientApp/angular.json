@@ -29,7 +29,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/custom_styles/_theme.scss"
+              "src/custom_styles/_theme.scss",
+              "src/custom_styles/fonts.scss"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
@@ -84,7 +85,8 @@
             "karmaConfig": "src/karma.conf.js",
             "styles": [
               "src/styles.scss",
-              "src/custom_styles/_theme.scss"
+              "src/custom_styles/_theme.scss",
+              "src/custom_styles/fonts.scss"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
