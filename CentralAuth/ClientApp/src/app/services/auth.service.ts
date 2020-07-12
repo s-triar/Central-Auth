@@ -11,16 +11,12 @@ import { UserService } from './user.service';
 })
 export class AuthService {
 
-  user: BehaviorSubject<User>;
-  user_roles: BehaviorSubject<string[]>;
-  user$: Observable<User>;
-  user_roles$: Observable<string[]>;
+  user: BehaviorSubject<User> = new BehaviorSubject<User>(new User());
+  user_roles: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  user$: Observable<User> = this.user.asObservable();
+  user_roles$: Observable<string[]> = this.user_roles.asObservable();
 
   constructor(private _http: HttpClient, private _tokenService: TokenService, private _userService: UserService) {
-    this.user = new BehaviorSubject<User>(new User());
-    this.user_roles = new BehaviorSubject<string[]>([]);
-    this.user$ = this.user.asObservable();
-    this.user_roles$ = this.user_roles.asObservable();
   }
 
   login(payload: Login): Observable<any> {
@@ -41,6 +37,9 @@ export class AuthService {
       );
       const rolesData = u['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
       this.user_roles.next(rolesData);
+    } else {
+      this.user.next(new User());
+      this.user_roles.next([]);
     }
   }
 }

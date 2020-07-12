@@ -204,7 +204,7 @@ namespace CentralAuth.Controllers
             {
                 using (trans)
                 {
-                    entity.ClientId = (this._utilityService.RandomString(3, true) + DateTime.Now.Ticks + entity.ApiName).ToSha256();
+                    entity.ClientId = Guid.NewGuid().ToString()+this._utilityService.RandomString(4, false);
                     entity.ClientSecret = this._utilityService.RandomString(23, false);
                     this._projectService.Add(entity);
                     var t = await this._projectService.SaveAsync();
@@ -215,18 +215,19 @@ namespace CentralAuth.Controllers
                         title = "Success",
                         ok = true
                     };
-                    if (t >= 1)
+                    if (t > 0)
                     {
                         using (configTrans)
                         {
                             Project project = this._projectService.FindByKey(entity.ApiName);
                             this._projectService.CreateClient(project);
                             t = await this._projectService.SaveConfigContextAsync();
-                            if (t >= 1)
+                            if (t > 0)
                             {
                                 this._projectService.CreateApiResource(project);
+                                this._projectService.CreateIdentityResource(project);
                                 t = await this._projectService.SaveConfigContextAsync();
-                                if (t >= 1)
+                                if (t > 0)
                                 {
                                     this._projectService.Commit(trans);
                                     this._projectService.Commit(configTrans);
@@ -310,25 +311,28 @@ namespace CentralAuth.Controllers
                     };
                     return BadRequest(res);
                 }
-                using (trans)
+                using (configTrans)
                 {
-                    //TODO DELETE UserProject
-                    this._projectService.DeleteUserProject(entity.ApiName);
-                    this._projectService.DeleteProjectCollab(entity.ApiName);
-                    this._projectService.DeleteProject(entity.ApiName);
-                    t = await this._projectService.SaveAsync();
-                    if (t >= 1)
+                    this._projectService.DeleteScopeApi(entity.ApiName);
+                    this._projectService.DeleteApiResource(entity.ApiName);
+                    this._projectService.DeleteIdentityResource(entity.ApiName);
+                    this._projectService.DeleteClient(entity.ApiName);
+                    
+                    t = await this._projectService.SaveConfigContextAsync();
+                    if (t >0)
                     {
-                        using (configTrans)
+                        using (trans)
                         {
-                            this._projectService.DeleteScopeApi(entity.ApiName);
-                            this._projectService.DeleteApiResource(entity.ApiName);
-                            this._projectService.DeleteClient(entity.ApiName);
-                            t = await this._projectService.SaveConfigContextAsync();
-                            if (t >= 1)
+                            //TODO DELETE UserProject
+                            this._projectService.DeleteAllRolesProject(entity.ApiName);
+                            this._projectService.DeleteUserProject(entity.ApiName);
+                            this._projectService.DeleteProjectCollab(entity.ApiName);
+                            this._projectService.DeleteProject(entity.ApiName);
+                            t = await this._projectService.SaveAsync();
+                            if (t >0)
                             {
-                                this._projectService.Commit(trans);
                                 this._projectService.Commit(configTrans);
+                                this._projectService.Commit(trans);
                                 return Ok(res);
                             }
                             this._projectService.Rollback(configTrans);
@@ -448,22 +452,22 @@ namespace CentralAuth.Controllers
                         {
                             this._projectService.DeleteFollowingScopeApi(entity.ProjekApiName, entity.KolaborasiApiName);
                             t = await this._projectService.SaveAsync();
-                            if (t > 0)
-                            {
+                            //if (t > 0)
+                            //{
                                 this._projectService.Commit(trans);
                                 this._projectService.Commit(configTrans);
                                 return Ok(res);
-                            }
-                            this._projectService.Rollback(trans);
-                            this._projectService.Rollback(configTrans);
-                            res = new CustomResponse()
-                            {
-                                errors = null,
-                                message = "Delete Following Gagal pada hapus API",
-                                title = "Warning",
-                                ok = false
-                            };
-                            return BadRequest(res);
+                            //}
+                            //this._projectService.Rollback(trans);
+                            //this._projectService.Rollback(configTrans);
+                            //res = new CustomResponse()
+                            //{
+                            //    errors = null,
+                            //    message = "Delete Following Gagal pada hapus API",
+                            //    title = "Warning",
+                            //    ok = false
+                            //};
+                            //return BadRequest(res);
                         }
                     }
                     this._projectService.Rollback(trans);

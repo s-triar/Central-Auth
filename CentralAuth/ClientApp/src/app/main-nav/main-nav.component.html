@@ -121,7 +121,7 @@
         aria-label="Toggle sidenav"
         mat-icon-button
         (click)="drawer.toggle()"
-        *ngIf="(user$ | async) != null"
+        *ngIf="(user$ | async).nik != null"
         fxFlex="none"
       >
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
@@ -146,14 +146,15 @@
         }}</mat-icon>
       </button>
       <button
-        *ngIf="(user$ | async) != null"
-        mat-icon-button
+        *ngIf="(user$ | async).nik != null"
+        mat-mini-fab
+        color="warn"
         type="button"
         matTooltip="Logout"
         matTooltipPosition="below"
         (click)="logout()"
       >
-        <mat-icon>meeting_room</mat-icon>
+        <mat-icon>settings_power</mat-icon>
       </button>
     </mat-toolbar>
     <router-outlet></router-outlet>

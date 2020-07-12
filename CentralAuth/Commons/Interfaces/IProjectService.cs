@@ -72,5 +72,8 @@ namespace CentralAuth.Commons.Interfaces
         Task<List<ProjectClaim>> getClaimOfUser(string ApiName, string Nik);
         Task<List<AppRole>> getRoleOfUser(string ApiName, string Nik);
         GridResponse<User> getAvailableUserProject(object entity, string ApiName);
+        void DeleteAllRolesProject(string ApiName);
+        void CreateIdentityResource(Project entity);
+        void DeleteIdentityResource(string ApiName);
     }
 }

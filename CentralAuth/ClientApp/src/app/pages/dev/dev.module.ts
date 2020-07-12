@@ -27,6 +27,10 @@ import { UpdateClaimProjectComponent } from './claim-project/dialogs/update-clai
 import { DeleteClaimProjectComponent } from './claim-project/dialogs/delete-claim-project/delete-claim-project.component';
 import { ClaimUserProjectComponent } from './user-project/dialogs/claim-user-project/claim-user-project.component';
 import { RoleUserProjectComponent } from './user-project/dialogs/role-user-project/role-user-project.component';
+// import { ScopeProjectComponent } from './scope-project/scope-project.component';
+// import { CreateScopeProjectComponent } from './scope-project/dialogs/create-scope-project/create-scope-project.component';
+// import { DeleteScopeProjectComponent } from './scope-project/dialogs/delete-scope-project/delete-scope-project.component';
+// import { UpdateScopeProjectComponent } from './scope-project/dialogs/update-scope-project/update-scope-project.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +56,10 @@ import { RoleUserProjectComponent } from './user-project/dialogs/role-user-proje
     DeleteClaimProjectComponent,
     ClaimUserProjectComponent,
     RoleUserProjectComponent,
+    // ScopeProjectComponent,
+    // CreateScopeProjectComponent,
+    // DeleteScopeProjectComponent,
+    // UpdateScopeProjectComponent,
   ],
   imports: [
     CommonModule,
@@ -75,6 +83,9 @@ import { RoleUserProjectComponent } from './user-project/dialogs/role-user-proje
     DeleteClaimProjectComponent,
     ClaimUserProjectComponent,
     RoleUserProjectComponent,
+    // CreateScopeProjectComponent,
+    // DeleteScopeProjectComponent,
+    // UpdateScopeProjectComponent,
   ]
 })
 export class DevModule { }

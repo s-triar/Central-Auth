@@ -26,6 +26,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Reflection;
 using System.Runtime.ConstrainedExecution;
+using IdentityServer4.Validation;
+using IdentityServer4.Services;
 
 namespace CentralAuth
 {
@@ -59,24 +61,7 @@ namespace CentralAuth
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
-
-            //services.ConfigureApplicationCookie(config =>
-            //{
-            //    config.Cookie.Name = "IdentityServer.Cookie";
-            //    config.LoginPath = "/AuthId/Login";
-            //    config.LogoutPath = "/AuthId/Logout";
-            //});
             var builder =  services.AddIdentityServer()
-                    //(options =>
-                    //    {
-                    //        options.UserInteraction.LoginUrl = "/IdServer/login";
-                    //        options.UserInteraction.LogoutUrl = "/IdServer/logout";
-                    //    })
-                    //.AddClientStore<AppClient>()
-                    //.AddClientStoreCache<AppClient>()
-                    //.AddResourceStore<AppApiResource>()
-                    //.AddResourceStoreCache<AppApiResource>()
-
                     .AddEFConfigurationStore(Configuration.GetConnectionString("DefaultConnection"))
                     .AddConfigurationStore(options =>
                     {
@@ -87,7 +72,12 @@ namespace CentralAuth
                         options.ConfigureDbContext = b => b.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
                     })
                     .AddAspNetIdentity<AppUser>()
-                    .AddJwtBearerClientAuthentication();
+                    //.AddInMemoryApiResources(IdentityServerConfiguration.GetApis())
+                    //.AddInMemoryClients(IdentityServerConfiguration.GetClients())
+                    .AddJwtBearerClientAuthentication()
+                    .AddResourceOwnerValidator<CustomResourceOwnerPasswordValidator>()
+                    .AddProfileService<CustomProfileService>()
+                    ;
 
             X509Certificate2 certif = GetCertificate();
             if(certif == null)
@@ -145,6 +135,10 @@ namespace CentralAuth
             };
 
             services.AddHttpContextAccessor();
+            // Custom resource owner password validator
+            //builder.Services.AddTransient<IResourceOwnerPasswordValidator, CustomResourceOwnerPasswordValidator>();
+            //builder.Services.AddTransient<IProfileService, CustomProfileService>();
+
             services.AddScoped<IUtilityService, UtilityService>();
             services.AddScoped<ISubDepartmentService, SubDepartmentService>();
             services.AddScoped<IDepartmentService, DepartmentService>();

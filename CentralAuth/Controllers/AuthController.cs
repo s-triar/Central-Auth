@@ -90,7 +90,7 @@ namespace CentralAuth.Controllers
         {
             JwtConfig jwtConfig = this._configuration.GetSection("Jwt").Get<JwtConfig>();
             var roles = await _userManager.GetRolesAsync(user);
-            roles = roles.Where(x => !x.Contains(":")).ToList();
+            roles = roles.Where(x => !x.Contains(":=")).ToList();
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),

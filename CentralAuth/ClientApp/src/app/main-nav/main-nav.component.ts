@@ -51,8 +51,8 @@ export class MainNavComponent implements OnInit, OnDestroy {
                                 .subscribe(
                                   (x: CustomResponse<any>) => {
                                     this._tokenService.removeToken();
+                                    this._authService.setLoggedUser();
                                     this.formSubscription.unsubscribe();
-                                    location.reload();
                                   },
                                   (err: HttpErrorResponse) => {
                                     this.formSubscription.unsubscribe();

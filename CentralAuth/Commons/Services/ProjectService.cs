@@ -104,33 +104,33 @@ namespace CentralAuth.Commons.Services
         {
             Client client = new Client
             {
-               AccessTokenLifetime = 43200,
-               AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
-               AllowedScopes = 
-               {
+                AccessTokenLifetime = 43200,
+                AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
+                AllowedScopes =
+                {
                     entity.ApiName,
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.Email,
-               },
-               AllowOfflineAccess = true,
-               AlwaysIncludeUserClaimsInIdToken = true,
-               AlwaysSendClientClaims = true,
-               Claims =
-               {
+                    IdentityServerConstants.StandardScopes.OfflineAccess
+                },
+                AllowOfflineAccess = true,
+                AlwaysIncludeUserClaimsInIdToken = true,
+                AlwaysSendClientClaims = true,
+                Claims =
+                {
 
-               },
-               ClientId = entity.ClientId,
-               ClientName = entity.ApiName,
-               ClientUri = entity.Url,
-               ClientSecrets = this._GenerateSecret(entity.ClientSecret),
-               IdentityTokenLifetime = 43200,
-               IncludeJwtId = true,
-               RedirectUris = {entity.Url+"/signin-oidc"},
-               RefreshTokenExpiration = TokenExpiration.Sliding,
-               RefreshTokenUsage = TokenUsage.OneTimeOnly,
-               RequireConsent = false,
-               UpdateAccessTokenClaimsOnRefresh = true
+                },
+                ClientId = entity.ClientId,
+                ClientName = entity.ApiName,
+                ClientUri = entity.Url,
+                ClientSecrets = this._GenerateSecret(entity.ClientSecret),
+                IdentityTokenLifetime = 43200,
+                IncludeJwtId = true,
+                RefreshTokenExpiration = TokenExpiration.Absolute,
+                RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                RequireConsent = false,
+                UpdateAccessTokenClaimsOnRefresh = true
             };
             this._configContext.Clients.Add(client.ToEntity());
         }
@@ -153,9 +153,27 @@ namespace CentralAuth.Commons.Services
             ApiResource api = new ApiResource
             {
                Name = entity.ApiName,
-               DisplayName = entity.NamaProject
+               DisplayName = entity.NamaProject,
+               Scopes = {
+                    new Scope{
+                        Name = entity.ApiName,
+                        DisplayName = "Main Scope for API "+entity.ApiName,
+                        Description = "This Scope holds all functionality (all scopes of this API Resource)"
+                    } 
+               }
             };
             this._configContext.ApiResources.Add(api.ToEntity());
+        }
+
+        public void CreateIdentityResource(Project entity)
+        {
+            IdentityResource api = new IdentityResource
+            {
+                Name = entity.ApiName,
+                DisplayName = entity.NamaProject,
+                Description = "Identity Resource for user to access this API"
+            };
+            this._configContext.IdentityResources.Add(api.ToEntity());
         }
 
         private List<Secret> _GenerateSecret (string secret)
@@ -469,6 +487,15 @@ namespace CentralAuth.Commons.Services
             }
         }
 
+        public void DeleteAllRolesProject(string ApiName)
+        {
+            var r = this._context.Roles.Where(x=>x.ProjectApiName == ApiName).AsEnumerable();
+            if (r != null)
+            {
+                this._context.Roles.RemoveRange(r);
+            }
+        }
+
         public bool checkAvailabilityApiName (string ApiName)
         {
             var res =  this.FindByKey(ApiName);
@@ -533,6 +560,11 @@ namespace CentralAuth.Commons.Services
         {
             var apiresources = this._configContext.ApiResources.Where(x => x.Name == ApiName).AsEnumerable();
             this._configContext.ApiResources.RemoveRange(apiresources);
+        }
+        public void DeleteIdentityResource(string ApiName)
+        {
+            var identityresource = this._configContext.IdentityResources.Where(x => x.Name == ApiName).AsEnumerable();
+            this._configContext.IdentityResources.RemoveRange(identityresource);
         }
 
         public void DeleteUserProject(string ApiName)
