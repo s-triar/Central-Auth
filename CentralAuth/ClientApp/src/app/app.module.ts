@@ -16,10 +16,10 @@ import { RegisterComponent } from './pages/auth/register/register.component';
 import { ForgetPasswordComponent } from './pages/auth/forget-password/forget-password.component';
 import { UserSideNavComponent } from './components/user-side-nav/user-side-nav.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { MaterialModule } from './modules/material.module';
+// import { MaterialModule } from './modules/material.module';
 import { CardProjectItemComponent } from './components/card-project-item/card-project-item.component';
 import { CardUserLoginComponent } from './components/card-user-login/card-user-login.component';
-import { GoogleChartsModule } from 'angular-google-charts';
+// import { GoogleChartsModule } from 'angular-google-charts';
 import { CardProjectListComponent } from './components/card-project-list/card-project-list.component';
 import { CardProjectAdminItemComponent } from './components/card-project-admin-item/card-project-admin-item.component';
 import { CardProjectAdminListComponent } from './components/card-project-admin-list/card-project-admin-list.component';
@@ -30,8 +30,8 @@ import { MasterDepartmentComponent } from './pages/master-department/master-depa
 import { CreateDirectorateComponent } from './pages/master-directorate/dialogs/create-directorate/create-directorate.component';
 import { DialogLoadingComponent } from './components/dialog-loading/dialog-loading.component';
 import { SnackbarNotifComponent } from './components/snackbar-notif/snackbar-notif.component';
-import { MatPaginatorIntl } from '@angular/material/paginator';
-import { MatPaginationCustomProvider } from './providers/mat-pagination-custom-provider';
+// import { MatPaginatorIntl } from '@angular/material/paginator';
+// import { MatPaginationCustomProvider } from './providers/mat-pagination-custom-provider';
 import { UpdateDirectorateComponent } from './pages/master-directorate/dialogs/update-directorate/update-directorate.component';
 import { DeleteDirectorateComponent } from './pages/master-directorate/dialogs/delete-directorate/delete-directorate.component';
 import { MasterSubDepartmentComponent } from './pages/master-sub-department/master-sub-department.component';
@@ -118,7 +118,6 @@ import { SharedModule } from './modules/shared/shared.module';
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
-    GoogleChartsModule,
     HttpClientModule,
     FormsModule,
     AppRoutingModule,

@@ -9,6 +9,7 @@ import { AuthService } from '../services/auth.service';
 import { CustomResponse } from '../models/custom-response';
 import { TokenService } from '../services/token.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-nav',
@@ -32,7 +33,8 @@ export class MainNavComponent implements OnInit, OnDestroy {
     private _renderer: Renderer2,
     private _themeService: ThemeService,
     private _authService: AuthService,
-    private _tokenService: TokenService
+    private _tokenService: TokenService,
+    private _router: Router
   ) {}
   ngOnDestroy(): void {}
 
@@ -53,6 +55,7 @@ export class MainNavComponent implements OnInit, OnDestroy {
                                     this._tokenService.removeToken();
                                     this._authService.setLoggedUser();
                                     this.formSubscription.unsubscribe();
+                                    this._router.navigate(['/login'], {replaceUrl: true});
                                   },
                                   (err: HttpErrorResponse) => {
                                     this.formSubscription.unsubscribe();

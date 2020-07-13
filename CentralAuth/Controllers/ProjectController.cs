@@ -225,7 +225,7 @@ namespace CentralAuth.Controllers
                             if (t > 0)
                             {
                                 this._projectService.CreateApiResource(project);
-                                this._projectService.CreateIdentityResource(project);
+                                //this._projectService.CreateIdentityResource(project);
                                 t = await this._projectService.SaveConfigContextAsync();
                                 if (t > 0)
                                 {
@@ -315,7 +315,7 @@ namespace CentralAuth.Controllers
                 {
                     this._projectService.DeleteScopeApi(entity.ApiName);
                     this._projectService.DeleteApiResource(entity.ApiName);
-                    this._projectService.DeleteIdentityResource(entity.ApiName);
+                    //this._projectService.DeleteIdentityResource(entity.ApiName);
                     this._projectService.DeleteClient(entity.ApiName);
                     
                     t = await this._projectService.SaveConfigContextAsync();

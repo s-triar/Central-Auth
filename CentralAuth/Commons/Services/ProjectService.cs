@@ -109,7 +109,7 @@ namespace CentralAuth.Commons.Services
                 AllowedScopes =
                 {
                     entity.ApiName,
-                    IdentityServerConstants.StandardScopes.OpenId,
+                    //IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.Email,
                     IdentityServerConstants.StandardScopes.OfflineAccess
@@ -124,6 +124,7 @@ namespace CentralAuth.Commons.Services
                 ClientId = entity.ClientId,
                 ClientName = entity.ApiName,
                 ClientUri = entity.Url,
+                RedirectUris = {entity.Url + "/signin-oidc"},
                 ClientSecrets = this._GenerateSecret(entity.ClientSecret),
                 IdentityTokenLifetime = 43200,
                 IncludeJwtId = true,
@@ -156,7 +157,7 @@ namespace CentralAuth.Commons.Services
                DisplayName = entity.NamaProject,
                Scopes = {
                     new Scope{
-                        Name = entity.ApiName+"."+entity.ApiName,
+                        Name = entity.ApiName,
                         DisplayName = "Main Scope for API "+entity.ApiName,
                         Description = "This Scope holds all functionality (all scopes of this API Resource)"
                     } 
@@ -169,7 +170,7 @@ namespace CentralAuth.Commons.Services
         {
             IdentityResource api = new IdentityResource
             {
-                Name = entity.ApiName,
+                Name = "Identity."+entity.ApiName,
                 DisplayName = entity.NamaProject,
                 Description = "Identity Resource for user to access this API"
             };
@@ -220,18 +221,12 @@ namespace CentralAuth.Commons.Services
                                        .Where(x => x.ClientUri == d.Projek.Url)
                                        .Include(x=>x.AllowedScopes)
                                        .FirstOrDefault();
-            ClientScope csIR = new ClientScope
+            ClientScope cs = new ClientScope
             {
                 ClientId = c.Id,
                 Scope = d.KolaborasiApiName
             };
-            ClientScope csAR = new ClientScope
-            {
-                ClientId = c.Id,
-                Scope = d.KolaborasiApiName+"."+d.KolaborasiApiName
-            };
-            c.AllowedScopes.Add(csIR);
-            c.AllowedScopes.Add(csAR);
+            c.AllowedScopes.Add(cs);
             this._configContext.Clients.Update(c);
         }
 
