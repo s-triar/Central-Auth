@@ -156,7 +156,7 @@ namespace CentralAuth.Commons.Services
                DisplayName = entity.NamaProject,
                Scopes = {
                     new Scope{
-                        Name = entity.ApiName,
+                        Name = entity.ApiName+"."+entity.ApiName,
                         DisplayName = "Main Scope for API "+entity.ApiName,
                         Description = "This Scope holds all functionality (all scopes of this API Resource)"
                     } 
@@ -220,12 +220,18 @@ namespace CentralAuth.Commons.Services
                                        .Where(x => x.ClientUri == d.Projek.Url)
                                        .Include(x=>x.AllowedScopes)
                                        .FirstOrDefault();
-            ClientScope cs = new ClientScope
+            ClientScope csIR = new ClientScope
             {
                 ClientId = c.Id,
                 Scope = d.KolaborasiApiName
             };
-            c.AllowedScopes.Add(cs);
+            ClientScope csAR = new ClientScope
+            {
+                ClientId = c.Id,
+                Scope = d.KolaborasiApiName+"."+d.KolaborasiApiName
+            };
+            c.AllowedScopes.Add(csIR);
+            c.AllowedScopes.Add(csAR);
             this._configContext.Clients.Update(c);
         }
 
