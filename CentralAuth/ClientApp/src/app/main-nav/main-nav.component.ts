@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, OnDestroy } from '@angular/core';
+import { Component, OnInit, Renderer2, OnDestroy, ViewChild } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
@@ -10,6 +10,7 @@ import { CustomResponse } from '../models/custom-response';
 import { TokenService } from '../services/token.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-main-nav',
@@ -21,6 +22,7 @@ export class MainNavComponent implements OnInit, OnDestroy {
   theme$: Observable<Theme>;
   formSubscription: Subscription;
   user$: Observable<User>;
+  @ViewChild('drawer', {static: true}) leftsidenav: MatSidenav;
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(
@@ -52,6 +54,7 @@ export class MainNavComponent implements OnInit, OnDestroy {
                                 .logout()
                                 .subscribe(
                                   (x: CustomResponse<any>) => {
+                                    this.leftsidenav.close();
                                     this._tokenService.removeToken();
                                     this._authService.setLoggedUser();
                                     this.formSubscription.unsubscribe();
