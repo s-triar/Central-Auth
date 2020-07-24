@@ -406,6 +406,30 @@ namespace CentralAuth.Controllers
         {
             return this._userService.GetUserDetail(Kode);
         }
+        [HttpGet("[action]")]
+        public UserVM GetDetailUser([FromQuery] string Kode)
+        {
+            var u = this._userService.GetUserDetail(Kode);
+            return new UserVM
+            {
+                Atasan = u.Atasan.Nama,
+                AtasanNik = u.AtasanNik,
+                Cabang = u.Cabang.NamaCabang,
+                CabangKode = u.CabangKode,
+                Departemen = u.Departemen.NamaDepartemen,
+                DepartemenKode = u.DepartemenKode,
+                Direktorat = u.Direktorat.NamaDirektorat,
+                DirektoratKode = u.DirektoratKode,
+                Email = u.Email,
+                Ext = u.Ext,
+                Nama = u.Nama,
+                Nik = u.Nik,
+                SubDepartemen = u.SubDepartemen.NamaSubDepartemen,
+                SubDepartemenKode = u.SubDepartemenKode,
+                Unit = u.Unit.NamaUnit,
+                UnitKode = u.UnitKode
+            };
+        }
         [HttpPost("[action]")]
         public async Task<IActionResult> RemoveRoleFromUser([FromBody]UserAddRole user)
         {

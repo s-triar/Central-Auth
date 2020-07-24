@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { CustomResponse } from 'src/app/models/custom-response';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TokenService } from 'src/app/services/token.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,7 @@ export class LoginComponent implements OnInit {
     password: ['', Validators.required],
   });
   formSubscription: Subscription;
-  constructor(private fb: FormBuilder, private _authService: AuthService, private _tokenService: TokenService) {}
+  constructor(private fb: FormBuilder, private _authService: AuthService, private _tokenService: TokenService, private _router: Router) {}
   ngOnInit(): void {}
   get nik() {
     return this.form.get('nik');
@@ -36,7 +37,8 @@ export class LoginComponent implements OnInit {
                                     this._tokenService.saveToken(x.data);
                                     this._authService.setLoggedUser();
                                     this.formSubscription.unsubscribe();
-                                    location.reload();
+                                    // location.reload();
+                                    this._router.navigateByUrl('/dashboard', {replaceUrl: true});
                                   },
                                   (err: HttpErrorResponse) => {
                                     this.formSubscription.unsubscribe();

@@ -8,7 +8,7 @@ import { AuthService } from './services/auth.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  title = 'app';
+  title = 'Central Auth';
   constructor(private _themeService: ThemeService, private _renderer: Renderer2, private _authService: AuthService) {}
   ngOnInit(): void {
     this._themeService.ApplyTheme(this._renderer);

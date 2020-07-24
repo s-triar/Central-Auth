@@ -29,6 +29,8 @@ using System.Runtime.ConstrainedExecution;
 using IdentityServer4.Validation;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Logging;
+using System.Net;
 
 namespace CentralAuth
 {
@@ -44,7 +46,6 @@ namespace CentralAuth
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
 
             services.AddDbContext<AppDbContext>(config =>
             {
@@ -119,7 +120,12 @@ namespace CentralAuth
                 c.EnableForHttps = true;
                 c.Providers.Add<GzipCompressionProvider>();
             });
-
+            //var _loggerFactory = new LoggerFactory();
+            //var cors = new DefaultCorsPolicyService(_loggerFactory.CreateLogger<DefaultCorsPolicyService>())
+            //{
+            //    AllowAll = true
+            //};
+            //services.AddSingleton<ICorsPolicyService>(cors);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // In production, the Angular files will be served from this directory
@@ -201,6 +207,13 @@ namespace CentralAuth
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            //app.UseCors(builder =>
+            //{
+            //    builder.WithOrigins("*")
+            //           .AllowCredentials()
+            //           .AllowAnyMethod()
+            //           .AllowAnyHeader();
+            //});
             app.UseResponseCompression();
             app.UseHttpsRedirection();
             app.UseStaticFiles();

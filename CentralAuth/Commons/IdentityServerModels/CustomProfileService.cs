@@ -1,5 +1,7 @@
 ﻿using CentralAuth.Commons.Models;
 using CentralAuth.Datas;
+using IdentityServer4.EntityFramework.DbContexts;
+using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
@@ -20,32 +22,46 @@ namespace CentralAuth.Commons.IdentityServerModels
         private UserManager<AppUser> _userManager;
         private SignInManager<AppUser> _signInManager;
         private RoleManager<AppRole> _roleManager;
-        public CustomProfileService(AppDbContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager)
+        private readonly ConfigurationDbContext _configContext;
+        public CustomProfileService(AppDbContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, ConfigurationDbContext configContext)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _configContext = configContext;
         }
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
             var sub = context.Subject.GetSubjectId();
 
             var user = await _userManager.FindByIdAsync(context.Subject.GetSubjectId());
-
+            var scopes = context.Client.AllowedScopes.ToList();
             var claimsIdentity = await this.getClaimsUserFromIdentityAsync(
-                                        user, 
-                                        context.Client.AllowedScopes.ToList(), 
+                                        user,
+                                        scopes, 
                                         context.RequestedResources.IdentityResources.Select(x => x.Name).ToList()
                                     );
 
             var claimsApi = await this.getClaimsUserFromApiAsync(
                                         user,
-                                        context.Client.AllowedScopes.ToList(),
+                                        scopes,
                                         context.RequestedResources.ApiResources.Select(x => x.Name).ToList()
                                     );
             var claims = claimsIdentity.Concat(claimsApi).ToList();
             context.IssuedClaims = claims;
+            if (context.RequestedResources.ApiResources.FirstOrDefault(x => x.Name == "general_approval") != null)
+            {
+                var listapiscope = this._configContext.ApiResources.ToList();
+                foreach(var sc in scopes)
+                {
+                    if(listapiscope.FirstOrDefault(x=>x.Name == sc) != null)
+                    {
+                        var c = this._configContext.ApiResources.FirstOrDefault(x => x.Name == sc);
+                        context.RequestedResources.ApiResources.Add(c.ToModel());
+                    }
+                }
+            }
         }
 
         public async Task IsActiveAsync(IsActiveContext context)
