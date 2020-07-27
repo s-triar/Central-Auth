@@ -23,17 +23,20 @@ namespace CentralAuth.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<AppRole> _roleManager;
+        private readonly IEmailService _emailService;
 
         public UserController(IUserService userService,
                               UserManager<AppUser> userManager, 
                               SignInManager<AppUser> signInManager, 
-                              RoleManager<AppRole> roleManager
+                              RoleManager<AppRole> roleManager,
+                              IEmailService emailService
                               )
         {
             _userService = userService;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _emailService = emailService;
         }
         [HttpPost("[action]")]
         public async Task<IActionResult> AddClaimsToUser([FromBody] UserAddRole entity)
@@ -157,6 +160,10 @@ namespace CentralAuth.Controllers
                             if (res_save == 1)
                             {
                                 this._userService.Commit(trans);
+                                var m = new Message(new string[] { newUserData.Email }, "Pendafatar Akun Central Auth", "Password anda : "+ newUserData.ConfirmPassword);
+                                try { _emailService.SendEmail(m); }
+                                catch (Exception ex) { }
+                                
                                 return Ok(new CustomResponse
                                 {
                                     errors = null,

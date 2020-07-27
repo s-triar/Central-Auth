@@ -47,6 +47,7 @@ namespace CentralAuth
         public void ConfigureServices(IServiceCollection services)
         {
 
+
             services.AddDbContext<AppDbContext>(config =>
             {
                 config.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
@@ -156,7 +157,9 @@ namespace CentralAuth
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProjectService, ProjectService>();
 
-
+            var emailConfig = Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+            services.AddScoped<IEmailService, EmailService>();
         }
 
         public X509Certificate2 GetCertificate()
